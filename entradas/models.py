@@ -23,4 +23,4 @@ class Entradas(models.Model):
         verbose_name_plural = 'Entradas'
 
     def __str__(self):
-        return f"{self.valor} - {self.categoria}"
+        return f"{self.categoria} - R${self.valor}"
