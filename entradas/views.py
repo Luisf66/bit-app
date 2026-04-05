@@ -5,7 +5,7 @@ from django.db.models.deletion import ProtectedError
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView
 
 from entradas.models import Categorias_Entradas
-from entradas.forms.categorias_entrada import Categorias_EntradasForm
+from entradas.forms.categorias_entrada_form import Categorias_EntradasForm
 
 from entradas.models import Entradas
 from entradas.forms.entrada_form import EntradasForm
@@ -38,7 +38,8 @@ class Categorias_EntradasDeleteView(DeleteView):
         try:
             return super().delete(request, *args, **kwargs)
         except ProtectedError as e:
-            messages.error(request, f"Erro ao excluir: {e.protected_objects}")
+            for obj in e.protected_objects:
+                messages.error(request, f"A categoria está sendo usada por : {obj}")
             return redirect(self.success_url)
 
 class EntradasCreateView(CreateView):
