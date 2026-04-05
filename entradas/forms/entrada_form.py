@@ -23,7 +23,7 @@ class EntradasForm(forms.ModelForm):
             }),
             'descricao': forms.TextInput(attrs={
                 'class': 'form-control form-control-sm',
-                'placeholder': 'Ex: Mercado semanal',
+                'placeholder': 'Ex: Pagamento do salário mensal',
             }),
             'valor': forms.NumberInput(attrs={
                 'class': 'form-control form-control-sm',
@@ -31,4 +31,11 @@ class EntradasForm(forms.ModelForm):
                 'min': '0',
                 'placeholder': '0,00',
             }),
+        }
+
+        labels = {
+            'data': 'Data',
+            'categoria': 'Categoria',
+            'descricao': 'Descrição',
+            'valor': 'Valor',
         }
