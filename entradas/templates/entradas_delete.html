@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    BIT-APP - Excluir Entrada
+{% endblock %}
+
+{% block content %}
+<div class="container py-4" style="max-width: 500px;">
+    <div class="d-flex align-items-center gap-2 mb-4">
+        <a href="{% url 'entradas:entradas-list' %}" class="btn btn-sm btn-outline-secondary">← Voltar</a>
+        <h5 class="mb-0 fw-semibold">Excluir Entrada</h5>
+    </div>
+
+    <div class="card border rounded p-4">
+        <div class="alert alert-danger small mb-3">
+            Essa ação não pode ser desfeita.
+        </div>
+
+        <p class="mb-3 small text-muted">Você está prestes a excluir a seguinte entrada:</p>
+
+        <table class="table table-sm table-bordered small mb-4">
+            <tr>
+                <td class="text-muted fw-semibold" style="width: 35%;">Data</td>
+                <td>{{ object.data|date:"d/m/Y" }}</td>
+            </tr>
+            <tr>
+                <td class="text-muted fw-semibold">Categoria</td>
+                <td><span class="badge text-bg-success fw-normal">{{ object.categoria }}</span></td>
+            </tr>
+            <tr>
+                <td class="text-muted fw-semibold">Descrição</td>
+                <td>{{ object.descricao }}</td>
+            </tr>
+            <tr>
+                <td class="text-muted fw-semibold">Valor</td>
+                <td class="fw-semibold text-danger">R$ {{ object.valor }}</td>
+            </tr>
+        </table>
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="d-flex gap-2 justify-content-end">
+                <a href="{% url 'entradas:entradas-list' %}" class="btn btn-sm btn-outline-secondary">Cancelar</a>
+                <button type="submit" class="btn btn-sm btn-danger">Confirmar exclusão</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
