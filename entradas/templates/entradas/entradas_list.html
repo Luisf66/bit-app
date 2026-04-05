@@ -26,7 +26,7 @@
                 {% for entrada in entradas %}
                 <tr>
                     <td class="ps-3 text-muted text-center">{{ entrada.data|date:"d/m/Y" }}</td>
-                    <td class="text-center"><span class="badge text-bg-success fw-normal">{{ entrada.categoria }}</span></td>
+                    <td class="text-center"><span class="badge text-bg-success fw-normal fs-6">{{ entrada.categoria }}</span></td>
                     <td class="text-center">{{ entrada.descricao }}</td>
                     <td class="text-center fw-semibold text-success">R$ {{ entrada.valor }}</td>
                     <td class="text-center">
