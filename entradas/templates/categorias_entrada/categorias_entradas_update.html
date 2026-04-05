@@ -1,23 +1,19 @@
 {% extends 'base.html' %}
-
 {% block title %}
     BIT-APP - Editar Categoria
 {% endblock %}
-
 {% block content %}
-<div class="container py-4" style="max-width: 600px;">
-    <div class="d-flex align-items-center gap-2 mb-4">
-        <a href="{% url 'entradas:categorias-entradas-list' %}" class="btn btn-sm btn-outline-secondary">← Voltar</a>
-        <h5 class="mb-0 fw-semibold">Editar Categoria</h5>
-    </div>
+<div class="container py-4" style="max-width: 600px; margin-left: 15%;">
 
     <div class="card border rounded p-4">
+        <h5 class="fw-semibold text-center mb-4">Editar Categoria</h5>
+
         <form method="POST">
             {% csrf_token %}
 
             {% for field in form %}
             <div class="mb-3">
-                <label for="{{ field.id_for_label }}" class="form-label small fw-semibold">
+                <label for="{{ field.id_for_label }}" class="form-label small fw-semibold w-100 text-center">
                     {{ field.label }}
                 </label>
                 {{ field }}
@@ -27,9 +23,11 @@
             </div>
             {% endfor %}
 
-            <div class="d-flex gap-2 justify-content-end">
-                <a href="{% url 'entradas:categorias-entradas-list' %}" class="btn btn-sm btn-outline-secondary">Cancelar</a>
-                <button type="submit" class="btn btn-sm btn-warning">Salvar alterações</button>
+            <div class="d-flex gap-2 justify-content-between mt-3">
+                <a href="{% url 'entradas:categorias-entradas-list' %}" class="btn btn-sm btn-outline-secondary">← Voltar</a>
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-sm btn-success">Confirmar alterações</button>
+                </div>
             </div>
         </form>
     </div>

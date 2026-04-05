@@ -7,3 +7,14 @@ class Categorias_EntradasForm(forms.ModelForm):
         fields = [
             'nome',
         ]
+
+        widgets = {
+            'nome': forms.TextInput(attrs={
+                'class': 'form-control form-control-sm',
+                'placeholder': 'Ex: Alimentação',
+            }),
+        }
+
+        labels = {
+            'nome': 'Nome',
+        }
