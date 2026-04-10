@@ -64,9 +64,15 @@
 <td class="text-secondary small">
     {{ transacao.satoshis|floatformat:8 }}
 </td>
-<td class="text-secondary small">
-    {{ transacao.taxa_porcentual|floatformat:2 }}%
-</td>
+{% if transacao.taxa_porcentual == 0 %}
+    <td class="text-secondary small">
+        0%
+    </td>
+{% else %}
+    <td class="text-secondary small">
+        {{ transacao.taxa_porcentual|floatformat:2 }}%        
+    </td>
+{% endif %}
 <td class="text-secondary small">
     {{ transacao.taxa_ativo }}
 </td>
