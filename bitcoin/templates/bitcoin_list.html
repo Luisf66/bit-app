@@ -25,6 +25,8 @@
 <th>Valor Líquido</th>
 <th>Satoshis</th>
 <th>Taxa %</th>
+<th>Taxa Ativo</th>
+<th>Taxa Qtde</th>
 <th>Cotação do Dia</th>
 <th>Origem</th>
 <th>Destino</th>
@@ -54,17 +56,29 @@
 </td>
 <td class="text-white small">{{ transacao.tipo }}</td>
 <td class="fw-semibold text-warning">
-    {{ transacao.valor_total|floatformat:8 }}
+    {{ transacao.valor_total|floatformat:2 }}
 </td>
 <td class="fw-semibold text-success">
-    {{ transacao.valor_liquido|floatformat:8 }}
+    {{ transacao.valor_liquido|floatformat:2 }}
 </td>
 <td class="text-secondary small">
-    {{ transacao.satoshis|floatformat:0 }}
+    {{ transacao.satoshis|floatformat:8 }}
 </td>
 <td class="text-secondary small">
-    {{ transacao.taxa_porcentual|floatformat:4 }}%
+    {{ transacao.taxa_porcentual|floatformat:2 }}%
 </td>
+<td class="text-secondary small">
+    {{ transacao.taxa_ativo }}
+</td>
+{% if transacao.taxa_quantidade == 0 %}
+    <td class="text-secondary small">
+        0
+    </td>
+{% else %}
+    <td class="text-secondary small">
+        {{ transacao.taxa_quantidade|floatformat:5 }}
+    </td>
+{% endif %}
 <td class="text-white small">
     R$ {{ transacao.cotacao_do_dia|floatformat:2 }}
 </td>
