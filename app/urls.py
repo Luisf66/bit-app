@@ -25,6 +25,7 @@ urlpatterns = [
 
     path('entradas/', include('entradas.urls')),
     path('saidas/', include('saidas.urls')),
+    path('bitcoin/', include('bitcoin.urls')),
 ]
 
 if settings.DEBUG:

@@ -2,49 +2,79 @@
 {% block title %}
     BIT-APP - Categorias de Saídas
 {% endblock %}
+
 {% block content %}
-<div class="container-fluid py-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <div class="w-100">
-            <h5 class="mb-0 fw-semibold">Categorias de Saídas</h5>
-        </div>
-        <a href="{% url 'saidas:categorias-saidas-create' %}" class="btn btn-sm btn-primary text-nowrap" style="margin-right: 30%;">
-            + Nova categoria
+<div class="container py-4">
+
+    <!-- HEADER -->
+    <div class="d-flex align-items-center gap-3 mb-4" style="margin-left: 29%;">
+        <h4 class="mb-0 fw-semibold text-warning d-flex align-items-center gap-2">
+            <i class="bi bi-bookmark-dash"></i>
+            Categorias de Saídas
+        </h4>
+
+        <a href="{% url 'saidas:categorias-saidas-create' %}" 
+           class="btn btn-warning fw-semibold rounded-pill px-4 py-2">
+            <i class="bi bi-plus-lg"></i> Nova Categoria
         </a>
     </div>
 
-    <div class="table-responsive rounded border" style="margin-right: 30%;">
-        <table class="table table-hover align-middle mb-0 small">
-            <thead class="table-light">
-                <tr>
-                    <th class="text-center">ID</th>
-                    <th class="text-center">Nome</th>
-                    <th class="text-center">Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for cat in categorias_saidas %}
-                <tr>
-                    <td class="text-center text-muted">{{ forloop.counter }}</td>
-                    <td class="text-center">
-                        <span class="badge text-bg-success fw-normal fs-6">{{ cat.nome }}</span>
-                    </td>
-                    <td class="text-center">
-                        <a href="{% url 'saidas:categorias-saidas-update' cat.pk %}" class="btn btn-sm btn-outline-secondary">
-                            <i class="bi bi-pencil"></i>
-                        </a>
-                        <a href="{% url 'saidas:categorias-saidas-delete' cat.pk %}" class="btn btn-sm btn-outline-danger">
-                            <i class="bi bi-trash"></i>
-                        </a>
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="3" class="text-center text-muted py-3">Nenhuma categoria cadastrada.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <!-- TABELA CENTRALIZADA -->
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+
+            <div class="bg-dark rounded-4 border border-secondary-subtle overflow-hidden">
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover align-middle mb-0">
+
+                        <thead>
+                            <tr class="text-center small text-secondary">
+                                <th>Nome</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for cat in categorias_saidas %}
+                            <tr class="text-center">
+                                
+                                <td>
+                                    <span class="badge bg-danger-subtle text-danger px-3 py-2 rounded-pill">
+                                        {{ cat.nome }}
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <a href="{% url 'saidas:categorias-saidas-update' cat.pk %}" 
+                                           class="btn btn-sm btn-outline-light rounded-circle">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+
+                                        <a href="{% url 'saidas:categorias-saidas-delete' cat.pk %}" 
+                                           class="btn btn-sm btn-outline-danger rounded-circle">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+
+                            </tr>
+
+                            {% empty %}
+                            <tr>
+                                <td colspan="2" class="text-center text-secondary py-4">
+                                    Nenhuma categoria cadastrada.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+
+        </div>
     </div>
+
 </div>
 {% endblock %}
