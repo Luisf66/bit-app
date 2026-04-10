@@ -9,6 +9,7 @@ app_name = 'bitcoin'
 
 urlpatterns = [
     path('upload/', views.Bitcoin_UploadView, name='bitcoin-upload'),
+    path('list/', views.TransacaoListView.as_view(), name='bitcoin-list'),
     #path('dashboard/', views.DashboardView, name='dashboard'),
 ]
 
