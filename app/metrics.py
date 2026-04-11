@@ -3,77 +3,50 @@ from entradas.models import Entradas
 from bitcoin.models import TransacaoBTC
 
 from django.db.models import Sum, Q
+from django.utils.formats import number_format
+
+
+def obter_saldo():
+    total_saidas = Saidas.objects.aggregate(
+        valor_total_saidas=Sum('valor')
+    )['valor_total_saidas'] or 0
+
+    total_entradas = Entradas.objects.aggregate(
+        valor_total_entradas=Sum('valor')
+    )['valor_total_entradas'] or 0
+
+    saldo = total_entradas - total_saidas
+
+    return {
+        'total_saidas': total_saidas,
+        'total_entradas': total_entradas,
+        'saldo': saldo,
+    }
 
 
 def obter_metricas_dashboard():
-    total_saidas = Saidas.objects.aggregate(valor_total=Sum('valor'))
-    total_entradas = Entradas.objects.aggregate(valor_total=Sum('valor'))
 
-    total_gasto_btc = TransacaoBTC.objects.aggregate(
-        total_gasto_btc=Sum(
-            'valor_total', 
-            filter=Q(tipo='compra_recorrente') | Q(tipo='compra')
-        )
+    btc_metrics = TransacaoBTC.objects.aggregate(
+        total_gasto_btc=Sum('valor_total', filter=Q(tipo__in=['compra', 'compra_recorrente'])),
+        total_liquido_btc=Sum('valor_liquido', filter=Q(tipo__in=['compra', 'compra_recorrente'])),
+        envio_btc_total=Sum('valor_total', filter=Q(tipo='envio_onchain')),
+        envio_btc_liquido=Sum('valor_liquido', filter=Q(tipo='envio_onchain')),
+        total_satoshis_comprados=Sum('satoshis', filter=Q(tipo__in=['compra', 'compra_recorrente'])),
+        total_satoshis_enviados=Sum('satoshis', filter=Q(tipo='envio_onchain')),
     )
+    
+    taxas_pagas_compra = btc_metrics['total_gasto_btc'] - btc_metrics['total_liquido_btc']
+    taxas_pagas_envio = btc_metrics['envio_btc_total'] - btc_metrics['envio_btc_liquido']
 
-    total_liquido_btc = TransacaoBTC.objects.aggregate(
-        total_liquido_btc=Sum(
-            'valor_liquido', 
-            filter=Q(tipo='compra_recorrente') | Q(tipo='compra')
-        )
-    )
+    return {
+        'total_gasto_btc': number_format(btc_metrics['total_gasto_btc'] or 0, decimal_pos=2),
+        'total_liquido_btc': number_format(btc_metrics['total_liquido_btc'] or 0, decimal_pos=2),
+        'taxas_pagas_compra': number_format(taxas_pagas_compra, decimal_pos=2),
 
-    envio_btc_total = TransacaoBTC.objects.aggregate(
-        envio_btc_total=Sum(
-            'valor_total', 
-            filter=Q(tipo='envio_onchain')
-        )
-    )
+        'envio_btc_total': number_format(btc_metrics['envio_btc_total'] or 0, decimal_pos=2),
+        'envio_btc_liquido': number_format(btc_metrics['envio_btc_liquido'] or 0, decimal_pos=2),
+        'taxas_pagas_envio': number_format(taxas_pagas_envio, decimal_pos=2),
 
-    envio_btc_liquido = TransacaoBTC.objects.aggregate(
-        envio_btc_liquido=Sum(
-            'valor_liquido', 
-            filter=Q(tipo='envio_onchain')
-        )
-    )
-
-    total_satoshis_comprados = TransacaoBTC.objects.aggregate(
-        total_satoshis_comprados=Sum(
-            'satoshis', 
-            filter=Q(tipo='compra_recorrente') | Q(tipo='compra')
-        )
-    )
-
-    total_satoshis_enviados = TransacaoBTC.objects.aggregate(
-        total_satoshis_enviados=Sum(
-            'satoshis', 
-            filter=Q(tipo='envio_onchain')
-        )
-    )
-
-    print("========== Saidas ==========")
-    print(f"Saidas: {total_saidas}")
-    print("========== Entradas ==========")
-    print(f"Entradas: {total_entradas}")
-    print("========== BTC ==========")
-    print(f"Gasto BTC: {total_gasto_btc}")
-    print(f"Gasto Liquido BTC: {total_liquido_btc}")
-    print(f"Envio BTC: {envio_btc_total}")
-    print(f"Envio Liquido BTC: {envio_btc_liquido}")
-    print("========== Satoshis ==========")
-    print(f"Satoshis Comprados: {total_satoshis_comprados}")
-    print(f"Satoshis Enviados: {total_satoshis_enviados}")
-
-    return dict(
-        total_saidas = total_saidas,
-        total_entradas = total_entradas,
-
-        total_gasto_btc = total_gasto_btc,
-        total_liquido_btc = total_liquido_btc,
-        
-        envio_btc_total = envio_btc_total,
-        envio_btc_liquido = envio_btc_liquido,
-        
-        total_satoshis_comprados = total_satoshis_comprados,
-        total_satoshis_enviados = total_satoshis_enviados
-    )
+        'total_satoshis_comprados': number_format(btc_metrics['total_satoshis_comprados'] or 0, decimal_pos=9),
+        'total_satoshis_enviados': number_format(btc_metrics['total_satoshis_enviados'] or 0, decimal_pos=9),
+    }

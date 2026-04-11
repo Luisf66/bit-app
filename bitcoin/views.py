@@ -5,7 +5,7 @@ from django.db import IntegrityError, transaction
 from django.shortcuts import render
 from bitcoin.models import TransacaoBTC
 from django.views.generic import ListView
-from app.metrics import obter_metricas_dashboard
+from app import metrics
 
 class TransacaoListView(ListView):
     model = TransacaoBTC
@@ -13,7 +13,28 @@ class TransacaoListView(ListView):
     context_object_name = 'transacoes'
 
 def DashboardView(request):
-    return render(request, 'bitcoin_dashboard.html', context=obter_metricas_dashboard())
+    saldo = metrics.obter_saldo()
+
+    metricas_btc = metrics.obter_metricas_dashboard()
+
+    context = {
+        'total_saidas': saldo['total_saidas'],
+        'total_entradas': saldo['total_entradas'],
+        'saldo': saldo['saldo'],
+
+        'total_gasto_btc': metricas_btc['total_gasto_btc'],
+        'total_liquido_btc': metricas_btc['total_liquido_btc'],
+        'taxas_pagas_compra': metricas_btc['taxas_pagas_compra'],
+
+        'envio_btc_total': metricas_btc['envio_btc_total'],
+        'envio_btc_liquido': metricas_btc['envio_btc_liquido'],
+        'taxas_pagas_envio': metricas_btc['taxas_pagas_envio'],
+
+        'total_satoshis_comprados': metricas_btc['total_satoshis_comprados'],
+        'total_satoshis_enviados': metricas_btc['total_satoshis_enviados'],
+    }
+
+    return render(request, 'bitcoin_dashboard.html', context)
 
 def Bitcoin_UploadView(request):
     if request.method == 'POST' and request.FILES.get('arquivo'):
