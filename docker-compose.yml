@@ -1,0 +1,25 @@
+services:
+
+    bit-app:
+      build: .
+      restart: always
+      ports:
+        - 8000:8000
+      depends_on:
+        - bit-app_db
+      env_file:
+        - .env
+      
+    bit-app_db:
+      image: postgres:15
+      ports:
+        - 15432:5432
+      volumes:
+        - bit-app_postgres_data:/var/lib/postgresql/data/
+      environment:
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=postgres
+        - POSTGRES_DB=bit-app
+
+volumes:
+  bit-app_postgres_data:
