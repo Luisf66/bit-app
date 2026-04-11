@@ -36,8 +36,8 @@ def obter_metricas():
         total_satoshis_enviados=Sum('satoshis', filter=Q(tipo='envio_onchain')),
     )
 
-    taxas_pagas_compra = btc_metrics['total_gasto_btc'] - btc_metrics['total_liquido_btc']
-    taxas_pagas_envio = btc_metrics['envio_btc_total'] - btc_metrics['envio_btc_liquido']
+    taxas_pagas_compra = (btc_metrics['total_gasto_btc'] or 0) - (btc_metrics['total_liquido_btc'] or 0)
+    taxas_pagas_envio = (btc_metrics['envio_btc_total'] or 0) - (btc_metrics['envio_btc_liquido'] or 0)
 
     return {
         'total_gasto_btc': number_format(btc_metrics['total_gasto_btc'] or 0, decimal_pos=2),
@@ -53,6 +53,7 @@ def obter_metricas():
     }
 
 def obter_dashboard():
+    datas, tipos, valores, satoshis, cotacoes = [], [], [], [], []
 
     btc_dashboard = TransacaoBTC.objects.filter(
         movimentacao='entrada',
@@ -68,10 +69,8 @@ def obter_dashboard():
     if btc_dashboard.exists():
         datas, tipos, valores, satoshis, cotacoes = (list(col) for col in zip(*btc_dashboard))
 
-    datas = [d.strftime('%d/%m/%Y %H:%M:%S') for d in datas]
-
-    print(f"tamanho: {len(datas)}")
-    print(f"tamanho: {len(valores)}")
+    if datas:
+        datas = [d.strftime('%d/%m/%Y %H:%M:%S') for d in datas]
 
     return {
         'datas_transacoes': datas,
