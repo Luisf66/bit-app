@@ -54,7 +54,10 @@ def obter_metricas():
 
 def obter_dashboard():
 
-    btc_dashboard = TransacaoBTC.objects.values_list(
+    btc_dashboard = TransacaoBTC.objects.filter(
+        movimentacao='entrada',
+        tipo__in=['compra_recorrente', 'compra']
+    ).values_list(
         'data',
         'tipo',
         Cast('valor_liquido', FloatField()),
@@ -65,7 +68,10 @@ def obter_dashboard():
     if btc_dashboard.exists():
         datas, tipos, valores, satoshis, cotacoes = (list(col) for col in zip(*btc_dashboard))
 
-    datas = [d.strftime('%d/%m/%Y') for d in datas]
+    datas = [d.strftime('%d/%m/%Y %H:%M:%S') for d in datas]
+
+    print(f"tamanho: {len(datas)}")
+    print(f"tamanho: {len(valores)}")
 
     return {
         'datas_transacoes': datas,

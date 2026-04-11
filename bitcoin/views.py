@@ -51,6 +51,7 @@ def Bitcoin_UploadView(request):
 
         # Converter data
         df['Data'] = pd.to_datetime(df['Data'], format='%d/%m/%Y %H:%M:%S')
+        df['Data'] = df['Data'].dt.tz_localize('America/Sao_Paulo') # fuso
 
         transacoes_salvas = 0
         transacoes_ignoradas = 0
@@ -77,13 +78,14 @@ def Bitcoin_UploadView(request):
                     cotacao_do_dia = Decimal(str(df.iloc[linha, 9]))
 
                     data = df.iloc[linha, 12]
+                    data_str_hash = data.strftime('%d/%m/%Y %H:%M:%S') # fuso
 
                     # Hash
                     conteudo = (
                         f"{ativo}{movimentacao}{tipo}"
                         f"{valor_total}{valor_liquido}{satoshis}"
                         f"{taxa_porcentual}{taxa_ativo}{taxa_quantidade}"
-                        f"{cotacao_do_dia}{origem}{destino}{data}"
+                        f"{cotacao_do_dia}{origem}{destino}{data_str_hash}" # fuso
                     )
 
                     hash_linha = hashlib.md5(conteudo.encode('utf-8')).hexdigest()
