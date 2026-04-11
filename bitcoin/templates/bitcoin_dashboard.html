@@ -106,13 +106,25 @@
     <div class="card border rounded p-3 mb-4">
         <div id="myDiv" style="background-color: white; border-radius: 8px;"></div>
     </div>
+
+    {{ datas_transacoes|json_script:"datas" }}
+    {{ tipos_transacoes|json_script:"tipos" }}
+    {{ valores_transacoes|json_script:"valores" }}
+    {{ satoshis_transacoes|json_script:"satoshis" }}
+    {{ cotacoes_transacoes|json_script:"cotacoes" }}
 </div>
 
 <script>
+    const datas_transacoes = JSON.parse(document.getElementById('datas').textContent);
+    const tipos_transacoes = JSON.parse(document.getElementById('tipos').textContent);
+    const valores_transacoes = JSON.parse(document.getElementById('valores').textContent);
+    const satoshis_transacoes = JSON.parse(document.getElementById('satoshis').textContent);
+    const cotacoes_transacoes = JSON.parse(document.getElementById('cotacoes').textContent);
+
     var data = [
         {
-            x: ['giraffes', 'orangutans', 'monkeys'],
-            y: [20, 14, 23],
+            x: datas_transacoes,
+            y: valores_transacoes,
             type: 'bar'
         }
     ];

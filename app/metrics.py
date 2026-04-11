@@ -65,6 +65,8 @@ def obter_dashboard():
     if btc_dashboard.exists():
         datas, tipos, valores, satoshis, cotacoes = (list(col) for col in zip(*btc_dashboard))
 
+    datas = [d.strftime('%d/%m/%Y') for d in datas]
+
     return {
         'datas_transacoes': datas,
         'tipos_transacoes': tipos,

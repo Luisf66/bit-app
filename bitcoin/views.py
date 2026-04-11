@@ -35,10 +35,10 @@ def DashboardView(request):
         'total_satoshis_comprados': metricas_btc['total_satoshis_comprados'],
         'total_satoshis_enviados': metricas_btc['total_satoshis_enviados'],
 
-        #'datas_transacoes': dashboard_btc['datas_transacoes'],
-        #'tipos_transacoes': dashboard_btc['tipos_transacoes'],
-        #'valores_transacoes': dashboard_btc['valores_transacoes'],
-        #'satoshis_transacoes': dashboard_btc['satoshis_transacoes'],
+        'datas_transacoes': dashboard_btc['datas_transacoes'],
+        'tipos_transacoes': dashboard_btc['tipos_transacoes'],
+        'valores_transacoes': dashboard_btc['valores_transacoes'],
+        'satoshis_transacoes': dashboard_btc['satoshis_transacoes'],
         'cotacoes_transacoes': dashboard_btc['cotacoes_transacoes'],
     }
 
