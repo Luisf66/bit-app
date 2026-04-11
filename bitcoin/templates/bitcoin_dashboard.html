@@ -4,100 +4,101 @@
 {% endblock %}
 {% block content %}
 <div class="container-fluid py-4">
-    <div class="mb-4">
+    <div class="mb-0 fw-semibold text-warning d-flex align-items-center gap-2">
         <h5 class="fw-semibold">Métricas</h5>
     </div>
 
-    <!-- Financeiro -->
-    <p class="text-muted small fw-semibold mb-2">FINANCEIRO</p>
+    <!-- Financeiro + BTC lado a lado -->
     <div class="row g-3 mb-4">
-        <div class="col-sm-4">
-            <div class="card border rounded p-3 text-center">
-                <p class="text-muted small mb-1">Entradas</p>
-                <p class="fw-semibold fs-5 text-success mb-0">R$ {{ total_entradas }}</p>
+
+        <!-- Coluna Financeiro -->
+        <div class="col-12 col-md-3">
+            <p class="text-muted small fw-semibold mb-2">FINANCEIRO</p>
+            <div class="d-flex flex-column gap-3">
+                <div class="card border rounded p-3 text-center">
+                    <p class="text-muted small mb-1">Entradas</p>
+                    <p class="fw-semibold fs-5 text-success mb-0">R$ {{ total_entradas }}</p>
+                </div>
+                <div class="card border rounded p-3 text-center">
+                    <p class="text-muted small mb-1">Saídas</p>
+                    <p class="fw-semibold fs-5 text-danger mb-0">R$ {{ total_saidas }}</p>
+                </div>
+                <div class="card border rounded p-3 text-center">
+                    <p class="text-muted small mb-1">Saldo</p>
+                    {% if saldo > 0 %}
+                        <p class="fw-semibold fs-5 text-success mb-0">R$ {{ saldo }}</p>
+                    {% else %}
+                        <p class="fw-semibold fs-5 text-danger mb-0">R$ {{ saldo }}</p>
+                    {% endif %}
+                </div>
             </div>
         </div>
-        <div class="col-sm-4">
-            <div class="card border rounded p-3 text-center">
-                <p class="text-muted small mb-1">Saídas</p>
-                <p class="fw-semibold fs-5 text-danger mb-0">R$ {{ total_saidas }}</p>
+
+        <!-- Coluna BTC -->
+        <div class="col-12 col-md-9">
+
+            <!-- Compras BTC -->
+            <p class="text-muted small fw-semibold mb-2">COMPRAS BTC</p>
+            <div class="row g-3 mb-3">
+                <div class="col-6 col-sm-6 col-md-3">
+                    <div class="card border rounded p-3 text-center">
+                        <p class="text-muted small mb-1">Total Gasto</p>
+                        <p class="fw-semibold fs-5 text-danger mb-0">R$ {{ total_gasto_btc }}</p>
+                    </div>
+                </div>
+                <div class="col-6 col-sm-6 col-md-3">
+                    <div class="card border rounded p-3 text-center">
+                        <p class="text-muted small mb-1">Total Líquido</p>
+                        <p class="fw-semibold fs-5 text-success mb-0">R$ {{ total_liquido_btc }}</p>
+                    </div>
+                </div>
+                <div class="col-6 col-sm-6 col-md-3">
+                    <div class="card border rounded p-3 text-center">
+                        <p class="text-muted small mb-1">Taxas Pagas</p>
+                        <p class="fw-semibold fs-5 mb-0">R$ {{ taxas_pagas_compra }}</p>
+                    </div>
+                </div>
+                <div class="col-6 col-sm-6 col-md-3">
+                    <div class="card border rounded p-3 text-center">
+                        <p class="text-muted small mb-1">Satoshis Comprados</p>
+                        <p class="fw-semibold fs-5 text-warning mb-0">{{ total_satoshis_comprados }}</p>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="col-sm-4">
-            <div class="card border rounded p-3 text-center">
-                <p class="text-muted small mb-1">Saldo</p>
-                {% if saldo > 0 %}
-                    <p class="fw-semibold fs-5 text-success mb-0">R$ {{ saldo }}</p>
-                {% else %}
-                     <p class="fw-semibold fs-5 text-danger mb-0">R$ {{ saldo }}</p>
-                {% endif %}
+
+            <!-- Envios BTC -->
+            <p class="text-muted small fw-semibold mb-2" style="margin-top: 8.2%;">ENVIOS BTC</p>
+            <div class="row g-3">
+                <div class="col-6 col-sm-6 col-md-3">
+                    <div class="card border rounded p-3 text-center">
+                        <p class="text-muted small mb-1">Total Enviado</p>
+                        <p class="fw-semibold fs-5 text-danger mb-0">R$ {{ envio_btc_total }}</p>
+                    </div>
+                </div>
+                <div class="col-6 col-sm-6 col-md-3">
+                    <div class="card border rounded p-3 text-center">
+                        <p class="text-muted small mb-1">Total Líquido Enviado</p>
+                        <p class="fw-semibold fs-5 text-success mb-0">R$ {{ envio_btc_liquido }}</p>
+                    </div>
+                </div>
+                <div class="col-6 col-sm-6 col-md-3">
+                    <div class="card border rounded p-3 text-center">
+                        <p class="text-muted small mb-1">Taxas Pagas no Envio</p>
+                        <p class="fw-semibold fs-5 mb-0">R$ {{ taxas_pagas_envio }}</p>
+                    </div>
+                </div>
+                <div class="col-6 col-sm-6 col-md-3">
+                    <div class="card border rounded p-3 text-center">
+                        <p class="text-muted small mb-1">Satoshis Enviados</p>
+                        <p class="fw-semibold fs-5 text-warning mb-0">{{ total_satoshis_enviados }}</p>
+                    </div>
+                </div>
             </div>
+
         </div>
     </div>
 
-    <!-- Compras BTC -->
-    <p class="text-muted small fw-semibold mb-2">COMPRAS BTC</p>
-    <div class="row g-3 mb-4">
-        <div class="col-sm-3">
-            <div class="card border rounded p-3 text-center">
-                <p class="text-muted small mb-1">Total Gasto</p>
-                <p class="fw-semibold fs-5 text-danger mb-0">R$ {{ total_gasto_btc }}</p>
-            </div>
-        </div>
-        <div class="col-sm-3">
-            <div class="card border rounded p-3 text-center">
-                <p class="text-muted small mb-1">Total Líquido</p>
-                <p class="fw-semibold fs-5 text-success mb-0">R$ {{ total_liquido_btc }}</p>
-            </div>
-        </div>
-        <div class="col-sm-3">
-            <div class="card border rounded p-3 text-center">
-                <p class="text-muted small mb-1">Taxas Pagas</p>
-                <p class="fw-semibold fs-5 text-warning mb-0">R$ {{ taxas_pagas_compra }}</p>
-            </div>
-        </div>
-        <div class="col-sm-3">
-            <div class="card border rounded p-3 text-center">
-                <p class="text-muted small mb-1">Satoshis Comprados</p>
-                <p class="fw-semibold fs-5 mb-0">{{ total_satoshis_comprados }}</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Envios BTC -->
-    <p class="text-muted small fw-semibold mb-2">ENVIOS BTC</p>
-    <div class="row g-3 mb-4">
-        <div class="col-sm-4">
-            <div class="card border rounded p-3 text-center">
-                <p class="text-muted small mb-1">Total Enviado</p>
-                <p class="fw-semibold fs-5 text-danger mb-0">R$ {{ envio_btc_total }}</p>
-            </div>
-        </div>
-        <div class="col-sm-4">
-            <div class="card border rounded p-3 text-center">
-                <p class="text-muted small mb-1">Total Líquido Enviado</p>
-                <p class="fw-semibold fs-5 text-success mb-0">R$ {{ envio_btc_liquido }}</p>
-            </div>
-        </div>
-        <div class="col-sm-4">
-            <div class="card border rounded p-3 text-center">
-                <p class="text-muted small mb-1">Taxas Pagas no Envio</p>
-                <p class="fw-semibold fs-5 text-warning mb-0">R$ {{ taxas_pagas_envio }}</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Satoshis Enviados -->
-    <div class="row g-3 mb-4">
-        <div class="col-sm-4">
-            <div class="card border rounded p-3 text-center">
-                <p class="text-muted small mb-1">Satoshis Enviados</p>
-                <p class="fw-semibold fs-5 mb-0">{{ total_satoshis_enviados }}</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="mb-4">
+    <div class="mb-0 fw-semibold text-warning d-flex align-items-center gap-2">
         <h5 class="fw-semibold">Dashboard</h5>
     </div>
 
@@ -107,7 +108,6 @@
     </div>
 </div>
 
-<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
 <script>
     var data = [
         {

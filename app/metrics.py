@@ -2,7 +2,8 @@ from saidas.models import Saidas
 from entradas.models import Entradas
 from bitcoin.models import TransacaoBTC
 
-from django.db.models import Sum, Q
+from django.db.models import Sum, Q, FloatField
+from django.db.models.functions import Cast
 from django.utils.formats import number_format
 
 
@@ -24,7 +25,7 @@ def obter_saldo():
     }
 
 
-def obter_metricas_dashboard():
+def obter_metricas():
 
     btc_metrics = TransacaoBTC.objects.aggregate(
         total_gasto_btc=Sum('valor_total', filter=Q(tipo__in=['compra', 'compra_recorrente'])),
@@ -34,7 +35,7 @@ def obter_metricas_dashboard():
         total_satoshis_comprados=Sum('satoshis', filter=Q(tipo__in=['compra', 'compra_recorrente'])),
         total_satoshis_enviados=Sum('satoshis', filter=Q(tipo='envio_onchain')),
     )
-    
+
     taxas_pagas_compra = btc_metrics['total_gasto_btc'] - btc_metrics['total_liquido_btc']
     taxas_pagas_envio = btc_metrics['envio_btc_total'] - btc_metrics['envio_btc_liquido']
 
@@ -49,4 +50,25 @@ def obter_metricas_dashboard():
 
         'total_satoshis_comprados': number_format(btc_metrics['total_satoshis_comprados'] or 0, decimal_pos=9),
         'total_satoshis_enviados': number_format(btc_metrics['total_satoshis_enviados'] or 0, decimal_pos=9),
+    }
+
+def obter_dashboard():
+
+    btc_dashboard = TransacaoBTC.objects.values_list(
+        'data',
+        'tipo',
+        Cast('valor_liquido', FloatField()),
+        Cast('satoshis', FloatField()),
+        Cast('cotacao_do_dia', FloatField())
+    )
+
+    if btc_dashboard.exists():
+        datas, tipos, valores, satoshis, cotacoes = (list(col) for col in zip(*btc_dashboard))
+
+    return {
+        'datas_transacoes': datas,
+        'tipos_transacoes': tipos,
+        'valores_transacoes': valores,
+        'satoshis_transacoes': satoshis,
+        'cotacoes_transacoes': cotacoes
     }
