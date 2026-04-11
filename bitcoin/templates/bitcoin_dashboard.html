@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}
+    BIT-APP - Dashboard
+{% endblock %}
+{% block content %}
+<body>
+    <h1>TESTE</h1>
+    <p>{{ total_saidas }}</p>
+    <p>{{ total_entradas }}</p>
+    <p>{{ total_gasto_btc }}</p>
+    <p>{{ total_liquido_btc }}</p>
+    <p>{{ envio_btc_total }}</p>
+    <p>{{ envio_btc_liquido }}</p>
+    <p>{{ total_satoshis_comprados }}</p>
+    <p>{{ total_satoshis_enviados }}</p>
+
+	<div id='myDiv'><!-- Plotly chart will be drawn inside this DIV --></div>
+</body>
+{% endblock %}
+
+<script>
+    var data = [
+        {
+            x: ['giraffes', 'orangutans', 'monkeys'],
+            y: [20, 14, 23],
+            type: 'bar'
+        }
+    ];
+
+Plotly.newPlot('myDiv', data);
+</script>

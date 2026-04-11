@@ -5,13 +5,15 @@ from django.db import IntegrityError, transaction
 from django.shortcuts import render
 from bitcoin.models import TransacaoBTC
 from django.views.generic import ListView
-
+from app.metrics import obter_metricas_dashboard
 
 class TransacaoListView(ListView):
     model = TransacaoBTC
     template_name = 'bitcoin_list.html'
     context_object_name = 'transacoes'
 
+def DashboardView(request):
+    return render(request, 'bitcoin_dashboard.html', context=obter_metricas_dashboard())
 
 def Bitcoin_UploadView(request):
     if request.method == 'POST' and request.FILES.get('arquivo'):
@@ -89,6 +91,6 @@ def Bitcoin_UploadView(request):
             f"Importação finalizada: {transacoes_salvas} salvos, {transacoes_ignoradas} ignorados"
         )
 
-        return render(request, 'bitcoin_upload.html')
+        return render(request, 'bitcoin_dashboard.html')
 
     return render(request, 'bitcoin_upload.html')
