@@ -104,7 +104,11 @@
 
     <!-- Gráfico -->
     <div class="card border rounded p-3 mb-4">
-        <div id="myDiv" style="background-color: white; border-radius: 8px; min-height: 700px;"></div>
+        <div id="Gráfico_compras" style="background-color: white; border-radius: 8px; min-height: 700px;"></div>
+    </div>
+
+    <div class="card border rounded p-3 mb-4">
+        <div id="Gráfico_movimentação" style="background-color: white; border-radius: 8px;"></div>
     </div>
 
     {{ datas_transacoes|json_script:"datas" }}
@@ -115,13 +119,14 @@
 </div>
 
 <script>
+    // dados
     const datas_transacoes = JSON.parse(document.getElementById('datas').textContent);
     const tipos_transacoes = JSON.parse(document.getElementById('tipos').textContent);
     const valores_transacoes = JSON.parse(document.getElementById('valores').textContent);
     const satoshis_transacoes = JSON.parse(document.getElementById('satoshis').textContent);
     const cotacoes_transacoes = JSON.parse(document.getElementById('cotacoes').textContent);
-
-    var data = [
+    // config grafico de compras
+    var data_grafico_compras = [
         {
             x: datas_transacoes,
             y: valores_transacoes,
@@ -129,12 +134,49 @@
         }
     ];
 
-    var layout = {
+    var layout_grafico_compras = {
+        title: {
+            text: 'Compras Registradas'
+        },
         paper_bgcolor: 'white',
         plot_bgcolor: 'white',
         font: { color: '#333' }
     };
 
-    Plotly.newPlot('myDiv', data, layout);
+    Plotly.newPlot(
+        'Gráfico_compras',
+        data_grafico_compras, 
+        layout_grafico_compras
+    );
+    // config grafico de movimentacao
+    var data = [{
+        values: [16, 15, 12, 6, 5, 4, 42],
+        labels: ['US', 'China', 'European Union', 'Russian Federation', 'Brazil', 'India', 'Rest of World' ],
+        domain: {column: 0},
+        name: 'Movimentações',
+        hoverinfo: 'label+percent+name',
+        hole: .4,
+        type: 'pie'
+        },{
+        values: [27, 11, 25, 8, 1, 3, 25],
+        labels: ['US', 'China', 'European Union', 'Russian Federation', 'Brazil', 'India', 'Rest of World' ],
+        textposition: 'inside',
+        domain: {column: 1},
+        name: 'Tipos',
+        hoverinfo: 'label+percent+name',
+        hole: .4,
+        type: 'pie'
+    }];
+
+    var layout = {
+        title: {
+            text: 'Movimentações e Tipos'
+        },
+        showlegend: false,
+        grid: {rows: 1, columns: 2}
+    };
+
+    Plotly.newPlot('Gráfico_movimentação', data, layout);
+
 </script>
 {% endblock %}
