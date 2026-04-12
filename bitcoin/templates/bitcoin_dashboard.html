@@ -149,23 +149,43 @@
         layout_grafico_compras
     );
     // config grafico de movimentacao
+    const tipo_transacao_compra = tipos_transacoes.filter(
+        item => item === 'compra'
+    );
+
+    const tipo_transacao_compra_recorrente = tipos_transacoes.filter(
+        item => item === 'compra_recorrente'
+    );
+
     var data = [{
-        values: [16, 15, 12, 6, 5, 4, 42],
-        labels: ['US', 'China', 'European Union', 'Russian Federation', 'Brazil', 'India', 'Rest of World' ],
+        values: [tipo_transacao_compra.length, tipo_transacao_compra_recorrente.length],
+        labels: ['Compra', 'Compra Recorrente'],
         domain: {column: 0},
         name: 'Movimentações',
         hoverinfo: 'label+percent+name',
         hole: .4,
-        type: 'pie'
-        },{
-        values: [27, 11, 25, 8, 1, 3, 25],
-        labels: ['US', 'China', 'European Union', 'Russian Federation', 'Brazil', 'India', 'Rest of World' ],
+        type: 'pie',
+        marker: {
+            colors: [
+                '#ff8000', 
+                '#000000',
+            ]
+        }
+    },{
+        values: [27, 11],
+        labels: ['Entrada', 'Saida',],
         textposition: 'inside',
         domain: {column: 1},
         name: 'Tipos',
         hoverinfo: 'label+percent+name',
         hole: .4,
-        type: 'pie'
+        type: 'pie',
+        marker: {
+            colors: [
+                '#ff8000', 
+                '#000000',
+            ]
+        }
     }];
 
     var layout = {
