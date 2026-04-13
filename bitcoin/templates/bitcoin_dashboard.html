@@ -4,14 +4,14 @@
 {% endblock %}
 {% block content %}
 <div class="container-fluid py-4">
+    <!-- Métricas -->
     <div class="mb-0 fw-semibold text-warning d-flex align-items-center gap-2">
         <h5 class="fw-semibold">Métricas</h5>
     </div>
 
-    <!-- Financeiro + BTC lado a lado -->
     <div class="row g-3 mb-4">
 
-        <!-- Coluna Financeiro -->
+        <!-- Coluna 1: Financeiro -->
         <div class="col-12 col-md-3">
             <p class="text-muted small fw-semibold mb-2">FINANCEIRO</p>
             <div class="d-flex flex-column gap-3">
@@ -34,68 +34,65 @@
             </div>
         </div>
 
-        <!-- Coluna BTC -->
-        <div class="col-12 col-md-9">
-
-            <!-- Compras BTC -->
+        <!-- Coluna 2: Compras BTC -->
+        <div class="col-12 col-md-3">
             <p class="text-muted small fw-semibold mb-2">COMPRAS BTC</p>
-            <div class="row g-3 mb-3">
-                <div class="col-6 col-sm-6 col-md-3">
-                    <div class="card border rounded p-3 text-center">
-                        <p class="text-muted small mb-1">Total Gasto</p>
-                        <p class="fw-semibold fs-5 text-danger mb-0">R$ {{ total_gasto_btc }}</p>
-                    </div>
+            <div class="d-flex flex-column gap-3">
+                <div class="card border rounded p-3 text-center">
+                    <p class="text-muted small mb-1">Total Gasto</p>
+                    <p class="fw-semibold fs-5 text-danger mb-0">R$ {{ total_gasto_btc }}</p>
                 </div>
-                <div class="col-6 col-sm-6 col-md-3">
-                    <div class="card border rounded p-3 text-center">
-                        <p class="text-muted small mb-1">Total Líquido</p>
-                        <p class="fw-semibold fs-5 text-success mb-0">R$ {{ total_liquido_btc }}</p>
-                    </div>
+                <div class="card border rounded p-3 text-center">
+                    <p class="text-muted small mb-1">Total Líquido</p>
+                    <p class="fw-semibold fs-5 text-success mb-0">R$ {{ total_liquido_btc }}</p>
                 </div>
-                <div class="col-6 col-sm-6 col-md-3">
-                    <div class="card border rounded p-3 text-center">
-                        <p class="text-muted small mb-1">Taxas Pagas</p>
-                        <p class="fw-semibold fs-5 mb-0">R$ {{ taxas_pagas_compra }}</p>
-                    </div>
-                </div>
-                <div class="col-6 col-sm-6 col-md-3">
-                    <div class="card border rounded p-3 text-center">
-                        <p class="text-muted small mb-1">Satoshis Comprados</p>
-                        <p class="fw-semibold fs-5 text-warning mb-0">{{ total_satoshis_comprados }}</p>
-                    </div>
+                <div class="card border rounded p-3 text-center">
+                    <p class="text-muted small mb-1">Taxas Pagas</p>
+                    <p class="fw-semibold fs-5 mb-0">R$ {{ taxas_pagas_compra }}</p>
                 </div>
             </div>
-
-            <!-- Envios BTC -->
-            <p class="text-muted small fw-semibold mb-2" style="margin-top: 8.2%;">ENVIOS BTC</p>
-            <div class="row g-3">
-                <div class="col-6 col-sm-6 col-md-3">
-                    <div class="card border rounded p-3 text-center">
-                        <p class="text-muted small mb-1">Total Enviado</p>
-                        <p class="fw-semibold fs-5 text-danger mb-0">R$ {{ envio_btc_total }}</p>
-                    </div>
-                </div>
-                <div class="col-6 col-sm-6 col-md-3">
-                    <div class="card border rounded p-3 text-center">
-                        <p class="text-muted small mb-1">Total Líquido Enviado</p>
-                        <p class="fw-semibold fs-5 text-success mb-0">R$ {{ envio_btc_liquido }}</p>
-                    </div>
-                </div>
-                <div class="col-6 col-sm-6 col-md-3">
-                    <div class="card border rounded p-3 text-center">
-                        <p class="text-muted small mb-1">Taxas Pagas no Envio</p>
-                        <p class="fw-semibold fs-5 mb-0">R$ {{ taxas_pagas_envio }}</p>
-                    </div>
-                </div>
-                <div class="col-6 col-sm-6 col-md-3">
-                    <div class="card border rounded p-3 text-center">
-                        <p class="text-muted small mb-1">Satoshis Enviados</p>
-                        <p class="fw-semibold fs-5 text-warning mb-0">{{ total_satoshis_enviados }}</p>
-                    </div>
-                </div>
-            </div>
-
         </div>
+
+        <!-- Coluna 3: Envios BTC -->
+        <div class="col-12 col-md-3">
+            <p class="text-muted small fw-semibold mb-2">ENVIOS BTC</p>
+            <div class="d-flex flex-column gap-3">
+                <div class="card border rounded p-3 text-center">
+                    <p class="text-muted small mb-1">Total Enviado</p>
+                    <p class="fw-semibold fs-5 text-danger mb-0">R$ {{ envio_btc_total }}</p>
+                </div>
+                <div class="card border rounded p-3 text-center">
+                    <p class="text-muted small mb-1">Total Líq. Enviado</p>
+                    <p class="fw-semibold fs-5 text-success mb-0">R$ {{ envio_btc_liquido }}</p>
+                </div>
+                <div class="card border rounded p-3 text-center">
+                    <p class="text-muted small mb-1">Taxas Pagas no Envio</p>
+                    <p class="fw-semibold fs-5 mb-0">R$ {{ taxas_pagas_envio }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coluna 4: Satoshis & Preço -->
+        <div class="col-12 col-md-3">
+            <p class="text-muted small fw-semibold mb-2">SATOSHIS & PREÇO</p>
+            <div class="d-flex flex-column gap-3">
+                <div class="card border rounded p-3 text-center">
+                    <p class="text-muted small mb-1">Satoshis Comprados</p>
+                    <p class="fw-semibold fs-5 text-warning mb-0">{{ total_satoshis_comprados }}</p>
+                </div>
+                <div class="card border rounded p-3 text-center">
+                    <p class="text-muted small mb-1">Satoshis Enviados</p>
+                    <p class="fw-semibold fs-5 text-warning mb-0">{{ total_satoshis_enviados }}</p>
+                </div>
+                <div class="card border rounded p-3 text-center">
+                    <p class="text-muted small mb-1">Preço Médio</p>
+                    <p class="fw-semibold fs-5 mb-0">R$ 400.000</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
     </div>
 
     <div class="mb-0 fw-semibold text-warning d-flex align-items-center gap-2">
@@ -153,7 +150,7 @@
 
     var layout_grafico_compras = {
         title: {
-            text: 'Compras Registradas'
+            text: 'Histórico Financeiro'
         },
         paper_bgcolor: 'white',
         plot_bgcolor: 'white',
