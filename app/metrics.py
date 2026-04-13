@@ -24,6 +24,42 @@ def obter_saldo():
         'saldo': saldo,
     }
 
+def obter_informacoes_financeiras():
+    entradas = Entradas.objects.all().values_list(
+        'data', 
+        'valor',
+        'categoria', 
+    ) # buscar data, valor e categoria das entradas
+    saidas = Saidas.objects.all().values_list(
+        'data', 
+        'valor',
+        'categoria',
+    ) # buscar data, valor e categoria das saidas
+
+    data_entrada, valor_entrada, categoria_entrada = [], [], [] # criar listas
+    data_saida, valor_saida, categoria_saida = [], [], [] # criar listas
+
+    if entradas.exists(): # se existir entradas converte em listas
+        data_entrada, valor_entrada, categoria_entrada = (list(col) for col in zip(*entradas))
+
+    if saidas.exists(): # se existir saidas converte em listas
+        data_saida, valor_saida, categoria_saida = (list(col) for col in zip(*saidas))
+
+    if data_entrada: # se existir data aplica formato
+        data_entrada = [d.strftime('%d/%m/%Y') for d in data_entrada]
+    
+    if data_saida: # se existir data aplica formato
+        data_saida = [d.strftime('%d/%m/%Y') for d in data_saida]
+
+    return {
+        'data_entrada': data_entrada,
+        'valor_entrada': valor_entrada,
+        'categoria_entrada': categoria_entrada,
+
+        'data_saida': data_saida,
+        'valor_saida': valor_saida,
+        'categoria_saida': categoria_saida
+    }
 
 def obter_metricas():
 

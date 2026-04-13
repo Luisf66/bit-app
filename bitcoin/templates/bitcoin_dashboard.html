@@ -106,6 +106,11 @@
         <div id="Gráfico_compras" style="min-height: 500px;"></div>
     </div>
 
+    <!-- Gráfico de Barras -->
+    <div class="card border rounded p-3 mb-4">
+        <div id="Gráfico_financeiro" style="min-height: 500px;"></div>
+    </div>
+
     <!-- Gráficos Donut -->
     <div class="row g-3 mb-4">
         <div class="col-12 col-md-6">
@@ -129,7 +134,16 @@
 {{ cotacoes_transacoes|json_script:"cotacoes" }}
 {{ movimentacoes_transacoes|json_script:"movimentacoes" }}
 
+{{ data_entrada|json_script:"data_entrada" }}
+{{ valor_entrada|json_script:"valor_entrada" }}
+{{ categoria_entrada|json_script:"categoria_entrada" }}
+{{ data_saida|json_script:"data_saida" }}
+{{ valor_saida|json_script:"valor_saida" }}
+{{ categoria_saida|json_script:"categoria_saida" }}
+
+
 <script>
+    // variaveis com dados do Dashboard BTC
     const datas_transacoes = JSON.parse(document.getElementById('datas').textContent);
     const tipos_transacoes = JSON.parse(document.getElementById('tipos').textContent);
     const valores_transacoes = JSON.parse(document.getElementById('valores').textContent);
@@ -149,6 +163,15 @@
     const textColor = isDark ? '#e5e5e5' : '#333333';
     const gridColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
 
+    // variaveis com dados Dashboard Financeiro
+    const data_entrada = JSON.parse(document.getElementById('data_entrada').textContent);
+    const valor_entrada = JSON.parse(document.getElementById('valor_entrada').textContent);
+    const categoria_entrada = JSON.parse(document.getElementById('categoria_entrada').textContent);
+    const data_saida = JSON.parse(document.getElementById('data_saida').textContent);
+    const valor_saida = JSON.parse(document.getElementById('valor_saida').textContent);
+    const categoria_saida = JSON.parse(document.getElementById('categoria_saida').textContent);
+    
+
     // Gráfico de barras
     Plotly.newPlot('Gráfico_compras', [{
         x: datas_transacoes,
@@ -160,7 +183,7 @@
         },
         hovertemplate: '<b>%{x}</b><br>R$ %{y:,.2f}<extra></extra>'
     }], {
-        title: { text: 'Histórico Financeiro', font: { color: textColor, size: 14 } },
+        title: { text: 'Histórico Financeiro Crypto', font: { color: textColor, size: 14 } },
         paper_bgcolor: bgColor,
         plot_bgcolor: bgColor,
         font: { color: textColor, family: 'inherit' },
@@ -223,5 +246,68 @@
         hoverinfo: 'label+percent',
         textinfo: 'none'
     }], donutLayout('Movim.'), plotlyConfig);
+
+
+    // Gráfico de barras
+    Plotly.newPlot('Gráfico_financeiro', [
+    {
+        x: data_entrada,
+        y: valor_entrada,
+        type: 'scatter',
+        mode: 'lines+markers',
+        name: 'Entradas',
+        line: {
+        color: '#22c55e',
+        width: 2
+        },
+        marker: {
+        color: '#22c55e',
+        size: 5,
+        opacity: 0.85
+        },
+        hovertemplate: '<b>%{x}</b><br>R$ %{y:,.2f}<extra></extra>'
+    },
+    {
+        x: data_saida,
+        y: valor_saida,
+        type: 'scatter',
+        mode: 'lines+markers',
+        name: 'Saídas',
+        line: {
+        color: '#ef4444',
+        width: 2,
+        dash: 'dot'
+        },
+        marker: {
+        color: '#ef4444',
+        size: 5,
+        opacity: 0.85
+        },
+        hovertemplate: '<b>%{x}</b><br>R$ %{y:,.2f}<extra></extra>'
+    }
+    ], {
+    title: { text: 'Histórico Financeiro', font: { color: textColor, size: 14 } },
+    paper_bgcolor: bgColor,
+    plot_bgcolor: bgColor,
+    font: { color: textColor, family: 'inherit' },
+    margin: { t: 40, r: 20, b: 60, l: 60 },
+    legend: {
+        orientation: 'h',
+        x: 0.5,
+        xanchor: 'center',
+        y: -0.15
+    },
+    xaxis: {
+        showticklabels: false,
+        showgrid: false,
+        linecolor: gridColor
+    },
+    yaxis: {
+        gridcolor: gridColor,
+        tickprefix: 'R$ ',
+        tickfont: { size: 11 },
+        linecolor: gridColor
+    }
+    }, plotlyConfig);
 </script>
 {% endblock %}

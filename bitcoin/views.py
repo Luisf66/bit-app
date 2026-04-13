@@ -15,6 +15,8 @@ class TransacaoListView(ListView):
 def DashboardView(request):
     saldo = metrics.obter_saldo()
 
+    informacoes_financeiras = metrics.obter_informacoes_financeiras()
+
     metricas_btc = metrics.obter_metricas()
 
     dashboard_btc = metrics.obter_dashboard()
@@ -23,6 +25,14 @@ def DashboardView(request):
         'total_saidas': saldo['total_saidas'],
         'total_entradas': saldo['total_entradas'],
         'saldo': saldo['saldo'],
+
+        'data_entrada': informacoes_financeiras['data_entrada'],
+        'valor_entrada': informacoes_financeiras['valor_entrada'],
+        'categoria_entrada': informacoes_financeiras['categoria_entrada'],
+
+        'data_saida': informacoes_financeiras['data_saida'],
+        'valor_saida': informacoes_financeiras['valor_saida'],
+        'categoria_saida': informacoes_financeiras['categoria_saida'],
 
         'total_gasto_btc': metricas_btc['total_gasto_btc'],
         'total_liquido_btc': metricas_btc['total_liquido_btc'],
