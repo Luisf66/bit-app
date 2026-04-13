@@ -104,7 +104,7 @@
 
     <!-- Gráfico -->
     <div class="card border rounded p-3 mb-4">
-        <div id="Gráfico_compras" style="background-color: white; border-radius: 8px; min-height: 700px;"></div>
+        <div id="Gráfico_compras" style="background-color: white; border-radius: 8px; min-height: 800px;"></div>
     </div>
 
     <div class="card border rounded p-3 mb-4">
@@ -116,6 +116,8 @@
     {{ valores_transacoes|json_script:"valores" }}
     {{ satoshis_transacoes|json_script:"satoshis" }}
     {{ cotacoes_transacoes|json_script:"cotacoes" }}
+    {{ movimentacoes_transacoes|json_script:"movimentacoes" }}
+
 </div>
 
 <script>
@@ -125,6 +127,21 @@
     const valores_transacoes = JSON.parse(document.getElementById('valores').textContent);
     const satoshis_transacoes = JSON.parse(document.getElementById('satoshis').textContent);
     const cotacoes_transacoes = JSON.parse(document.getElementById('cotacoes').textContent);
+    const movimentacoes_transacoes = JSON.parse(document.getElementById('movimentacoes').textContent);
+    // separação de compra e compra recorrente
+    const tipo_transacao_compra = tipos_transacoes.filter(
+        item => item === 'compra'
+    );
+    const tipo_transacao_compra_recorrente = tipos_transacoes.filter(
+        item => item === 'compra_recorrente'
+    );
+    // separação de entrada e saida
+    const movimentacao_transacao_entrada = movimentacoes_transacoes.filter(
+        item => item === 'entrada'
+    );
+    const movimentacao_transacao_saida = movimentacoes_transacoes.filter(
+        item => item === 'saida'
+    );
     // config grafico de compras
     var data_grafico_compras = [
         {
@@ -149,14 +166,6 @@
         layout_grafico_compras
     );
     // config grafico de movimentacao
-    const tipo_transacao_compra = tipos_transacoes.filter(
-        item => item === 'compra'
-    );
-
-    const tipo_transacao_compra_recorrente = tipos_transacoes.filter(
-        item => item === 'compra_recorrente'
-    );
-
     var data = [{
         values: [tipo_transacao_compra.length, tipo_transacao_compra_recorrente.length],
         labels: ['Compra', 'Compra Recorrente'],
@@ -172,7 +181,7 @@
             ]
         }
     },{
-        values: [27, 11],
+        values: [movimentacao_transacao_entrada.length, movimentacao_transacao_saida.length],
         labels: ['Entrada', 'Saida',],
         textposition: 'inside',
         domain: {column: 1},

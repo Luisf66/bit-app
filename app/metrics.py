@@ -66,8 +66,15 @@ def obter_dashboard():
         Cast('cotacao_do_dia', FloatField())
     )
 
+    movimentacoes = TransacaoBTC.objects.filter(
+        tipo__in=['compra_recorrente', 'compra', 'envio_onchain']
+    ).values_list('movimentacao')
+
     if btc_dashboard.exists():
         datas, tipos, valores, satoshis, cotacoes = (list(col) for col in zip(*btc_dashboard))
+
+    if movimentacoes:
+        movimentacoes = [m[0] for m in movimentacoes]
 
     if datas:
         datas = [d.strftime('%d/%m/%Y %H:%M:%S') for d in datas]
@@ -77,5 +84,6 @@ def obter_dashboard():
         'tipos_transacoes': tipos,
         'valores_transacoes': valores,
         'satoshis_transacoes': satoshis,
-        'cotacoes_transacoes': cotacoes
+        'cotacoes_transacoes': cotacoes,
+        'movimentacoes_transacoes': movimentacoes
     }

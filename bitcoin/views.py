@@ -40,6 +40,7 @@ def DashboardView(request):
         'valores_transacoes': dashboard_btc['valores_transacoes'],
         'satoshis_transacoes': dashboard_btc['satoshis_transacoes'],
         'cotacoes_transacoes': dashboard_btc['cotacoes_transacoes'],
+        'movimentacoes_transacoes': dashboard_btc['movimentacoes_transacoes'],
     }
 
     return render(request, 'bitcoin_dashboard.html', context)
