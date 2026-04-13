@@ -5,8 +5,12 @@
 {% block content %}
 <div class="container-fluid py-4">
     <!-- Métricas -->
-    <div class="mb-0 fw-semibold text-warning d-flex align-items-center gap-2">
-        <h5 class="fw-semibold">Métricas</h5>
+    <div class="mb-3 fw-semibold text-warning d-flex align-items-center gap-2">
+        <h5 class="fw-semibold mb-0">Métricas</h5>
+        <div class="card border rounded px-3 py-2 ms-auto d-flex flex-row align-items-center gap-2 mb-0">
+            <span class="text-muted small">Cotação BTC</span>
+            <span class="fw-semibold text-warning">R$ 386.000</span>
+        </div>
     </div>
 
     <div class="row g-3 mb-4">
@@ -92,117 +96,132 @@
         </div>
 
     </div>
-
-    </div>
-
-    <div class="mb-0 fw-semibold text-warning d-flex align-items-center gap-2">
+    <!-- Metrica / Dashboard -->
+    <div class="mb-0 fw-semibold text-warning d-flex align-items-center justify-content-center gap-2">
         <h5 class="fw-semibold">Dashboard</h5>
     </div>
 
-    <!-- Gráfico -->
+    <!-- Gráfico de Barras -->
     <div class="card border rounded p-3 mb-4">
-        <div id="Gráfico_compras" style="background-color: white; border-radius: 8px; min-height: 800px;"></div>
+        <div id="Gráfico_compras" style="min-height: 500px;"></div>
     </div>
 
-    <div class="card border rounded p-3 mb-4">
-        <div id="Gráfico_movimentação" style="background-color: white; border-radius: 8px;"></div>
-    </div>
-
-    {{ datas_transacoes|json_script:"datas" }}
-    {{ tipos_transacoes|json_script:"tipos" }}
-    {{ valores_transacoes|json_script:"valores" }}
-    {{ satoshis_transacoes|json_script:"satoshis" }}
-    {{ cotacoes_transacoes|json_script:"cotacoes" }}
-    {{ movimentacoes_transacoes|json_script:"movimentacoes" }}
-
+    <!-- Gráficos Donut -->
+    <div class="row g-3 mb-4">
+        <div class="col-12 col-md-6">
+            <div class="card border rounded p-3">
+                <p class="text-muted small fw-semibold mb-3">TIPOS DE COMPRA</p>
+                <div id="Gráfico_tipos" style="min-height: 280px;"></div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="card border rounded p-3">
+                <p class="text-muted small fw-semibold mb-3">MOVIMENTAÇÕES</p>
+                <div id="Gráfico_movimentação" style="min-height: 280px;"></div>
+            </div>
+        </div>
 </div>
 
+{{ datas_transacoes|json_script:"datas" }}
+{{ tipos_transacoes|json_script:"tipos" }}
+{{ valores_transacoes|json_script:"valores" }}
+{{ satoshis_transacoes|json_script:"satoshis" }}
+{{ cotacoes_transacoes|json_script:"cotacoes" }}
+{{ movimentacoes_transacoes|json_script:"movimentacoes" }}
+
 <script>
-    // dados
     const datas_transacoes = JSON.parse(document.getElementById('datas').textContent);
     const tipos_transacoes = JSON.parse(document.getElementById('tipos').textContent);
     const valores_transacoes = JSON.parse(document.getElementById('valores').textContent);
     const satoshis_transacoes = JSON.parse(document.getElementById('satoshis').textContent);
     const cotacoes_transacoes = JSON.parse(document.getElementById('cotacoes').textContent);
     const movimentacoes_transacoes = JSON.parse(document.getElementById('movimentacoes').textContent);
-    // separação de compra e compra recorrente
-    const tipo_transacao_compra = tipos_transacoes.filter(
-        item => item === 'compra'
-    );
-    const tipo_transacao_compra_recorrente = tipos_transacoes.filter(
-        item => item === 'compra_recorrente'
-    );
-    // separação de entrada e saida
-    const movimentacao_transacao_entrada = movimentacoes_transacoes.filter(
-        item => item === 'entrada'
-    );
-    const movimentacao_transacao_saida = movimentacoes_transacoes.filter(
-        item => item === 'saida'
-    );
-    // config grafico de compras
-    var data_grafico_compras = [
-        {
-            x: datas_transacoes,
-            y: valores_transacoes,
-            type: 'bar'
-        }
-    ];
 
-    var layout_grafico_compras = {
-        title: {
-            text: 'Histórico Financeiro'
+    const qtd_compra = tipos_transacoes.filter(i => i === 'compra').length;
+    const qtd_compra_recorrente = tipos_transacoes.filter(i => i === 'compra_recorrente').length;
+    const qtd_entrada = movimentacoes_transacoes.filter(i => i === 'entrada').length;
+    const qtd_saida = movimentacoes_transacoes.filter(i => i === 'saida').length;
+
+    const plotlyConfig = { responsive: true, displayModeBar: false };
+
+    const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const bgColor = 'rgba(0,0,0,0)';
+    const textColor = isDark ? '#e5e5e5' : '#333333';
+    const gridColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
+
+    // Gráfico de barras
+    Plotly.newPlot('Gráfico_compras', [{
+        x: datas_transacoes,
+        y: valores_transacoes,
+        type: 'bar',
+        marker: {
+            color: '#ff8000',
+            opacity: 0.85
         },
-        paper_bgcolor: 'white',
-        plot_bgcolor: 'white',
-        font: { color: '#333' }
-    };
+        hovertemplate: '<b>%{x}</b><br>R$ %{y:,.2f}<extra></extra>'
+    }], {
+        title: { text: 'Histórico Financeiro', font: { color: textColor, size: 14 } },
+        paper_bgcolor: bgColor,
+        plot_bgcolor: bgColor,
+        font: { color: textColor, family: 'inherit' },
+        margin: { t: 40, r: 20, b: 60, l: 60 },
+        xaxis: {
+            showticklabels: false,
+            showgrid: false,
+            linecolor: gridColor
+        },
+        yaxis: {
+            gridcolor: gridColor,
+            tickprefix: 'R$ ',
+            tickfont: { size: 11 },
+            linecolor: gridColor
+        }
+    }, plotlyConfig);
 
-    Plotly.newPlot(
-        'Gráfico_compras',
-        data_grafico_compras, 
-        layout_grafico_compras
-    );
-    // config grafico de movimentacao
-    var data = [{
-        values: [tipo_transacao_compra.length, tipo_transacao_compra_recorrente.length],
+    // Donut config base
+    const donutLayout = (label) => ({
+        paper_bgcolor: bgColor,
+        plot_bgcolor: bgColor,
+        font: { color: textColor, family: 'inherit' },
+        margin: { t: 10, r: 10, b: 10, l: 10 },
+        showlegend: true,
+        legend: {
+            orientation: 'v',
+            x: 1,
+            y: 0.5,
+            xanchor: 'left',
+            font: { size: 12 }
+        },
+        annotations: [{
+            text: label,
+            x: 0.5, y: 0.5,
+            font: { size: 13, color: textColor },
+            showarrow: false
+        }]
+    });
+
+    const donutColors = ['#ff8000', '#1a1a1a'];
+
+    // Gráfico tipos de compra
+    Plotly.newPlot('Gráfico_tipos', [{
+        values: [qtd_compra, qtd_compra_recorrente],
         labels: ['Compra', 'Compra Recorrente'],
-        domain: {column: 0},
-        name: 'Movimentações',
-        hoverinfo: 'label+percent+name',
-        hole: .4,
         type: 'pie',
-        marker: {
-            colors: [
-                '#ff8000', 
-                '#000000',
-            ]
-        }
-    },{
-        values: [movimentacao_transacao_entrada.length, movimentacao_transacao_saida.length],
-        labels: ['Entrada', 'Saida',],
-        textposition: 'inside',
-        domain: {column: 1},
-        name: 'Tipos',
-        hoverinfo: 'label+percent+name',
-        hole: .4,
+        hole: 0.6,
+        marker: { colors: donutColors },
+        hoverinfo: 'label+percent',
+        textinfo: 'none'
+    }], donutLayout('Compras'), plotlyConfig);
+
+    // Gráfico movimentações
+    Plotly.newPlot('Gráfico_movimentação', [{
+        values: [qtd_entrada, qtd_saida],
+        labels: ['Entrada', 'Saída'],
         type: 'pie',
-        marker: {
-            colors: [
-                '#ff8000', 
-                '#000000',
-            ]
-        }
-    }];
-
-    var layout = {
-        title: {
-            text: 'Movimentações e Tipos'
-        },
-        showlegend: false,
-        grid: {rows: 1, columns: 2}
-    };
-
-    Plotly.newPlot('Gráfico_movimentação', data, layout);
-
+        hole: 0.6,
+        marker: { colors: donutColors },
+        hoverinfo: 'label+percent',
+        textinfo: 'none'
+    }], donutLayout('Movim.'), plotlyConfig);
 </script>
 {% endblock %}
