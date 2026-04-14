@@ -5,7 +5,10 @@ from django.db import IntegrityError, transaction
 from django.shortcuts import render
 from bitcoin.models import TransacaoBTC
 from django.views.generic import ListView
+
 from app import metrics
+from bitcoin.utils import get_btc_price, get_wallet_info
+
 
 class TransacaoListView(ListView):
     model = TransacaoBTC
@@ -13,15 +16,18 @@ class TransacaoListView(ListView):
     context_object_name = 'transacoes'
 
 def DashboardView(request):
+    cotacao_dia = get_btc_price()
+    informacoes_carteira = get_wallet_info()
     saldo = metrics.obter_saldo()
-
     informacoes_financeiras = metrics.obter_informacoes_financeiras()
-
     metricas_btc = metrics.obter_metricas()
-
     dashboard_btc = metrics.obter_dashboard()
 
+    print(f"informacoes_carteira: {informacoes_carteira}") 
+
     context = {
+        'cotacao_dia': cotacao_dia,
+
         'total_saidas': saldo['total_saidas'],
         'total_entradas': saldo['total_entradas'],
         'saldo': saldo['saldo'],
