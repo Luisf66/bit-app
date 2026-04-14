@@ -16,41 +16,45 @@ class TransacaoListView(ListView):
     context_object_name = 'transacoes'
 
 def DashboardView(request):
+    carteira = request.GET.get('carteira', '').strip()
+    informacoes_carteira = None
+    calculo_saldo_btc_brl = 0
+
     cotacao_dia = get_btc_price()
-    informacoes_carteira = get_wallet_info()
+
     saldo = metrics.obter_saldo()
     informacoes_financeiras = metrics.obter_informacoes_financeiras()
     metricas_btc = metrics.obter_metricas()
     dashboard_btc = metrics.obter_dashboard()
 
-    print(f"informacoes_carteira: {informacoes_carteira}") 
+    if carteira: # verifica se a carteira foi buscada
+        informacoes_carteira = get_wallet_info(carteira) # busca informacoes da carteira
+        if informacoes_carteira.get('saldo_btc'): # se for uma carteira valida
+            cotacao_dia = float(cotacao_dia.replace('.', '').replace(',', '.')) # converte cotacao para float
+            calculo_saldo_btc_brl = round(informacoes_carteira['saldo_btc'] * cotacao_dia, 2) # calcula o saldo da carteira em reais
 
     context = {
+        'carteira_buscada': carteira,
+        'informacoes_carteira': informacoes_carteira,
+        'saldo_btc_brl': calculo_saldo_btc_brl,
         'cotacao_dia': cotacao_dia,
-
         'total_saidas': saldo['total_saidas'],
         'total_entradas': saldo['total_entradas'],
         'saldo': saldo['saldo'],
-
         'data_entrada': informacoes_financeiras['data_entrada'],
         'valor_entrada': informacoes_financeiras['valor_entrada'],
         'categoria_entrada': informacoes_financeiras['categoria_entrada'],
-
         'data_saida': informacoes_financeiras['data_saida'],
         'valor_saida': informacoes_financeiras['valor_saida'],
         'categoria_saida': informacoes_financeiras['categoria_saida'],
-
         'total_gasto_btc': metricas_btc['total_gasto_btc'],
         'total_liquido_btc': metricas_btc['total_liquido_btc'],
         'taxas_pagas_compra': metricas_btc['taxas_pagas_compra'],
-
         'envio_btc_total': metricas_btc['envio_btc_total'],
         'envio_btc_liquido': metricas_btc['envio_btc_liquido'],
         'taxas_pagas_envio': metricas_btc['taxas_pagas_envio'],
-
         'total_satoshis_comprados': metricas_btc['total_satoshis_comprados'],
         'total_satoshis_enviados': metricas_btc['total_satoshis_enviados'],
-
         'datas_transacoes': dashboard_btc['datas_transacoes'],
         'tipos_transacoes': dashboard_btc['tipos_transacoes'],
         'valores_transacoes': dashboard_btc['valores_transacoes'],
