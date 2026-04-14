@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}
+    BIT-APP - Excluir Saída
+{% endblock %}
+{% block content %}
+<div class="container py-4" style="max-width: 700px; margin-left: 15%;">
+
+    <div class="card border rounded p-4">
+        <h5 class="fw-semibold text-center mb-4">Excluir Saída</h5>
+
+        <div class="alert alert-danger small mb-3 text-center">
+            Essa ação não pode ser desfeita.
+        </div>
+
+        <p class="mb-3 small text-muted text-center">Você está prestes a excluir a seguinte saída:</p>
+
+        <table class="table table-sm table-bordered small mb-4">
+            <tr>
+                <td class="text-muted fw-semibold text-center" style="width: 35%;">Data</td>
+                <td class="text-center">{{ object.data|date:"d/m/Y" }}</td>
+            </tr>
+            <tr>
+                <td class="text-muted fw-semibold text-center">Categoria</td>
+                <td class="text-center"><span class="badge text-bg-success fw-normal">{{ object.categoria }}</span></td>
+            </tr>
+            <tr>
+                <td class="text-muted fw-semibold text-center">Descrição</td>
+                <td class="text-center">{{ object.descricao }}</td>
+            </tr>
+            <tr>
+                <td class="text-muted fw-semibold text-center">Valor</td>
+                <td class="text-center fw-semibold text-success">R$ {{ object.valor }}</td>
+            </tr>
+        </table>
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="d-flex gap-2 justify-content-between mt-3">
+                <a href="{% url 'saidas:saidas-list' %}" class="btn btn-sm btn-outline-secondary">← Voltar</a>
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-sm btn-danger">Confirmar exclusão</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

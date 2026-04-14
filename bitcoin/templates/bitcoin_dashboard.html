@@ -1,0 +1,313 @@
+{% extends 'base.html' %}
+{% block title %}
+    BIT-APP - Dashboard
+{% endblock %}
+{% block content %}
+<div class="container-fluid py-4">
+    <!-- Métricas -->
+    <div class="mb-3 fw-semibold text-warning d-flex align-items-center gap-2">
+        <h5 class="fw-semibold mb-0">Métricas</h5>
+        <div class="card border rounded px-3 py-2 ms-auto d-flex flex-row align-items-center gap-2 mb-0">
+            <span class="text-muted small">Cotação BTC</span>
+            <span class="fw-semibold text-warning">R$ 386.000</span>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-4">
+
+        <!-- Coluna 1: Financeiro -->
+        <div class="col-12 col-md-3">
+            <p class="text-muted small fw-semibold mb-2">FINANCEIRO</p>
+            <div class="d-flex flex-column gap-3">
+                <div class="card border rounded p-3 text-center">
+                    <p class="text-muted small mb-1">Entradas</p>
+                    <p class="fw-semibold fs-5 text-success mb-0">R$ {{ total_entradas }}</p>
+                </div>
+                <div class="card border rounded p-3 text-center">
+                    <p class="text-muted small mb-1">Saídas</p>
+                    <p class="fw-semibold fs-5 text-danger mb-0">R$ {{ total_saidas }}</p>
+                </div>
+                <div class="card border rounded p-3 text-center">
+                    <p class="text-muted small mb-1">Saldo</p>
+                    {% if saldo > 0 %}
+                        <p class="fw-semibold fs-5 text-success mb-0">R$ {{ saldo }}</p>
+                    {% else %}
+                        <p class="fw-semibold fs-5 text-danger mb-0">R$ {{ saldo }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Coluna 2: Compras BTC -->
+        <div class="col-12 col-md-3">
+            <p class="text-muted small fw-semibold mb-2">COMPRAS BTC</p>
+            <div class="d-flex flex-column gap-3">
+                <div class="card border rounded p-3 text-center">
+                    <p class="text-muted small mb-1">Total Gasto</p>
+                    <p class="fw-semibold fs-5 text-danger mb-0">R$ {{ total_gasto_btc }}</p>
+                </div>
+                <div class="card border rounded p-3 text-center">
+                    <p class="text-muted small mb-1">Total Líquido</p>
+                    <p class="fw-semibold fs-5 text-success mb-0">R$ {{ total_liquido_btc }}</p>
+                </div>
+                <div class="card border rounded p-3 text-center">
+                    <p class="text-muted small mb-1">Taxas Pagas</p>
+                    <p class="fw-semibold fs-5 mb-0">R$ {{ taxas_pagas_compra }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coluna 3: Envios BTC -->
+        <div class="col-12 col-md-3">
+            <p class="text-muted small fw-semibold mb-2">ENVIOS BTC</p>
+            <div class="d-flex flex-column gap-3">
+                <div class="card border rounded p-3 text-center">
+                    <p class="text-muted small mb-1">Total Enviado</p>
+                    <p class="fw-semibold fs-5 text-danger mb-0">R$ {{ envio_btc_total }}</p>
+                </div>
+                <div class="card border rounded p-3 text-center">
+                    <p class="text-muted small mb-1">Total Líq. Enviado</p>
+                    <p class="fw-semibold fs-5 text-success mb-0">R$ {{ envio_btc_liquido }}</p>
+                </div>
+                <div class="card border rounded p-3 text-center">
+                    <p class="text-muted small mb-1">Taxas Pagas no Envio</p>
+                    <p class="fw-semibold fs-5 mb-0">R$ {{ taxas_pagas_envio }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coluna 4: Satoshis & Preço -->
+        <div class="col-12 col-md-3">
+            <p class="text-muted small fw-semibold mb-2">SATOSHIS & PREÇO</p>
+            <div class="d-flex flex-column gap-3">
+                <div class="card border rounded p-3 text-center">
+                    <p class="text-muted small mb-1">Satoshis Comprados</p>
+                    <p class="fw-semibold fs-5 text-warning mb-0">{{ total_satoshis_comprados }}</p>
+                </div>
+                <div class="card border rounded p-3 text-center">
+                    <p class="text-muted small mb-1">Satoshis Enviados</p>
+                    <p class="fw-semibold fs-5 text-warning mb-0">{{ total_satoshis_enviados }}</p>
+                </div>
+                <div class="card border rounded p-3 text-center">
+                    <p class="text-muted small mb-1">Preço Médio</p>
+                    <p class="fw-semibold fs-5 mb-0">R$ 400.000</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- Metrica / Dashboard -->
+    <div class="mb-0 fw-semibold text-warning d-flex align-items-center justify-content-center gap-2">
+        <h5 class="fw-semibold">Dashboard</h5>
+    </div>
+
+    <!-- Gráfico de Barras -->
+    <div class="card border rounded p-3 mb-4">
+        <div id="Gráfico_compras" style="min-height: 500px;"></div>
+    </div>
+
+    <!-- Gráfico de Barras -->
+    <div class="card border rounded p-3 mb-4">
+        <div id="Gráfico_financeiro" style="min-height: 500px;"></div>
+    </div>
+
+    <!-- Gráficos Donut -->
+    <div class="row g-3 mb-4">
+        <div class="col-12 col-md-6">
+            <div class="card border rounded p-3">
+                <p class="text-muted small fw-semibold mb-3">TIPOS DE COMPRA</p>
+                <div id="Gráfico_tipos" style="min-height: 280px;"></div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="card border rounded p-3">
+                <p class="text-muted small fw-semibold mb-3">MOVIMENTAÇÕES</p>
+                <div id="Gráfico_movimentação" style="min-height: 280px;"></div>
+            </div>
+        </div>
+</div>
+
+{{ datas_transacoes|json_script:"datas" }}
+{{ tipos_transacoes|json_script:"tipos" }}
+{{ valores_transacoes|json_script:"valores" }}
+{{ satoshis_transacoes|json_script:"satoshis" }}
+{{ cotacoes_transacoes|json_script:"cotacoes" }}
+{{ movimentacoes_transacoes|json_script:"movimentacoes" }}
+
+{{ data_entrada|json_script:"data_entrada" }}
+{{ valor_entrada|json_script:"valor_entrada" }}
+{{ categoria_entrada|json_script:"categoria_entrada" }}
+{{ data_saida|json_script:"data_saida" }}
+{{ valor_saida|json_script:"valor_saida" }}
+{{ categoria_saida|json_script:"categoria_saida" }}
+
+
+<script>
+    // variaveis com dados do Dashboard BTC
+    const datas_transacoes = JSON.parse(document.getElementById('datas').textContent);
+    const tipos_transacoes = JSON.parse(document.getElementById('tipos').textContent);
+    const valores_transacoes = JSON.parse(document.getElementById('valores').textContent);
+    const satoshis_transacoes = JSON.parse(document.getElementById('satoshis').textContent);
+    const cotacoes_transacoes = JSON.parse(document.getElementById('cotacoes').textContent);
+    const movimentacoes_transacoes = JSON.parse(document.getElementById('movimentacoes').textContent);
+
+    const qtd_compra = tipos_transacoes.filter(i => i === 'compra').length;
+    const qtd_compra_recorrente = tipos_transacoes.filter(i => i === 'compra_recorrente').length;
+    const qtd_entrada = movimentacoes_transacoes.filter(i => i === 'entrada').length;
+    const qtd_saida = movimentacoes_transacoes.filter(i => i === 'saida').length;
+
+    const plotlyConfig = { responsive: true, displayModeBar: false };
+
+    const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const bgColor = 'rgba(0,0,0,0)';
+    const textColor = isDark ? '#e5e5e5' : '#333333';
+    const gridColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
+
+    // variaveis com dados Dashboard Financeiro
+    const data_entrada = JSON.parse(document.getElementById('data_entrada').textContent);
+    const valor_entrada = JSON.parse(document.getElementById('valor_entrada').textContent);
+    const categoria_entrada = JSON.parse(document.getElementById('categoria_entrada').textContent);
+    const data_saida = JSON.parse(document.getElementById('data_saida').textContent);
+    const valor_saida = JSON.parse(document.getElementById('valor_saida').textContent);
+    const categoria_saida = JSON.parse(document.getElementById('categoria_saida').textContent);
+    
+
+    // Gráfico de barras
+    Plotly.newPlot('Gráfico_compras', [{
+        x: datas_transacoes,
+        y: valores_transacoes,
+        type: 'bar',
+        marker: {
+            color: '#ff8000',
+            opacity: 0.85
+        },
+        hovertemplate: '<b>%{x}</b><br>R$ %{y:,.2f}<extra></extra>'
+    }], {
+        title: { text: 'Histórico Financeiro Crypto', font: { color: textColor, size: 14 } },
+        paper_bgcolor: bgColor,
+        plot_bgcolor: bgColor,
+        font: { color: textColor, family: 'inherit' },
+        margin: { t: 40, r: 20, b: 60, l: 60 },
+        xaxis: {
+            showticklabels: false,
+            showgrid: false,
+            linecolor: gridColor
+        },
+        yaxis: {
+            gridcolor: gridColor,
+            tickprefix: 'R$ ',
+            tickfont: { size: 11 },
+            linecolor: gridColor
+        }
+    }, plotlyConfig);
+
+    // Donut config base
+    const donutLayout = (label) => ({
+        paper_bgcolor: bgColor,
+        plot_bgcolor: bgColor,
+        font: { color: textColor, family: 'inherit' },
+        margin: { t: 10, r: 10, b: 10, l: 10 },
+        showlegend: true,
+        legend: {
+            orientation: 'v',
+            x: 1,
+            y: 0.5,
+            xanchor: 'left',
+            font: { size: 12 }
+        },
+        annotations: [{
+            text: label,
+            x: 0.5, y: 0.5,
+            font: { size: 13, color: textColor },
+            showarrow: false
+        }]
+    });
+
+    const donutColors = ['#ff8000', '#1a1a1a'];
+
+    // Gráfico tipos de compra
+    Plotly.newPlot('Gráfico_tipos', [{
+        values: [qtd_compra, qtd_compra_recorrente],
+        labels: ['Compra', 'Compra Recorrente'],
+        type: 'pie',
+        hole: 0.6,
+        marker: { colors: donutColors },
+        hoverinfo: 'label+percent',
+        textinfo: 'none'
+    }], donutLayout('Compras'), plotlyConfig);
+
+    // Gráfico movimentações
+    Plotly.newPlot('Gráfico_movimentação', [{
+        values: [qtd_entrada, qtd_saida],
+        labels: ['Entrada', 'Saída'],
+        type: 'pie',
+        hole: 0.6,
+        marker: { colors: donutColors },
+        hoverinfo: 'label+percent',
+        textinfo: 'none'
+    }], donutLayout('Movim.'), plotlyConfig);
+
+
+    // Gráfico de barras
+    Plotly.newPlot('Gráfico_financeiro', [
+    {
+        x: data_entrada,
+        y: valor_entrada,
+        type: 'scatter',
+        mode: 'lines+markers',
+        name: 'Entradas',
+        line: {
+        color: '#22c55e',
+        width: 2
+        },
+        marker: {
+        color: '#22c55e',
+        size: 5,
+        opacity: 0.85
+        },
+        hovertemplate: '<b>%{x}</b><br>R$ %{y:,.2f}<extra></extra>'
+    },
+    {
+        x: data_saida,
+        y: valor_saida,
+        type: 'scatter',
+        mode: 'lines+markers',
+        name: 'Saídas',
+        line: {
+        color: '#ef4444',
+        width: 2,
+        dash: 'dot'
+        },
+        marker: {
+        color: '#ef4444',
+        size: 5,
+        opacity: 0.85
+        },
+        hovertemplate: '<b>%{x}</b><br>R$ %{y:,.2f}<extra></extra>'
+    }
+    ], {
+    title: { text: 'Histórico Financeiro', font: { color: textColor, size: 14 } },
+    paper_bgcolor: bgColor,
+    plot_bgcolor: bgColor,
+    font: { color: textColor, family: 'inherit' },
+    margin: { t: 40, r: 20, b: 60, l: 60 },
+    legend: {
+        orientation: 'h',
+        x: 0.5,
+        xanchor: 'center',
+        y: -0.15
+    },
+    xaxis: {
+        showticklabels: false,
+        showgrid: false,
+        linecolor: gridColor
+    },
+    yaxis: {
+        gridcolor: gridColor,
+        tickprefix: 'R$ ',
+        tickfont: { size: 11 },
+        linecolor: gridColor
+    }
+    }, plotlyConfig);
+</script>
+{% endblock %}
