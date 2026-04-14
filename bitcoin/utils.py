@@ -25,5 +25,5 @@ def get_wallet_info(address):
         }
     except:
         return {
-            "Carteira nao encontrada": "Verifique o endereço da carteira"
+            "erro": "Verifique o endereço da carteira"
         }
