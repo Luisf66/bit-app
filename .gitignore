@@ -16,3 +16,7 @@ venv/
 
 # OS
 .DS_Store
+
+#imagens
+*.png
+*.svg
