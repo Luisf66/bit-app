@@ -33,6 +33,8 @@ def DashboardView(request):
             cotacao_dia = float(cotacao_dia.replace('.', '').replace(',', '.')) # converte cotacao para float
             calculo_saldo_btc_brl = round(informacoes_carteira['saldo_btc'] * cotacao_dia, 2) # calcula o saldo da carteira em reais
 
+    preco_medio = metrics.obter_preco_medio()
+
     context = {
         'carteira_buscada': carteira,
         'informacoes_carteira': informacoes_carteira,
@@ -41,6 +43,7 @@ def DashboardView(request):
         'total_saidas': saldo['total_saidas'],
         'total_entradas': saldo['total_entradas'],
         'saldo': saldo['saldo'],
+        'preco_medio': preco_medio,
         'data_entrada': informacoes_financeiras['data_entrada'],
         'valor_entrada': informacoes_financeiras['valor_entrada'],
         'categoria_entrada': informacoes_financeiras['categoria_entrada'],
