@@ -4,12 +4,74 @@
 {% endblock %}
 {% block content %}
 <div class="container-fluid py-4">
+    <!-- Campo de Busca de Carteira -->
+    <div class="mb-4">
+        <div class="card border rounded p-3">
+            <h6 class="fw-semibold text-warning mb-3">
+                <i class="bi bi-search me-2"></i>Buscar Carteira
+            </h6>
+            <form method="GET" action="">
+                <div class="d-flex gap-2">
+                    <input 
+                        type="text" 
+                        name="carteira" 
+                        class="form-control bg-dark text-light border-secondary" 
+                        placeholder="Digite o endereço da carteira BTC..."
+                        value="{{ carteira_buscada|default:'' }}"
+                    >
+                    <button type="submit" class="btn btn-warning fw-semibold px-4">
+                        Buscar
+                    </button>
+                    {% if carteira_buscada %}
+                    <a href="?" class="btn btn-outline-secondary">
+                        Limpar
+                    </a>
+                    {% endif %}
+                </div>
+            </form>
+
+            {% if informacoes_carteira.saldo_btc %}
+            <div class="mt-3 border-top border-secondary pt-3">
+                <p class="text-muted small fw-semibold mb-3">INFORMAÇÕES DA CARTEIRA</p>
+                <div class="row g-2">
+                    <div class="col-4">
+                        <div class="bg-dark rounded border border-secondary p-3 text-center">
+                            <p class="text-muted small mb-1">Saldo BTC</p>
+                            <p class="fw-semibold text-warning mb-0">₿ {{ informacoes_carteira.saldo_btc }}</p>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="bg-dark rounded border border-secondary p-3 text-center">
+                            <p class="text-muted small mb-1">Saldo BTC-BRL</p>
+                            <p class="fw-semibold text-success mb-0">R$ {{ saldo_btc_brl }}</p>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="bg-dark rounded border border-secondary p-3 text-center">
+                            <p class="text-muted small mb-1">Total de Transações</p>
+                            <p class="fw-semibold text-light mb-0">{{ informacoes_carteira.total_transacoes }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% elif informacoes_carteira.erro %}
+            <div class="mt-3 border-top border-secondary pt-3">
+                <p class="text-muted small fw-semibold mb-3">INFORMAÇÕES DA CARTEIRA</p>
+                <div class="d-flex justify-content-center">
+                    <div class="bg-dark rounded border border-secondary p-3 text-center">
+                        <p class="text-muted small mb-0">Carteira Não Encontrada</p>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
     <!-- Métricas -->
     <div class="mb-3 fw-semibold text-warning d-flex align-items-center gap-2">
         <h5 class="fw-semibold mb-0">Métricas</h5>
         <div class="card border rounded px-3 py-2 ms-auto d-flex flex-row align-items-center gap-2 mb-0">
             <span class="text-muted small">Cotação BTC</span>
-            <span class="fw-semibold text-warning">R$ 386.000</span>
+            <span class="fw-semibold text-warning">R$ {{ cotacao_dia }}</span>
         </div>
     </div>
 
@@ -88,10 +150,17 @@
                     <p class="text-muted small mb-1">Satoshis Enviados</p>
                     <p class="fw-semibold fs-5 text-warning mb-0">{{ total_satoshis_enviados }}</p>
                 </div>
-                <div class="card border rounded p-3 text-center">
-                    <p class="text-muted small mb-1">Preço Médio</p>
-                    <p class="fw-semibold fs-5 mb-0">R$ 400.000</p>
-                </div>
+                {% if preco_medio > cotacao_dia %}
+                    <div class="card border rounded p-3 text-center">
+                        <p class="text-muted small mb-1">Preço Médio</p>
+                        <p class="fw-semibold fs-5 mb-0 text-danger">R$ {{ preco_medio }}</p>
+                    </div>
+                {% else %}
+                    <div class="card border rounded p-3 text-center">
+                        <p class="text-muted small mb-1">Preço Médio</p>
+                        <p class="fw-semibold fs-5 mb-0 text-success">R$ {{ preco_medio }}</p>
+                    </div>
+                {% endif %}
             </div>
         </div>
 
@@ -170,6 +239,55 @@
     const data_saida = JSON.parse(document.getElementById('data_saida').textContent);
     const valor_saida = JSON.parse(document.getElementById('valor_saida').textContent);
     const categoria_saida = JSON.parse(document.getElementById('categoria_saida').textContent);
+
+
+    // Agrupa valores pela mesma data para entradas
+    const agrupado_entrada = {};
+
+    for (let i = 0; i < data_entrada.length; i++) {
+        const data = data_entrada[i];
+        const valor = valor_entrada[i];
+
+        if (agrupado_entrada[data]) {
+            agrupado_entrada[data] += valor;
+        } else {
+            agrupado_entrada[data] = valor;
+        }
+    }
+
+    // Separa de volta em dois vetores ordenados por data
+    const datasUnicas = Object.keys(agrupado_entrada).sort((a, b) => {
+        const [dA, mA, aA] = a.split('/');
+        const [dB, mB, aB] = b.split('/');
+        return new Date(`${aA}-${mA}-${dA}`) - new Date(`${aB}-${mB}-${dB}`);
+    });
+
+    const data_entrada_final = datasUnicas;
+    const valor_entrada_final = datasUnicas.map(data => agrupado_entrada[data]);
+
+    // Agrupa valores pela mesma data para saidas
+    const agrupado_saida = {};
+
+    for (let i = 0; i < data_saida.length; i++) {
+        const data = data_saida[i];
+        const valor = valor_saida[i];
+
+        if (agrupado_saida[data]) {
+            agrupado_saida[data] += valor;
+        } else {
+            agrupado_saida[data] = valor;
+        }
+    }
+
+    // Separa de volta em dois vetores ordenados por data
+    const datasUnicas_saidas = Object.keys(agrupado_saida).sort((a, b) => {
+        const [dA, mA, aA] = a.split('/');
+        const [dB, mB, aB] = b.split('/');
+        return new Date(`${aA}-${mA}-${dA}`) - new Date(`${aB}-${mB}-${dB}`);
+    });
+
+    const data_saida_final = datasUnicas_saidas;
+    const valor_saida_final = datasUnicas_saidas.map(data => agrupado_saida[data]);
     
 
     // Gráfico de barras
@@ -251,8 +369,8 @@
     // Gráfico de barras
     Plotly.newPlot('Gráfico_financeiro', [
     {
-        x: data_entrada,
-        y: valor_entrada,
+        x: data_entrada_final,
+        y: valor_entrada_final,
         type: 'scatter',
         mode: 'lines+markers',
         name: 'Entradas',
@@ -268,8 +386,8 @@
         hovertemplate: '<b>%{x}</b><br>R$ %{y:,.2f}<extra></extra>'
     },
     {
-        x: data_saida,
-        y: valor_saida,
+        x: data_saida_final,
+        y: valor_saida_final,
         type: 'scatter',
         mode: 'lines+markers',
         name: 'Saídas',
