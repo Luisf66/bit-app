@@ -1,0 +1,87 @@
+# .github/workflows/ci.yml
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"  # cacheia dependências entre execuções
+
+      - name: Instalar dependências
+        run: pip install -r requirements.txt
+
+      # ---------------------------------------------------------
+      # LINT — descomente quando quiser ativar
+      # Instale antes: pip install flake8 (adicione ao requirements)
+      # ---------------------------------------------------------
+      # - name: Lint (flake8)
+      #   run: flake8 . --max-line-length=120 --exclude=migrations
+
+      - name: Rodar migrações
+        env:
+          POSTGRES_DB: test_db
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          DEBUG: "True"
+          # DATABASE_LOCAL não é definida → vai cair no bloco do PostgreSQL
+        run: python manage.py migrate --noinput
+
+      - name: Rodar testes
+        env:
+          POSTGRES_DB: test_db
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          DEBUG: "True"
+        run: pytest
+
+      # ---------------------------------------------------------
+      # COVERAGE — descomente quando quiser ativar
+      # Instale antes: pip install pytest-cov (adicione ao requirements)
+      # ---------------------------------------------------------
+      # - name: Cobertura de testes
+      #   env:
+      #     DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
+      #     SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      #     DEBUG: "True"
+      #   run: pytest --cov=. --cov-report=xml --cov-fail-under=80
+      #
+      # - name: Upload do relatório de cobertura
+      #   uses: codecov/codecov-action@v4
+      #   with:
+      #     token: ${{ secrets.CODECOV_TOKEN }}
+      #     files: ./coverage.xml
