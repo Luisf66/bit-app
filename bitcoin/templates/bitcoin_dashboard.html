@@ -239,6 +239,55 @@
     const data_saida = JSON.parse(document.getElementById('data_saida').textContent);
     const valor_saida = JSON.parse(document.getElementById('valor_saida').textContent);
     const categoria_saida = JSON.parse(document.getElementById('categoria_saida').textContent);
+
+
+    // Agrupa valores pela mesma data para entradas
+    const agrupado_entrada = {};
+
+    for (let i = 0; i < data_entrada.length; i++) {
+        const data = data_entrada[i];
+        const valor = valor_entrada[i];
+
+        if (agrupado_entrada[data]) {
+            agrupado_entrada[data] += valor;
+        } else {
+            agrupado_entrada[data] = valor;
+        }
+    }
+
+    // Separa de volta em dois vetores ordenados por data
+    const datasUnicas = Object.keys(agrupado_entrada).sort((a, b) => {
+        const [dA, mA, aA] = a.split('/');
+        const [dB, mB, aB] = b.split('/');
+        return new Date(`${aA}-${mA}-${dA}`) - new Date(`${aB}-${mB}-${dB}`);
+    });
+
+    const data_entrada_final = datasUnicas;
+    const valor_entrada_final = datasUnicas.map(data => agrupado_entrada[data]);
+
+    // Agrupa valores pela mesma data para saidas
+    const agrupado_saida = {};
+
+    for (let i = 0; i < data_saida.length; i++) {
+        const data = data_saida[i];
+        const valor = valor_saida[i];
+
+        if (agrupado_saida[data]) {
+            agrupado_saida[data] += valor;
+        } else {
+            agrupado_saida[data] = valor;
+        }
+    }
+
+    // Separa de volta em dois vetores ordenados por data
+    const datasUnicas_saidas = Object.keys(agrupado_saida).sort((a, b) => {
+        const [dA, mA, aA] = a.split('/');
+        const [dB, mB, aB] = b.split('/');
+        return new Date(`${aA}-${mA}-${dA}`) - new Date(`${aB}-${mB}-${dB}`);
+    });
+
+    const data_saida_final = datasUnicas_saidas;
+    const valor_saida_final = datasUnicas_saidas.map(data => agrupado_saida[data]);
     
 
     // Gráfico de barras
@@ -320,8 +369,8 @@
     // Gráfico de barras
     Plotly.newPlot('Gráfico_financeiro', [
     {
-        x: data_entrada,
-        y: valor_entrada,
+        x: data_entrada_final,
+        y: valor_entrada_final,
         type: 'scatter',
         mode: 'lines+markers',
         name: 'Entradas',
@@ -337,8 +386,8 @@
         hovertemplate: '<b>%{x}</b><br>R$ %{y:,.2f}<extra></extra>'
     },
     {
-        x: data_saida,
-        y: valor_saida,
+        x: data_saida_final,
+        y: valor_saida_final,
         type: 'scatter',
         mode: 'lines+markers',
         name: 'Saídas',
