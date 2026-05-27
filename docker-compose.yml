@@ -9,6 +9,8 @@ services:
         - bit-app_db
       env_file:
         - .env
+      volumes:
+        - .:/bit-app 
       
     bit-app_db:
       image: postgres:15

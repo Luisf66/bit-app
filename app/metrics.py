@@ -2,7 +2,7 @@ from saidas.models import Saidas
 from entradas.models import Entradas
 from bitcoin.models import TransacaoBTC
 
-from django.db.models import Sum, Q, FloatField
+from django.db.models import Sum, Q, FloatField, Avg
 from django.db.models.functions import Cast
 from django.utils.formats import number_format
 
@@ -123,3 +123,18 @@ def obter_dashboard():
         'cotacoes_transacoes': cotacoes,
         'movimentacoes_transacoes': movimentacoes
     }
+
+def obter_preco_medio():
+    preco_medio = TransacaoBTC.objects.filter(
+        movimentacao='entrada',
+        tipo__in=['compra_recorrente', 'compra']
+    ).aggregate(
+        valor_liquido_total=Avg('valor_liquido'),
+        valor_satoshis_total=Avg('satoshis')
+    )
+
+    preco_medio_total = preco_medio['valor_liquido_total'] / preco_medio['valor_satoshis_total']
+
+    preco_medio_formatado = f'{preco_medio_total:,.2f}'.replace(',', 'X').replace('.', ',').replace('X', '.')
+
+    return preco_medio_formatado
