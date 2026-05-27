@@ -59,17 +59,20 @@ jobs:
           # DATABASE_LOCAL não é definida → vai cair no bloco do PostgreSQL
         run: python manage.py migrate --noinput
 
-      - name: Rodar testes
-        env:
-          POSTGRES_DB: test_db
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_HOST: localhost
-          POSTGRES_PORT: 5432
-          SECRET_KEY: ${{ secrets.SECRET_KEY }}
-          DEBUG: "True"
-          ALLOWED_HOSTS: "localhost,127.0.0.1"
-        run: pytest
+      # ---------------------------------------------------------
+      # TESTES — descomente quando tiver testes escritos
+      # ---------------------------------------------------------
+      # - name: Rodar testes
+      #   env:
+      #     POSTGRES_DB: test_db
+      #     POSTGRES_USER: postgres
+      #     POSTGRES_PASSWORD: postgres
+      #     POSTGRES_HOST: localhost
+      #     POSTGRES_PORT: 5432
+      #     SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      #     DEBUG: "True"
+      #     ALLOWED_HOSTS: "localhost,127.0.0.1"
+      #   run: pytest
 
       # ---------------------------------------------------------
       # COVERAGE — descomente quando quiser ativar
