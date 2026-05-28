@@ -115,6 +115,9 @@ def obter_dashboard():
     if datas:
         datas = [d.strftime('%d/%m/%Y %H:%M:%S') for d in datas]
 
+    datas.reverse()
+    valores.reverse()
+
     return {
         'datas_transacoes': datas,
         'tipos_transacoes': tipos,
