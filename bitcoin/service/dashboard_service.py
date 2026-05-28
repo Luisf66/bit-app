@@ -1,11 +1,12 @@
 from app import metrics
-from bitcoin.utils import get_btc_price, get_wallet_info
+from bitcoin.service.blockchain_service import BlockchainService, BlockchainAPIError
 
 
 class DashboardService:
 
     def __init__(self):
-        self.cotacao_dia = get_btc_price()
+        self.blockchain = BlockchainService()
+        self.cotacao_dia = self.blockchain.get_btc_price()
 
     def get_wallet_context(self, carteira: str) -> dict:
         """
@@ -17,7 +18,7 @@ class DashboardService:
         saldo_btc_brl = 0
 
         if carteira:
-            informacoes_carteira = get_wallet_info(carteira)
+            informacoes_carteira = self.blockchain.get_wallet_info(carteira)
 
             if informacoes_carteira and informacoes_carteira.get('saldo_btc'):
                 cotacao_float = float(
