@@ -8,7 +8,7 @@ from django.urls import path
 app_name = 'bitcoin'
 
 urlpatterns = [
-    path('upload/', views.Bitcoin_UploadView, name='bitcoin-upload'),
+    path('upload/', views.bitcoin_upload_view, name='bitcoin-upload'),
     path('list/', views.TransacaoListView.as_view(), name='bitcoin-list'),
     path('dashboard/', views.dashboard_view, name='bitcoin-dashboard'),
 ]
