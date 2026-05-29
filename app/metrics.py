@@ -56,9 +56,6 @@ def obter_informacoes_financeiras():
 
     valor_entrada_acumulada = list(itertools.accumulate(valor_entrada))
 
-    print(f'data_entrada: {data_entrada}')
-    print(f'valor_entrada: {valor_entrada}')
-
     return {
         'data_entrada': data_entrada,
         'valor_entrada': valor_entrada,
