@@ -175,6 +175,11 @@
         <div id="Gráfico_compras" style="min-height: 500px;"></div>
     </div>
 
+    <!-- Gráfico de Barras -->
+    <div class="card border rounded p-3 mb-4">
+        <div id="Gráfico_Saldo" style="min-height: 500px;"></div>
+    </div>
+
     <!-- Gráficos Donut -->
     <div class="row g-3 mb-4">
         <div class="col-12 col-md-6">
@@ -189,7 +194,7 @@
                 <div id="Gráfico_movimentação" style="min-height: 280px;"></div>
             </div>
         </div>
-</div>
+    </div>
 
 {{ datas_transacoes|json_script:"datas" }}
 {{ tipos_transacoes|json_script:"tipos" }}
@@ -198,14 +203,26 @@
 {{ cotacoes_transacoes|json_script:"cotacoes" }}
 {{ movimentacoes_transacoes|json_script:"movimentacoes" }}
 
+{{ data_entrada|json_script:"data_entrada" }}
+{{ valor_entrada_acumulada|json_script:"valor_entrada_acumulada" }}
+
 <script>
-    // variaveis com dados do Dashboard BTC
+    // data das transações BTC da BIPA
     const datas_transacoes = JSON.parse(document.getElementById('datas').textContent);
+    // tipo das transações BTC da BIPA
     const tipos_transacoes = JSON.parse(document.getElementById('tipos').textContent);
+    // valor das transações BTC da BIPA
     const valores_transacoes = JSON.parse(document.getElementById('valores').textContent);
+    // satoshis das transações BTC da BIPA
     const satoshis_transacoes = JSON.parse(document.getElementById('satoshis').textContent);
+    // cotação das transações BTC da BIPA
     const cotacoes_transacoes = JSON.parse(document.getElementById('cotacoes').textContent);
+    // movimentacoes das transações BTC da BIPA
     const movimentacoes_transacoes = JSON.parse(document.getElementById('movimentacoes').textContent);
+    // data das entradas/ganhos do usuario
+    const data_entrada = JSON.parse(document.getElementById('data_entrada').textContent);
+    // valor acumulado das entradas/ganhos do usuario
+    const valor_entrada_acumulada = JSON.parse(document.getElementById('valor_entrada_acumulada').textContent);
 
     const qtd_compra = tipos_transacoes.filter(i => i === 'compra').length;
     const qtd_compra_recorrente = tipos_transacoes.filter(i => i === 'compra_recorrente').length;
@@ -294,6 +311,16 @@
         hoverinfo: 'label+percent',
         textinfo: 'none'
     }], donutLayout('Movim.'), plotlyConfig);
+
+    var trace1 = {
+        x: data_entrada,
+        y: valor_entrada_acumulada,
+        type: 'scatter'
+    };
+
+    var data = [trace1];
+
+    Plotly.newPlot('Gráfico_Saldo', data);
 
 </script>
 {% endblock %}
