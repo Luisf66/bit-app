@@ -2,6 +2,8 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.views.generic import ListView
 
+from ai.agent import BitAppAgent
+
 from bitcoin.models import TransacaoBTC
 from bitcoin.service.dashboard_service import DashboardService
 from bitcoin.service.upload_service import BitcoinUploadService, CSVInvalidoError
@@ -16,6 +18,7 @@ def dashboard_view(request):
     carteira = request.GET.get('carteira', '')
     service = DashboardService()
     context = service.build_context(carteira)
+    BitAppAgent().invoke()
     return render(request, 'bitcoin_dashboard.html', context)
 
 def bitcoin_upload_view(request):
