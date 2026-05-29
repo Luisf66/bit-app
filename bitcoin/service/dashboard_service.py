@@ -48,10 +48,9 @@ class DashboardService:
             'saldo': saldo['saldo'],
             'data_entrada': info['data_entrada'],
             'valor_entrada': info['valor_entrada'],
-            'categoria_entrada': info['categoria_entrada'],
+            'valor_entrada_acumulada': info['valor_entrada_acumulada'],
             'data_saida': info['data_saida'],
             'valor_saida': info['valor_saida'],
-            'categoria_saida': info['categoria_saida'],
         }
 
     def get_btc_context(self) -> dict:

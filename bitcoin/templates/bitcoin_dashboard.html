@@ -177,24 +177,34 @@
 
     <!-- Gráfico de Barras -->
     <div class="card border rounded p-3 mb-4">
-        <div id="Gráfico_financeiro" style="min-height: 500px;"></div>
+        <div id="Gráfico_Saldo" style="min-height: 500px;"></div>
+    </div>
+
+    <!-- Gráfico de Barras -->
+    <div class="card border rounded p-3 mb-4">
+        <div id="Gráfico_Entrada" style="min-height: 500px;"></div>
+    </div>
+
+    <!-- Gráfico de Barras -->
+    <div class="card border rounded p-3 mb-4">
+        <div id="Gráfico_Retirada" style="min-height: 500px;"></div>
     </div>
 
     <!-- Gráficos Donut -->
     <div class="row g-3 mb-4">
         <div class="col-12 col-md-6">
             <div class="card border rounded p-3">
-                <p class="text-muted small fw-semibold mb-3">TIPOS DE COMPRA</p>
+                <p class="text-muted small fw-semibold mb-3">TIPOS DE COMPRA NA BIPA</p>
                 <div id="Gráfico_tipos" style="min-height: 280px;"></div>
             </div>
         </div>
         <div class="col-12 col-md-6">
             <div class="card border rounded p-3">
-                <p class="text-muted small fw-semibold mb-3">MOVIMENTAÇÕES</p>
+                <p class="text-muted small fw-semibold mb-3">MOVIMENTAÇÕES NA BIPA</p>
                 <div id="Gráfico_movimentação" style="min-height: 280px;"></div>
             </div>
         </div>
-</div>
+    </div>
 
 {{ datas_transacoes|json_script:"datas" }}
 {{ tipos_transacoes|json_script:"tipos" }}
@@ -205,20 +215,34 @@
 
 {{ data_entrada|json_script:"data_entrada" }}
 {{ valor_entrada|json_script:"valor_entrada" }}
-{{ categoria_entrada|json_script:"categoria_entrada" }}
+{{ valor_entrada_acumulada|json_script:"valor_entrada_acumulada" }}
+
 {{ data_saida|json_script:"data_saida" }}
 {{ valor_saida|json_script:"valor_saida" }}
-{{ categoria_saida|json_script:"categoria_saida" }}
-
 
 <script>
-    // variaveis com dados do Dashboard BTC
+    // data das transações BTC da BIPA
     const datas_transacoes = JSON.parse(document.getElementById('datas').textContent);
+    // tipo das transações BTC da BIPA
     const tipos_transacoes = JSON.parse(document.getElementById('tipos').textContent);
+    // valor das transações BTC da BIPA
     const valores_transacoes = JSON.parse(document.getElementById('valores').textContent);
+    // satoshis das transações BTC da BIPA
     const satoshis_transacoes = JSON.parse(document.getElementById('satoshis').textContent);
+    // cotação das transações BTC da BIPA
     const cotacoes_transacoes = JSON.parse(document.getElementById('cotacoes').textContent);
+    // movimentacoes das transações BTC da BIPA
     const movimentacoes_transacoes = JSON.parse(document.getElementById('movimentacoes').textContent);
+    // data das entradas/ganhos do usuario
+    const data_entrada = JSON.parse(document.getElementById('data_entrada').textContent);
+     // valor das entradas/ganhos do usuario
+    const valor_entrada = JSON.parse(document.getElementById('valor_entrada').textContent);
+    // valor acumulado das entradas/ganhos do usuario
+    const valor_entrada_acumulada = JSON.parse(document.getElementById('valor_entrada_acumulada').textContent);
+    // data das saidas/gastos do usuario
+    const data_saida = JSON.parse(document.getElementById('data_saida').textContent);
+     // valor das saidas/gastos do usuario
+    const valor_saida = JSON.parse(document.getElementById('valor_saida').textContent);
 
     const qtd_compra = tipos_transacoes.filter(i => i === 'compra').length;
     const qtd_compra_recorrente = tipos_transacoes.filter(i => i === 'compra_recorrente').length;
@@ -232,63 +256,6 @@
     const textColor = isDark ? '#e5e5e5' : '#333333';
     const gridColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
 
-    // variaveis com dados Dashboard Financeiro
-    const data_entrada = JSON.parse(document.getElementById('data_entrada').textContent);
-    const valor_entrada = JSON.parse(document.getElementById('valor_entrada').textContent);
-    const categoria_entrada = JSON.parse(document.getElementById('categoria_entrada').textContent);
-    const data_saida = JSON.parse(document.getElementById('data_saida').textContent);
-    const valor_saida = JSON.parse(document.getElementById('valor_saida').textContent);
-    const categoria_saida = JSON.parse(document.getElementById('categoria_saida').textContent);
-
-
-    // Agrupa valores pela mesma data para entradas
-    const agrupado_entrada = {};
-
-    for (let i = 0; i < data_entrada.length; i++) {
-        const data = data_entrada[i];
-        const valor = valor_entrada[i];
-
-        if (agrupado_entrada[data]) {
-            agrupado_entrada[data] += valor;
-        } else {
-            agrupado_entrada[data] = valor;
-        }
-    }
-
-    // Separa de volta em dois vetores ordenados por data
-    const datasUnicas = Object.keys(agrupado_entrada).sort((a, b) => {
-        const [dA, mA, aA] = a.split('/');
-        const [dB, mB, aB] = b.split('/');
-        return new Date(`${aA}-${mA}-${dA}`) - new Date(`${aB}-${mB}-${dB}`);
-    });
-
-    const data_entrada_final = datasUnicas;
-    const valor_entrada_final = datasUnicas.map(data => agrupado_entrada[data]);
-
-    // Agrupa valores pela mesma data para saidas
-    const agrupado_saida = {};
-
-    for (let i = 0; i < data_saida.length; i++) {
-        const data = data_saida[i];
-        const valor = valor_saida[i];
-
-        if (agrupado_saida[data]) {
-            agrupado_saida[data] += valor;
-        } else {
-            agrupado_saida[data] = valor;
-        }
-    }
-
-    // Separa de volta em dois vetores ordenados por data
-    const datasUnicas_saidas = Object.keys(agrupado_saida).sort((a, b) => {
-        const [dA, mA, aA] = a.split('/');
-        const [dB, mB, aB] = b.split('/');
-        return new Date(`${aA}-${mA}-${dA}`) - new Date(`${aB}-${mB}-${dB}`);
-    });
-
-    const data_saida_final = datasUnicas_saidas;
-    const valor_saida_final = datasUnicas_saidas.map(data => agrupado_saida[data]);
-    
 
     // Gráfico de barras
     Plotly.newPlot('Gráfico_compras', [{
@@ -365,67 +332,137 @@
         textinfo: 'none'
     }], donutLayout('Movim.'), plotlyConfig);
 
-
-    // Gráfico de barras
-    Plotly.newPlot('Gráfico_financeiro', [
-    {
-        x: data_entrada_final,
-        y: valor_entrada_final,
+    // Gráfico de Saldo Acumulado
+    Plotly.newPlot('Gráfico_Saldo', [{
+        x: data_entrada,
+        y: valor_entrada_acumulada,
         type: 'scatter',
-        mode: 'lines+markers',
-        name: 'Entradas',
+        mode: 'lines+markers',        // ← adiciona os pontos
         line: {
-        color: '#22c55e',
-        width: 2
+            color: '#00cc66',
+            width: 2
         },
-        marker: {
-        color: '#22c55e',
-        size: 5,
-        opacity: 0.85
+        marker: {                      // ← estilo dos pontos
+            color: '#00cc66',
+            size: 6,
+            symbol: 'circle',
+            line: {
+                color: '#ffffff',
+                width: 1
+            }
         },
+        fill: 'tozeroy',
+        fillcolor: 'rgba(0, 204, 102, 0.1)',
         hovertemplate: '<b>%{x}</b><br>R$ %{y:,.2f}<extra></extra>'
-    },
-    {
-        x: data_saida_final,
-        y: valor_saida_final,
-        type: 'scatter',
-        mode: 'lines+markers',
-        name: 'Saídas',
-        line: {
-        color: '#ef4444',
-        width: 2,
-        dash: 'dot'
+    }], {
+        title: { text: 'Ganho Total', font: { color: textColor, size: 14 } },
+        paper_bgcolor: bgColor,
+        plot_bgcolor: bgColor,
+        font: { color: textColor, family: 'inherit' },
+        margin: { t: 40, r: 20, b: 80, l: 60 },   // ← b maior para caber as datas
+        xaxis: {
+            showticklabels: true,                   // ← exibe as datas
+            showgrid: false,
+            linecolor: gridColor,
+            tickangle: -45,                         // ← inclina para não sobrepor
+            tickfont: { size: 10 },
+            tickformat: '%d/%m/%Y',                 // ← formato da data
         },
-        marker: {
-        color: '#ef4444',
-        size: 5,
-        opacity: 0.85
-        },
-        hovertemplate: '<b>%{x}</b><br>R$ %{y:,.2f}<extra></extra>'
-    }
-    ], {
-    title: { text: 'Histórico Financeiro', font: { color: textColor, size: 14 } },
-    paper_bgcolor: bgColor,
-    plot_bgcolor: bgColor,
-    font: { color: textColor, family: 'inherit' },
-    margin: { t: 40, r: 20, b: 60, l: 60 },
-    legend: {
-        orientation: 'h',
-        x: 0.5,
-        xanchor: 'center',
-        y: -0.15
-    },
-    xaxis: {
-        showticklabels: false,
-        showgrid: false,
-        linecolor: gridColor
-    },
-    yaxis: {
-        gridcolor: gridColor,
-        tickprefix: 'R$ ',
-        tickfont: { size: 11 },
-        linecolor: gridColor
-    }
+        yaxis: {
+            gridcolor: gridColor,
+            tickprefix: 'R$ ',
+            tickfont: { size: 11 },
+            linecolor: gridColor
+        }
     }, plotlyConfig);
+
+    // Gráfico de Entradas
+    Plotly.newPlot('Gráfico_Entrada', [{
+        x: data_entrada,
+        y: valor_entrada,
+        type: 'scatter',
+        mode: 'lines+markers',        // ← adiciona os pontos
+        line: {
+            color: '#00cc66',
+            width: 2
+        },
+        marker: {                      // ← estilo dos pontos
+            color: '#00cc66',
+            size: 6,
+            symbol: 'circle',
+            line: {
+                color: '#ffffff',
+                width: 1
+            }
+        },
+        fill: 'tozeroy',
+        fillcolor: 'rgba(0, 204, 102, 0.1)',
+        hovertemplate: '<b>%{x}</b><br>R$ %{y:,.2f}<extra></extra>'
+    }], {
+        title: { text: 'Gráfico de Ganhos', font: { color: textColor, size: 14 } },
+        paper_bgcolor: bgColor,
+        plot_bgcolor: bgColor,
+        font: { color: textColor, family: 'inherit' },
+        margin: { t: 40, r: 20, b: 80, l: 60 },   // ← b maior para caber as datas
+        xaxis: {
+            showticklabels: true,                   // ← exibe as datas
+            showgrid: false,
+            linecolor: gridColor,
+            tickangle: -45,                         // ← inclina para não sobrepor
+            tickfont: { size: 10 },
+            tickformat: '%d/%m/%Y',                 // ← formato da data
+        },
+        yaxis: {
+            gridcolor: gridColor,
+            tickprefix: 'R$ ',
+            tickfont: { size: 11 },
+            linecolor: gridColor
+        }
+    }, plotlyConfig);
+
+    // Gráfico de Retirada
+    Plotly.newPlot('Gráfico_Retirada', [{
+        x: data_saida,
+        y: valor_saida,
+        type: 'scatter',
+        mode: 'lines+markers',        // ← adiciona os pontos
+        line: {
+            color: '#cc0000',
+            width: 2
+        },
+        marker: {                      // ← estilo dos pontos
+            color: '#cc0000',
+            size: 6,
+            symbol: 'circle',
+            line: {
+                color: '#ffffff',
+                width: 1
+            }
+        },
+        fill: 'tozeroy',
+        fillcolor: 'rgba(204, 14, 0, 0.1)',
+        hovertemplate: '<b>%{x}</b><br>R$ %{y:,.2f}<extra></extra>'
+    }], {
+        title: { text: 'Gráfico de Gastos', font: { color: textColor, size: 14 } },
+        paper_bgcolor: bgColor,
+        plot_bgcolor: bgColor,
+        font: { color: textColor, family: 'inherit' },
+        margin: { t: 40, r: 20, b: 80, l: 60 },   // ← b maior para caber as datas
+        xaxis: {
+            showticklabels: true,                   // ← exibe as datas
+            showgrid: false,
+            linecolor: gridColor,
+            tickangle: -45,                         // ← inclina para não sobrepor
+            tickfont: { size: 10 },
+            tickformat: '%d/%m/%Y',                 // ← formato da data
+        },
+        yaxis: {
+            gridcolor: gridColor,
+            tickprefix: 'R$ ',
+            tickfont: { size: 11 },
+            linecolor: gridColor
+        }
+    }, plotlyConfig);
+
 </script>
 {% endblock %}

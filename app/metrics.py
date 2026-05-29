@@ -1,3 +1,4 @@
+import itertools
 from saidas.models import Saidas
 from entradas.models import Entradas
 from bitcoin.models import TransacaoBTC
@@ -24,41 +25,43 @@ def obter_saldo():
         'saldo': saldo,
     }
 
+
 def obter_informacoes_financeiras():
-    entradas = Entradas.objects.all().values_list(
-        'data', 
-        'valor',
-        'categoria', 
-    ) # buscar data, valor e categoria das entradas
-    saidas = Saidas.objects.all().values_list(
-        'data', 
-        'valor',
-        'categoria',
-    ) # buscar data, valor e categoria das saidas
+    entradas = (
+        Entradas.objects
+        .values('data')
+        .annotate(valor=Sum('valor'))
+        .order_by('data')
+    )
 
-    data_entrada, valor_entrada, categoria_entrada = [], [], [] # criar listas
-    data_saida, valor_saida, categoria_saida = [], [], [] # criar listas
+    saidas = (
+        Saidas.objects
+        .values('data')
+        .annotate(valor=Sum('valor'))
+        .order_by('data')
+    )
 
-    if entradas.exists(): # se existir entradas converte em listas
-        data_entrada, valor_entrada, categoria_entrada = (list(col) for col in zip(*entradas))
+    data_entrada, valor_entrada = [], []
+    data_saida, valor_saida = [], []
 
-    if saidas.exists(): # se existir saidas converte em listas
-        data_saida, valor_saida, categoria_saida = (list(col) for col in zip(*saidas))
+    if entradas.exists():
+        for entry in entradas:
+            data_entrada.append(entry['data'].strftime('%d/%m/%Y'))
+            valor_entrada.append(entry['valor'])
 
-    if data_entrada: # se existir data aplica formato
-        data_entrada = [d.strftime('%d/%m/%Y') for d in data_entrada]
-    
-    if data_saida: # se existir data aplica formato
-        data_saida = [d.strftime('%d/%m/%Y') for d in data_saida]
+    if saidas.exists():
+        for entry in saidas:
+            data_saida.append(entry['data'].strftime('%d/%m/%Y'))
+            valor_saida.append(entry['valor'])
+
+    valor_entrada_acumulada = list(itertools.accumulate(valor_entrada))
 
     return {
         'data_entrada': data_entrada,
         'valor_entrada': valor_entrada,
-        'categoria_entrada': categoria_entrada,
-
+        'valor_entrada_acumulada': valor_entrada_acumulada,
         'data_saida': data_saida,
         'valor_saida': valor_saida,
-        'categoria_saida': categoria_saida
     }
 
 def obter_metricas():
@@ -114,6 +117,9 @@ def obter_dashboard():
 
     if datas:
         datas = [d.strftime('%d/%m/%Y %H:%M:%S') for d in datas]
+
+    datas.reverse()
+    valores.reverse()
 
     return {
         'datas_transacoes': datas,
