@@ -62,7 +62,7 @@ class BitAppAgent:
 
         print('Iniciando chamada...')
         #print(f'Payload: {payload}')
-
+        '''
         response = requests.post(self.__base_url, json=payload, headers=headers)
         response.raise_for_status()
 
@@ -70,4 +70,4 @@ class BitAppAgent:
         result = response.json()["choices"][0]["message"]["content"]
         print(f'Resultado: {result}')
         return result
-    
+        '''

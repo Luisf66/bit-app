@@ -83,18 +83,18 @@
             <div class="d-flex flex-column gap-3">
                 <div class="card border rounded p-3 text-center">
                     <p class="text-muted small mb-1">Entradas</p>
-                    <p class="fw-semibold fs-5 text-success mb-0">R$ {{ total_entradas }}</p>
+                    <p class="fw-semibold fs-5 text-success mb-0">R$ {{ total_entradas|floatformat:2 }}</p>
                 </div>
                 <div class="card border rounded p-3 text-center">
                     <p class="text-muted small mb-1">Saídas</p>
-                    <p class="fw-semibold fs-5 text-danger mb-0">R$ {{ total_saidas }}</p>
+                    <p class="fw-semibold fs-5 text-danger mb-0">R$ {{ total_saidas|floatformat:2 }}</p>
                 </div>
                 <div class="card border rounded p-3 text-center">
                     <p class="text-muted small mb-1">Saldo</p>
                     {% if saldo > 0 %}
-                        <p class="fw-semibold fs-5 text-success mb-0">R$ {{ saldo }}</p>
+                        <p class="fw-semibold fs-5 text-success mb-0">R$ {{ saldo|floatformat:2 }}</p>
                     {% else %}
-                        <p class="fw-semibold fs-5 text-danger mb-0">R$ {{ saldo }}</p>
+                        <p class="fw-semibold fs-5 text-danger mb-0">R$ {{ saldo|floatformat:2 }}</p>
                     {% endif %}
                 </div>
             </div>

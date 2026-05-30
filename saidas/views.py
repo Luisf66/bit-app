@@ -41,6 +41,8 @@ class SaidasListView(ListView):
     model = Saidas
     template_name = 'saidas/saidas_list.html'
     context_object_name = 'saidas'
+    ordering = ['data']
+
 
 class SaidasUpdateView(UpdateView):
     model = Saidas
