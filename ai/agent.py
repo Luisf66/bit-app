@@ -1,12 +1,10 @@
 import json
 import requests
-import datetime
 from ai import prompt
+from ai.models import Prompt
 from bitcoin.service.dashboard_service import DashboardService
 
 from decouple import config
-from django.db.models import Sum, F
-from django.db.models.functions import ExtractMonth, TruncMonth
 
 
 class BitAppAgent:
@@ -26,17 +24,7 @@ class BitAppAgent:
            'total_entradas': dashboard_service.get_financeiro_context()['total_entradas'],
            'saldo': dashboard_service.get_financeiro_context()['saldo'],
        })
-    '''
-        return json.dumps({
-            'vendas_por_mes': list(vendas_por_mes),
-            'vendas_anuais': vendas_anuais,
-            'despesas_mensais': despesas_mensais,
-            'mensalidades': {
-                'referencias': [str(m.get('referencia')) for m in mensalidades_do_ano],
-                'valores_por_mes': valor_mensalidade,
-            },
-        }, default=str)
-        '''
+
 
     def invoke(self):
         
@@ -60,14 +48,15 @@ class BitAppAgent:
             "Content-Type": "application/json"
         }
 
-        print('Iniciando chamada...')
         #print(f'Payload: {payload}')
-        '''
+        
         response = requests.post(self.__base_url, json=payload, headers=headers)
         response.raise_for_status()
 
         # ✅ Formato OpenAI: choices[0].message.content
         result = response.json()["choices"][0]["message"]["content"]
-        print(f'Resultado: {result}')
+        #print(f'Resultado: {result}')
+        Prompt.objects.create(response=result)
+
         return result
-        '''
+        

@@ -164,6 +164,26 @@
             </div>
         </div>
 
+    <div class="accordion" id="accordionAnaliseIA">
+        <div class="accordion-item border-0">
+            <h2 class="accordion-header">
+            <button class="accordion-button collapsed fw-semibold text-warning"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapseAnalise"
+                    aria-expanded="false"
+                    aria-controls="collapseAnalise">
+                Análise da Dados — IA
+            </button>
+            </h2>
+            <div id="collapseAnalise" class="accordion-collapse collapse" data-bs-parent="#accordionAnaliseIA">
+            <div class="accordion-body">
+                {{ analise_ia|safe }}
+            </div>
+            </div>
+        </div>
+    </div>
+
     </div>
     <!-- Metrica / Dashboard -->
     <div class="mb-0 fw-semibold text-warning d-flex align-items-center justify-content-center gap-2">
