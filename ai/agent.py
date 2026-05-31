@@ -18,11 +18,21 @@ class BitAppAgent:
        Obtem os dados do dashboard para enviar para IA analisar
        """
        dashboard_service = DashboardService()
-       
+
        return json.dumps({
+           # gastos do usuario
            'total_saidas': dashboard_service.get_financeiro_context()['total_saidas'],
+           'data_saida': dashboard_service.get_financeiro_context()['data_saida'],
+           'valor_saida': dashboard_service.get_financeiro_context()['valor_saida'],
+           # ganhos do usuario
            'total_entradas': dashboard_service.get_financeiro_context()['total_entradas'],
+           'data_entrada': dashboard_service.get_financeiro_context()['data_entrada'],
+           'valor_entrada': dashboard_service.get_financeiro_context()['valor_entrada'],
+           # saldo do usuario
            'saldo': dashboard_service.get_financeiro_context()['saldo'],
+           # compra e envio de BTC na BIPA
+           'total_gasto_btc': dashboard_service.get_btc_context()['total_gasto_btc'],
+           'total_liquido_btc': dashboard_service.get_btc_context()['total_liquido_btc'],
        })
 
 
@@ -59,4 +69,3 @@ class BitAppAgent:
         Prompt.objects.create(response=result)
 
         return result
-        
