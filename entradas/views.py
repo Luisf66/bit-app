@@ -52,6 +52,7 @@ class EntradasListView(ListView):
     model = Entradas
     template_name = 'entradas/entradas_list.html'
     context_object_name = 'entradas'
+    ordering = ['data']
 
 class EntradasUpdateView(UpdateView):
     model = Entradas

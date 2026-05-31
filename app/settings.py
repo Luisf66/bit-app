@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 
     'django_extensions',
 
+    'ai',
     'bitcoin',
     'entradas',
     'saidas',
