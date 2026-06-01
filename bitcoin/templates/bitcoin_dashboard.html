@@ -2,13 +2,38 @@
 {% block title %}BIT-APP - Dashboard{% endblock %}
 {% block content %}
 
-<div class="py-4 px-6">
+<div class="py-6 px-8">
+
+  <!-- Header -->
+  <div class="mb-8">
+    <p class="text-zinc-500 text-xs font-semibold uppercase tracking-widest mb-1">Visão Geral</p>
+    <div class="flex items-center justify-between">
+      <h4 class="font-semibold text-white text-xl flex items-center gap-2 m-0">
+        <i class="bi bi-grid text-amber-500"></i> Dashboard
+      </h4>
+      <div class="flex items-center gap-3">
+
+        <!-- Botão privacidade -->
+        <button id="btn-privacidade" onclick="togglePrivacidade()"
+                class="flex items-center gap-2 bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2 text-amber-500">
+          <i id="icone-privacidade" class="bi bi-eye"></i>
+          <span id="texto-privacidade">Ocultar valores</span>
+        </button>
+
+        <div class="flex items-center gap-2 bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2">
+          <i class="bi bi-currency-bitcoin text-amber-500"></i>
+          <span class="text-zinc-400 text-xs">Cotação BTC</span>
+          <span class="font-semibold text-amber-400 text-sm">R$ {{ cotacao_dia }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Buscar Carteira -->
-  <div class="mb-6">
-    <div class="border border-zinc-700 rounded-lg p-4">
-      <h6 class="font-semibold text-amber-500 mb-3 flex items-center gap-2">
-        <i class="bi bi-search"></i> Buscar Carteira
+  <div class="mb-8">
+    <div class="bg-zinc-900 border border-zinc-700 rounded-xl p-5">
+      <h6 class="font-semibold text-white mb-4 flex items-center gap-2 text-sm">
+        <i class="bi bi-search text-amber-500"></i> Buscar Carteira BTC
       </h6>
       <form method="GET" action="">
         <div class="flex gap-2">
@@ -17,15 +42,15 @@
             name="carteira"
             placeholder="Digite o endereço da carteira BTC..."
             value="{{ carteira_buscada|default:'' }}"
-            class="flex-1 bg-zinc-800 border border-zinc-600 rounded px-3 py-2 text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:border-amber-500 transition-colors"
+            class="flex-1 bg-zinc-800 border border-zinc-600 rounded-lg px-4 py-2.5 text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:border-amber-500 transition-colors"
           >
           <button type="submit"
-                  class="bg-amber-500 hover:bg-amber-400 text-black font-semibold text-sm px-4 rounded transition-colors">
+                  class="bg-amber-500 hover:bg-amber-400 text-black font-semibold text-sm px-5 rounded-lg transition-colors">
             Buscar
           </button>
           {% if carteira_buscada %}
           <a href="?"
-             class="border border-zinc-600 hover:border-zinc-400 text-zinc-400 hover:text-white text-sm px-4 rounded flex items-center transition-colors no-underline">
+             class="border border-zinc-600 hover:border-zinc-400 text-zinc-400 hover:text-white text-sm px-4 rounded-lg flex items-center transition-colors no-underline">
             Limpar
           </a>
           {% endif %}
@@ -33,175 +58,194 @@
       </form>
 
       {% if informacoes_carteira.saldo_btc %}
-      <div class="mt-4 border-t border-zinc-700 pt-4">
-        <p class="text-zinc-500 text-xs font-semibold mb-3">INFORMAÇÕES DA CARTEIRA</p>
-        <div class="grid grid-cols-3 gap-2">
-          <div class="bg-zinc-800 rounded border border-zinc-700 p-3 text-center">
-            <p class="text-zinc-400 text-xs mb-1">Saldo BTC</p>
+      <div class="mt-4 pt-4 border-t border-zinc-800">
+        <p class="text-zinc-500 text-xs font-semibold uppercase tracking-widest mb-3">Informações da Carteira</p>
+        <div class="grid grid-cols-3 gap-3">
+          <div class="bg-zinc-800 rounded-lg border border-zinc-700 p-4 text-center">
+            <p class="text-zinc-500 text-xs mb-2">Saldo BTC</p>
             <p class="font-semibold text-amber-400 m-0">₿ {{ informacoes_carteira.saldo_btc }}</p>
           </div>
-          <div class="bg-zinc-800 rounded border border-zinc-700 p-3 text-center">
-            <p class="text-zinc-400 text-xs mb-1">Saldo BTC-BRL</p>
+          <div class="bg-zinc-800 rounded-lg border border-zinc-700 p-4 text-center">
+            <p class="text-zinc-500 text-xs mb-2">Saldo em BRL</p>
             <p class="font-semibold text-green-400 m-0">R$ {{ saldo_btc_brl }}</p>
           </div>
-          <div class="bg-zinc-800 rounded border border-zinc-700 p-3 text-center">
-            <p class="text-zinc-400 text-xs mb-1">Total de Transações</p>
+          <div class="bg-zinc-800 rounded-lg border border-zinc-700 p-4 text-center">
+            <p class="text-zinc-500 text-xs mb-2">Total de Transações</p>
             <p class="font-semibold text-white m-0">{{ informacoes_carteira.total_transacoes }}</p>
           </div>
         </div>
       </div>
       {% elif informacoes_carteira.erro %}
-      <div class="mt-4 border-t border-zinc-700 pt-4">
-        <p class="text-zinc-500 text-xs font-semibold mb-3">INFORMAÇÕES DA CARTEIRA</p>
-        <div class="flex justify-center">
-          <div class="bg-zinc-800 rounded border border-zinc-700 p-3 text-center">
-            <p class="text-zinc-400 text-xs m-0">Carteira Não Encontrada</p>
-          </div>
+      <div class="mt-4 pt-4 border-t border-zinc-800 flex justify-center">
+        <div class="bg-zinc-800 rounded-lg border border-zinc-700 px-6 py-3 text-center">
+          <i class="bi bi-exclamation-circle text-red-400 mb-1 block"></i>
+          <p class="text-zinc-400 text-xs m-0">Carteira não encontrada</p>
         </div>
       </div>
       {% endif %}
     </div>
   </div>
 
-  <!-- Header Métricas -->
-  <div class="flex items-center gap-2 mb-4">
-    <h5 class="font-semibold text-amber-500 m-0">Métricas</h5>
-    <div class="border border-zinc-700 rounded px-3 py-2 ml-auto flex items-center gap-2">
-      <span class="text-zinc-400 text-sm">Cotação BTC</span>
-      <span class="font-semibold text-amber-400">R$ {{ cotacao_dia }}</span>
+  <!-- Métricas -->
+  <div class="mb-8">
+    <p class="text-zinc-500 text-xs font-semibold uppercase tracking-widest mb-4">Métricas</p>
+    <div class="grid grid-cols-4 gap-4">
+
+      <!-- Financeiro -->
+      <div class="bg-zinc-900 border border-zinc-700 rounded-xl p-4">
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-7 h-7 rounded-lg bg-zinc-800 flex items-center justify-center">
+            <i class="bi bi-wallet2 text-amber-500" style="font-size: 13px;"></i>
+          </div>
+          <p class="text-zinc-400 text-xs font-semibold uppercase tracking-wider m-0">Financeiro</p>
+        </div>
+        <div class="flex flex-col gap-3">
+          <div class="flex justify-between items-center py-2 border-b border-zinc-800">
+            <p class="text-zinc-500 text-xs m-0">Entradas</p>
+            <p class="text-green-400 font-semibold text-sm m-0 valor-privado">R$ {{ total_entradas|floatformat:2 }}</p>
+          </div>
+          <div class="flex justify-between items-center py-2 border-b border-zinc-800">
+            <p class="text-zinc-500 text-xs m-0">Saídas</p>
+            <p class="text-red-400 font-semibold text-sm m-0 valor-privado">R$ {{ total_saidas|floatformat:2 }}</p>
+          </div>
+          <div class="flex justify-between items-center py-2">
+            <p class="text-zinc-500 text-xs m-0">Saldo</p>
+            {% if saldo > 0 %}
+            <p class="text-green-400 font-semibold text-sm m-0 valor-privado">R$ {{ saldo|floatformat:2 }}</p>
+            {% else %}
+            <p class="text-red-400 font-semibold text-sm m-0 valor-privado">R$ {{ saldo|floatformat:2 }}</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Compras BTC -->
+      <div class="bg-zinc-900 border border-zinc-700 rounded-xl p-4">
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-7 h-7 rounded-lg bg-zinc-800 flex items-center justify-center">
+            <i class="bi bi-cart3 text-amber-500" style="font-size: 13px;"></i>
+          </div>
+          <p class="text-zinc-400 text-xs font-semibold uppercase tracking-wider m-0">Compras BTC</p>
+        </div>
+        <div class="flex flex-col gap-3">
+          <div class="flex justify-between items-center py-2 border-b border-zinc-800">
+            <p class="text-zinc-500 text-xs m-0">Total Gasto</p>
+            <p class="text-red-400 font-semibold text-sm m-0 valor-privado">R$ {{ total_gasto_btc }}</p>
+          </div>
+          <div class="flex justify-between items-center py-2 border-b border-zinc-800">
+            <p class="text-zinc-500 text-xs m-0">Total Líquido</p>
+            <p class="text-green-400 font-semibold text-sm m-0 valor-privado">R$ {{ total_liquido_btc }}</p>
+          </div>
+          <div class="flex justify-between items-center py-2">
+            <p class="text-zinc-500 text-xs m-0">Taxas Pagas</p>
+            <p class="text-white font-semibold text-sm m-0 valor-privado">R$ {{ taxas_pagas_compra }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Envios BTC -->
+      <div class="bg-zinc-900 border border-zinc-700 rounded-xl p-4">
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-7 h-7 rounded-lg bg-zinc-800 flex items-center justify-center">
+            <i class="bi bi-send text-amber-500" style="font-size: 13px;"></i>
+          </div>
+          <p class="text-zinc-400 text-xs font-semibold uppercase tracking-wider m-0">Envios BTC</p>
+        </div>
+        <div class="flex flex-col gap-3">
+          <div class="flex justify-between items-center py-2 border-b border-zinc-800">
+            <p class="text-zinc-500 text-xs m-0">Total Enviado</p>
+            <p class="text-red-400 font-semibold text-sm m-0 valor-privado">R$ {{ envio_btc_total }}</p>
+          </div>
+          <div class="flex justify-between items-center py-2 border-b border-zinc-800">
+            <p class="text-zinc-500 text-xs m-0">Total Líq. Enviado</p>
+            <p class="text-green-400 font-semibold text-sm m-0 valor-privado">R$ {{ envio_btc_liquido }}</p>
+          </div>
+          <div class="flex justify-between items-center py-2">
+            <p class="text-zinc-500 text-xs m-0">Taxas no Envio</p>
+            <p class="text-white font-semibold text-sm m-0 valor-privado">R$ {{ taxas_pagas_envio }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Satoshis & Preço -->
+      <div class="bg-zinc-900 border border-zinc-700 rounded-xl p-4">
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-7 h-7 rounded-lg bg-zinc-800 flex items-center justify-center">
+            <i class="bi bi-currency-bitcoin text-amber-500" style="font-size: 13px;"></i>
+          </div>
+          <p class="text-zinc-400 text-xs font-semibold uppercase tracking-wider m-0">Satoshis & Preço</p>
+        </div>
+        <div class="flex flex-col gap-3">
+          <div class="flex justify-between items-center py-2 border-b border-zinc-800">
+            <p class="text-zinc-500 text-xs m-0">Sats Comprados</p>
+            <p class="text-amber-400 font-semibold text-sm m-0 valor-privado">{{ total_satoshis_comprados }}</p>
+          </div>
+          <div class="flex justify-between items-center py-2 border-b border-zinc-800">
+            <p class="text-zinc-500 text-xs m-0">Sats Enviados</p>
+            <p class="text-amber-400 font-semibold text-sm m-0 valor-privado">{{ total_satoshis_enviados }}</p>
+          </div>
+          <div class="flex justify-between items-center py-2">
+            <p class="text-zinc-500 text-xs m-0">Preço Médio</p>
+            {% if preco_medio > cotacao_dia %}
+            <p class="text-red-400 font-semibold text-sm m-0">R$ {{ preco_medio }}</p>
+            {% else %}
+            <p class="text-green-400 font-semibold text-sm m-0">R$ {{ preco_medio }}</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 
-  <!-- Cards de Métricas -->
-  <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-
-    <!-- Financeiro -->
-    <div>
-      <p class="text-zinc-500 text-xs font-semibold mb-2">FINANCEIRO</p>
-      <div class="flex flex-col gap-3">
-        <div class="border border-zinc-700 rounded p-3 text-center">
-          <p class="text-zinc-400 text-xs mb-1">Entradas</p>
-          <p class="font-semibold text-lg text-green-400 m-0">R$ {{ total_entradas|floatformat:2 }}</p>
+  <!-- Análise IA -->
+  <div class="mb-8">
+    <div class="bg-zinc-900 border border-zinc-700 rounded-xl overflow-hidden">
+      <button
+        onclick="const c=document.getElementById('collapseAnalise');c.classList.toggle('hidden');this.querySelector('.chevron').classList.toggle('rotate-180')"
+        class="w-full flex items-center justify-between px-5 py-4 hover:bg-zinc-800 transition-colors">
+        <div class="flex items-center gap-3">
+          <div class="w-7 h-7 rounded-lg bg-amber-900/40 flex items-center justify-center">
+            <i class="bi bi-robot text-amber-500" style="font-size: 13px;"></i>
+          </div>
+          <span class="text-white font-semibold text-sm">Análise de Dados — IA</span>
         </div>
-        <div class="border border-zinc-700 rounded p-3 text-center">
-          <p class="text-zinc-400 text-xs mb-1">Saídas</p>
-          <p class="font-semibold text-lg text-red-400 m-0">R$ {{ total_saidas|floatformat:2 }}</p>
-        </div>
-        <div class="border border-zinc-700 rounded p-3 text-center">
-          <p class="text-zinc-400 text-xs mb-1">Saldo</p>
-          {% if saldo > 0 %}
-          <p class="font-semibold text-lg text-green-400 m-0">R$ {{ saldo|floatformat:2 }}</p>
-          {% else %}
-          <p class="font-semibold text-lg text-red-400 m-0">R$ {{ saldo|floatformat:2 }}</p>
-          {% endif %}
+        <i class="bi bi-chevron-down chevron text-zinc-400 transition-transform duration-200"></i>
+      </button>
+      <div id="collapseAnalise" class="hidden px-5 py-5 border-t border-zinc-800">
+        <div class="text-zinc-300 text-sm leading-relaxed">
+          {{ analise_ia|safe }}
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- Compras BTC -->
-    <div>
-      <p class="text-zinc-500 text-xs font-semibold mb-2">COMPRAS BTC</p>
-      <div class="flex flex-col gap-3">
-        <div class="border border-zinc-700 rounded p-3 text-center">
-          <p class="text-zinc-400 text-xs mb-1">Total Gasto</p>
-          <p class="font-semibold text-lg text-red-400 m-0">R$ {{ total_gasto_btc }}</p>
+  <!-- Gráficos -->
+  <div class="mb-4">
+    <p class="text-zinc-500 text-xs font-semibold uppercase tracking-widest mb-4">Gráficos</p>
+    <div class="flex flex-col gap-4">
+      <div class="bg-zinc-900 border border-zinc-700 rounded-xl p-5">
+        <div id="Gráfico_compras" style="min-height: 400px;"></div>
+      </div>
+      <div class="bg-zinc-900 border border-zinc-700 rounded-xl p-5">
+        <div id="Gráfico_Saldo" style="min-height: 400px;"></div>
+      </div>
+      <div class="bg-zinc-900 border border-zinc-700 rounded-xl p-5">
+        <div id="Gráfico_Entrada" style="min-height: 400px;"></div>
+      </div>
+      <div class="bg-zinc-900 border border-zinc-700 rounded-xl p-5">
+        <div id="Gráfico_Retirada" style="min-height: 400px;"></div>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="bg-zinc-900 border border-zinc-700 rounded-xl p-5">
+          <p class="text-zinc-500 text-xs font-semibold uppercase tracking-widest mb-4">Tipos de Compra</p>
+          <div id="Gráfico_tipos" style="min-height: 280px;"></div>
         </div>
-        <div class="border border-zinc-700 rounded p-3 text-center">
-          <p class="text-zinc-400 text-xs mb-1">Total Líquido</p>
-          <p class="font-semibold text-lg text-green-400 m-0">R$ {{ total_liquido_btc }}</p>
-        </div>
-        <div class="border border-zinc-700 rounded p-3 text-center">
-          <p class="text-zinc-400 text-xs mb-1">Taxas Pagas</p>
-          <p class="font-semibold text-lg text-white m-0">R$ {{ taxas_pagas_compra }}</p>
+        <div class="bg-zinc-900 border border-zinc-700 rounded-xl p-5">
+          <p class="text-zinc-500 text-xs font-semibold uppercase tracking-widest mb-4">Movimentações</p>
+          <div id="Gráfico_movimentação" style="min-height: 280px;"></div>
         </div>
       </div>
-    </div>
-
-    <!-- Envios BTC -->
-    <div>
-      <p class="text-zinc-500 text-xs font-semibold mb-2">ENVIOS BTC</p>
-      <div class="flex flex-col gap-3">
-        <div class="border border-zinc-700 rounded p-3 text-center">
-          <p class="text-zinc-400 text-xs mb-1">Total Enviado</p>
-          <p class="font-semibold text-lg text-red-400 m-0">R$ {{ envio_btc_total }}</p>
-        </div>
-        <div class="border border-zinc-700 rounded p-3 text-center">
-          <p class="text-zinc-400 text-xs mb-1">Total Líq. Enviado</p>
-          <p class="font-semibold text-lg text-green-400 m-0">R$ {{ envio_btc_liquido }}</p>
-        </div>
-        <div class="border border-zinc-700 rounded p-3 text-center">
-          <p class="text-zinc-400 text-xs mb-1">Taxas Pagas no Envio</p>
-          <p class="font-semibold text-lg text-white m-0">R$ {{ taxas_pagas_envio }}</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Satoshis & Preço -->
-    <div>
-      <p class="text-zinc-500 text-xs font-semibold mb-2">SATOSHIS & PREÇO</p>
-      <div class="flex flex-col gap-3">
-        <div class="border border-zinc-700 rounded p-3 text-center">
-          <p class="text-zinc-400 text-xs mb-1">Satoshis Comprados</p>
-          <p class="font-semibold text-lg text-amber-400 m-0">{{ total_satoshis_comprados }}</p>
-        </div>
-        <div class="border border-zinc-700 rounded p-3 text-center">
-          <p class="text-zinc-400 text-xs mb-1">Satoshis Enviados</p>
-          <p class="font-semibold text-lg text-amber-400 m-0">{{ total_satoshis_enviados }}</p>
-        </div>
-        <div class="border border-zinc-700 rounded p-3 text-center">
-          <p class="text-zinc-400 text-xs mb-1">Preço Médio</p>
-          {% if preco_medio > cotacao_dia %}
-          <p class="font-semibold text-lg text-red-400 m-0">R$ {{ preco_medio }}</p>
-          {% else %}
-          <p class="font-semibold text-lg text-green-400 m-0">R$ {{ preco_medio }}</p>
-          {% endif %}
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- Análise IA accordion (vanilla JS, sem Bootstrap) -->
-  <div class="border border-zinc-700 rounded-lg mb-6 overflow-hidden">
-    <button
-      onclick="const c=document.getElementById('collapseAnalise');c.classList.toggle('hidden');this.querySelector('i').classList.toggle('rotate-180')"
-      class="w-full flex items-center justify-between px-4 py-3 bg-zinc-900 hover:bg-zinc-800 transition-colors text-amber-500 font-semibold text-sm">
-      <span><i class="bi bi-robot mr-2"></i>Análise de Dados — IA</span>
-      <i class="bi bi-chevron-down transition-transform duration-200"></i>
-    </button>
-    <div id="collapseAnalise" class="hidden px-4 py-4 border-t border-zinc-700">
-      {{ analise_ia|safe }}
-    </div>
-  </div>
-
-  <!-- Header Dashboard -->
-  <div class="flex justify-center mb-4">
-    <h5 class="font-semibold text-amber-500">Dashboard</h5>
-  </div>
-
-  <!-- Gráficos linha -->
-  <div class="border border-zinc-700 rounded-lg p-4 mb-4">
-    <div id="Gráfico_compras" style="min-height: 500px;"></div>
-  </div>
-  <div class="border border-zinc-700 rounded-lg p-4 mb-4">
-    <div id="Gráfico_Saldo" style="min-height: 500px;"></div>
-  </div>
-  <div class="border border-zinc-700 rounded-lg p-4 mb-4">
-    <div id="Gráfico_Entrada" style="min-height: 500px;"></div>
-  </div>
-  <div class="border border-zinc-700 rounded-lg p-4 mb-4">
-    <div id="Gráfico_Retirada" style="min-height: 500px;"></div>
-  </div>
-
-  <!-- Gráficos Donut -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-    <div class="border border-zinc-700 rounded-lg p-4">
-      <p class="text-zinc-500 text-xs font-semibold mb-3">TIPOS DE COMPRA NA BIPA</p>
-      <div id="Gráfico_tipos" style="min-height: 280px;"></div>
-    </div>
-    <div class="border border-zinc-700 rounded-lg p-4">
-      <p class="text-zinc-500 text-xs font-semibold mb-3">MOVIMENTAÇÕES NA BIPA</p>
-      <div id="Gráfico_movimentação" style="min-height: 280px;"></div>
     </div>
   </div>
 
@@ -238,14 +282,13 @@
   const qtd_saida = movimentacoes_transacoes.filter(i => i === 'saida').length;
 
   const plotlyConfig = { responsive: true, displayModeBar: false };
-  const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
   const bgColor = 'rgba(0,0,0,0)';
-  const textColor = isDark ? '#e5e5e5' : '#333333';
-  const gridColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
+  const textColor = '#e5e5e5';
+  const gridColor = 'rgba(255,255,255,0.06)';
 
   Plotly.newPlot('Gráfico_compras', [{
     x: datas_transacoes, y: valores_transacoes, type: 'bar',
-    marker: { color: '#ff8000', opacity: 0.85 },
+    marker: { color: '#f59e0b', opacity: 0.85 },
     hovertemplate: '<b>%{x}</b><br>R$ %{y:,.2f}<extra></extra>'
   }], {
     title: { text: 'Histórico Financeiro Crypto', font: { color: textColor, size: 14 } },
@@ -265,7 +308,7 @@
     annotations: [{ text: label, x: 0.5, y: 0.5, font: { size: 13, color: textColor }, showarrow: false }]
   });
 
-  const donutColors = ['#ff8000', '#1a1a1a'];
+  const donutColors = ['#f59e0b', '#27272a'];
 
   Plotly.newPlot('Gráfico_tipos', [{
     values: [qtd_compra, qtd_compra_recorrente], labels: ['Compra', 'Compra Recorrente'],
@@ -282,7 +325,7 @@
   const scatterBase = (color) => ({
     type: 'scatter', mode: 'lines+markers',
     line: { color, width: 2 },
-    marker: { color, size: 6, symbol: 'circle', line: { color: '#ffffff', width: 1 } }
+    marker: { color, size: 6, symbol: 'circle', line: { color: '#18181b', width: 1 } }
   });
 
   const axisLayout = (title) => ({
@@ -296,21 +339,40 @@
 
   Plotly.newPlot('Gráfico_Saldo', [{
     ...scatterBase('#00cc66'), x: data_entrada, y: valor_entrada_acumulada,
-    fill: 'tozeroy', fillcolor: 'rgba(0, 204, 102, 0.1)',
+    fill: 'tozeroy', fillcolor: 'rgba(0, 204, 102, 0.08)',
     hovertemplate: '<b>%{x}</b><br>R$ %{y:,.2f}<extra></extra>'
   }], axisLayout('Ganho Total'), plotlyConfig);
 
   Plotly.newPlot('Gráfico_Entrada', [{
     ...scatterBase('#00cc66'), x: data_entrada, y: valor_entrada,
-    fill: 'tozeroy', fillcolor: 'rgba(0, 204, 102, 0.1)',
+    fill: 'tozeroy', fillcolor: 'rgba(0, 204, 102, 0.08)',
     hovertemplate: '<b>%{x}</b><br>R$ %{y:,.2f}<extra></extra>'
   }], axisLayout('Gráfico de Ganhos'), plotlyConfig);
 
   Plotly.newPlot('Gráfico_Retirada', [{
-    ...scatterBase('#cc0000'), x: data_saida, y: valor_saida,
-    fill: 'tozeroy', fillcolor: 'rgba(204, 14, 0, 0.1)',
+    ...scatterBase('#ef4444'), x: data_saida, y: valor_saida,
+    fill: 'tozeroy', fillcolor: 'rgba(239, 68, 68, 0.08)',
     hovertemplate: '<b>%{x}</b><br>R$ %{y:,.2f}<extra></extra>'
   }], axisLayout('Gráfico de Gastos'), plotlyConfig);
+</script>
+
+<script>
+  let valoresVisiveis = true;
+
+  function togglePrivacidade() {
+    valoresVisiveis = !valoresVisiveis;
+
+    const icone = document.getElementById('icone-privacidade');
+    const texto = document.getElementById('texto-privacidade');
+
+    icone.className = valoresVisiveis ? 'bi bi-eye' : 'bi bi-eye-slash';
+    texto.textContent = valoresVisiveis ? 'Ocultar valores' : 'Mostrar valores';
+
+    document.querySelectorAll('.valor-privado').forEach(el => {
+      el.style.filter = valoresVisiveis ? 'none' : 'blur(8px)';
+      el.style.userSelect = valoresVisiveis ? 'auto' : 'none';
+    });
+  }
 </script>
 
 {% endblock %}
