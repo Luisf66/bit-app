@@ -2,109 +2,143 @@
 {% block title %}BIT-APP - Transações BTC{% endblock %}
 {% block content %}
 
-<div class="py-4 px-6">
+<div class="py-6 px-8">
 
   <!-- Header -->
-  <div class="flex items-center gap-4 mb-6">
-    <h4 class="font-semibold text-amber-500 flex items-center gap-2 m-0">
-      <i class="bi bi-currency-bitcoin"></i> Transações BTC
+  <div class="mb-8">
+    <p class="text-zinc-500 text-xs font-semibold uppercase tracking-widest mb-1">Bitcoin</p>
+    <h4 class="font-semibold text-white text-xl flex items-center gap-2 m-0">
+      <i class="bi bi-currency-bitcoin text-amber-500"></i> Transações BTC
     </h4>
   </div>
 
-  <!-- Tabela -->
-  <div class="bg-zinc-900 rounded-2xl border border-zinc-700 overflow-hidden">
-    <div class="overflow-x-auto">
-      <table class="w-full text-sm">
-        <thead>
-          <tr class="text-center text-zinc-400 text-xs border-b border-zinc-700">
-            <th class="py-3 px-4 font-medium">Data</th>
-            <th class="py-3 px-4 font-medium">Ativo</th>
-            <th class="py-3 px-4 font-medium">Movimentação</th>
-            <th class="py-3 px-4 font-medium">Tipo</th>
-            <th class="py-3 px-4 font-medium">Valor Total</th>
-            <th class="py-3 px-4 font-medium">Valor Líquido</th>
-            <th class="py-3 px-4 font-medium">Satoshis</th>
-            <th class="py-3 px-4 font-medium">Taxa %</th>
-            <th class="py-3 px-4 font-medium">Taxa Ativo</th>
-            <th class="py-3 px-4 font-medium">Taxa Qtde</th>
-            <th class="py-3 px-4 font-medium">Cotação do Dia</th>
-            <th class="py-3 px-4 font-medium">Origem</th>
-            <th class="py-3 px-4 font-medium">Destino</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for transacao in transacoes %}
-          <tr class="text-center border-b border-zinc-800 hover:bg-zinc-800 transition-colors">
+  <!-- Lista de transações -->
+  <div class="flex flex-col gap-2">
+    {% for transacao in transacoes %}
 
-            <td class="py-3 px-4 text-zinc-400">
-              {{ transacao.data|date:"d/m/Y H:i" }}
-            </td>
+    <!-- Card principal -->
+    <div class="bg-zinc-900 border border-zinc-700 hover:border-zinc-500 rounded-xl transition-colors">
 
-            <td class="py-3 px-4">
-              <span class="bg-amber-900/40 text-amber-400 text-xs px-2 py-1 rounded-full">
-                {{ transacao.ativo }}
-              </span>
-            </td>
+      <!-- Linha principal -->
+      <div class="px-5 py-4 flex items-center gap-4">
 
-            <td class="py-3 px-4">
-              {% if transacao.movimentacao == "entrada" %}
-              <span class="bg-green-900/40 text-green-400 text-xs px-2 py-1 rounded-full">
-                {{ transacao.movimentacao }}
-              </span>
-              {% else %}
-              <span class="bg-red-900/40 text-red-400 text-xs px-2 py-1 rounded-full">
-                {{ transacao.movimentacao }}
-              </span>
-              {% endif %}
-            </td>
+        <!-- Ícone movimentação -->
+        <div class="shrink-0">
+          {% if transacao.movimentacao == "entrada" %}
+          <div class="w-9 h-9 rounded-lg bg-green-900/40 flex items-center justify-center">
+            <i class="bi bi-arrow-down-left text-green-400"></i>
+          </div>
+          {% else %}
+          <div class="w-9 h-9 rounded-lg bg-red-900/40 flex items-center justify-center">
+            <i class="bi bi-arrow-up-right text-red-400"></i>
+          </div>
+          {% endif %}
+        </div>
 
-            <td class="py-3 px-4 text-white">{{ transacao.tipo }}</td>
+        <!-- Data e tipo -->
+        <div class="w-36 shrink-0">
+          <p class="text-white text-sm font-medium m-0 capitalize">{{ transacao.tipo }}</p>
+          <p class="text-zinc-500 text-xs m-0">{{ transacao.data|date:"d/m/Y H:i" }}</p>
+        </div>
 
-            <td class="py-3 px-4 font-semibold text-amber-400">
-              {{ transacao.valor_total|floatformat:2 }}
-            </td>
+        <div class="w-px h-8 bg-zinc-700 shrink-0"></div>
 
-            <td class="py-3 px-4 font-semibold text-green-400">
-              {{ transacao.valor_liquido|floatformat:2 }}
-            </td>
+        <!-- Ativo e movimentação -->
+        <div class="flex items-center gap-2 w-40 shrink-0">
+          <span class="bg-amber-900/40 text-amber-400 text-xs px-2.5 py-1 rounded-full">
+            {{ transacao.ativo }}
+          </span>
+          {% if transacao.movimentacao == "entrada" %}
+          <span class="bg-green-900/40 text-green-400 text-xs px-2.5 py-1 rounded-full">
+            {{ transacao.movimentacao }}
+          </span>
+          {% else %}
+          <span class="bg-red-900/40 text-red-400 text-xs px-2.5 py-1 rounded-full">
+            {{ transacao.movimentacao }}
+          </span>
+          {% endif %}
+        </div>
 
-            <td class="py-3 px-4 text-zinc-400">
-              {{ transacao.satoshis|floatformat:8 }}
-            </td>
+        <div class="w-px h-8 bg-zinc-700 shrink-0"></div>
 
-            <td class="py-3 px-4 text-zinc-400">
-              {% if transacao.taxa_porcentual == 0 %}0%
-              {% else %}{{ transacao.taxa_porcentual|floatformat:2 }}%
-              {% endif %}
-            </td>
+        <!-- Origem → Destino -->
+        <div class="flex-1 flex items-center gap-2 min-w-0">
+          <p class="text-zinc-400 text-xs m-0 truncate">{{ transacao.origem }}</p>
+          <i class="bi bi-arrow-right text-zinc-600 shrink-0" style="font-size: 11px;"></i>
+          <p class="text-zinc-400 text-xs m-0 truncate">{{ transacao.destino }}</p>
+        </div>
 
-            <td class="py-3 px-4 text-zinc-400">{{ transacao.taxa_ativo }}</td>
+        <div class="w-px h-8 bg-zinc-700 shrink-0"></div>
 
-            <td class="py-3 px-4 text-zinc-400">
+        <!-- Valores -->
+        <div class="text-right shrink-0">
+          <p class="text-amber-400 font-semibold text-sm m-0">R$ {{ transacao.valor_total|floatformat:2 }}</p>
+          <p class="text-green-400 text-xs m-0">Líq: R$ {{ transacao.valor_liquido|floatformat:2 }}</p>
+        </div>
+
+        <!-- Toggle detalhes -->
+        <button onclick="this.closest('.bg-zinc-900').querySelector('.detalhes').classList.toggle('hidden'); this.querySelector('i').classList.toggle('rotate-180')"
+                class="shrink-0 w-7 h-7 rounded-lg bg-zinc-800 hover:bg-zinc-700 border border-zinc-600 flex items-center justify-center text-zinc-400 hover:text-white transition-all">
+          <i class="bi bi-chevron-down transition-transform" style="font-size: 11px;"></i>
+        </button>
+
+      </div>
+
+      <!-- Detalhes expandíveis -->
+      <div class="detalhes hidden border-t border-zinc-800 px-5 py-4">
+        <div class="grid grid-cols-4 gap-4">
+          <div>
+            <p class="text-zinc-500 text-xs mb-1">Satoshis</p>
+            <p class="text-white text-sm m-0">{{ transacao.satoshis|floatformat:8 }}</p>
+          </div>
+          <div>
+            <p class="text-zinc-500 text-xs mb-1">Cotação do dia</p>
+            <p class="text-white text-sm m-0">R$ {{ transacao.cotacao_do_dia|floatformat:2 }}</p>
+          </div>
+          <div>
+            <p class="text-zinc-500 text-xs mb-1">Taxa ativo</p>
+            <p class="text-white text-sm m-0">{{ transacao.taxa_ativo }}</p>
+          </div>
+          <div>
+            <p class="text-zinc-500 text-xs mb-1">Taxa quantidade</p>
+            <p class="text-white text-sm m-0">
               {% if transacao.taxa_quantidade == 0 %}0
               {% else %}{{ transacao.taxa_quantidade|floatformat:5 }}
               {% endif %}
-            </td>
+            </p>
+          </div>
+          <div>
+            <p class="text-zinc-500 text-xs mb-1">Taxa %</p>
+            <p class="text-white text-sm m-0">
+              {% if transacao.taxa_porcentual == 0 %}0%
+              {% else %}{{ transacao.taxa_porcentual|floatformat:2 }}%
+              {% endif %}
+            </p>
+          </div>
+        </div>
+      </div>
 
-            <td class="py-3 px-4 text-white">
-              R$ {{ transacao.cotacao_do_dia|floatformat:2 }}
-            </td>
-
-            <td class="py-3 px-4 text-zinc-400">{{ transacao.origem }}</td>
-            <td class="py-3 px-4 text-zinc-400">{{ transacao.destino }}</td>
-
-          </tr>
-          {% empty %}
-          <tr>
-            <td colspan="13" class="text-center text-zinc-500 py-8">
-              Nenhuma transação encontrada.
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
     </div>
+
+    {% empty %}
+    <div class="py-16 flex flex-col items-center justify-center gap-3 text-center">
+      <div class="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center">
+        <i class="bi bi-currency-bitcoin text-zinc-500 text-xl"></i>
+      </div>
+      <p class="text-zinc-500 text-sm">Nenhuma transação encontrada.</p>
+      <a href="{% url 'bitcoin:bitcoin-upload' %}"
+         class="text-amber-500 hover:text-amber-400 text-sm no-underline transition-colors">
+        Importar transações →
+      </a>
+    </div>
+    {% endfor %}
   </div>
+
+  {% if transacoes %}
+  <p class="text-zinc-600 text-xs mt-4">
+    {{ transacoes|length }} transação transações registrada{{ transacoes|length|pluralize }}
+  </p>
+  {% endif %}
 
 </div>
 
