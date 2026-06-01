@@ -1,82 +1,90 @@
-<div class="w-56 shrink-0 bg-black min-h-screen px-5 pt-5">
+<div class="w-56 shrink-0 min-h-screen flex flex-col border-r border-zinc-800" style="background: #09090b;">
 
+  <!-- Toggle mobile -->
   <button
-    class="block sm:hidden mb-3 bg-zinc-800 text-white rounded px-3 py-2"
-    onclick="document.getElementById('menuCollapse').classList.toggle('hidden')"
-  >
-    <i class="bi bi-list text-2xl"></i>
+    class="block sm:hidden m-4 bg-zinc-800 text-white rounded-lg px-3 py-2 self-start"
+    onclick="document.getElementById('menuCollapse').classList.toggle('hidden')">
+    <i class="bi bi-list text-xl"></i>
   </button>
 
-  <div id="menuCollapse" class="hidden sm:block">
+  <div id="menuCollapse" class="hidden sm:flex flex-col flex-1 px-3 py-4 gap-6" style="margin-top: 30%; margin-left: 5%;">
 
-    <ul class="flex flex-col gap-1">
-      <li>
-        <a href="{% url 'bitcoin:bitcoin-dashboard' %}"
-           class="flex items-center gap-2 text-white py-2 no-underline hover:text-amber-500 transition-colors">
-          <i class="bi bi-graph-up text-2xl"></i>
-          <span>Dashboard</span>
-        </a>
-      </li>
-    </ul>
+    <!-- Dashboard -->
+    <div>
+      <p class="text-zinc-600 text-xs font-semibold uppercase tracking-widest px-3 mb-1">Geral</p>
+      <ul class="flex flex-col gap-0.5">
+        <li>
+          <a href="{% url 'bitcoin:bitcoin-dashboard' %}"
+             class="flex items-center gap-3 text-zinc-400 hover:text-white hover:bg-zinc-800 px-3 py-2.5 rounded-lg no-underline transition-colors text-sm">
+            <i class="bi bi-grid" style="font-size: 15px;"></i>
+            <span>Dashboard</span>
+          </a>
+        </li>
+      </ul>
+    </div>
 
-    <hr class="border-zinc-700 my-3 w-full">
+    <!-- Entradas -->
+    <div>
+      <p class="text-zinc-600 text-xs font-semibold uppercase tracking-widest px-3 mb-1">Entradas</p>
+      <ul class="flex flex-col gap-0.5">
+        <li>
+          <a href="{% url 'entradas:entradas-list' %}"
+             class="flex items-center gap-3 text-zinc-400 hover:text-white hover:bg-zinc-800 px-3 py-2.5 rounded-lg no-underline transition-colors text-sm">
+            <i class="bi bi-cash-coin" style="font-size: 15px;"></i>
+            <span>Entradas</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'entradas:categorias-entradas-list' %}"
+             class="flex items-center gap-3 text-zinc-400 hover:text-white hover:bg-zinc-800 px-3 py-2.5 rounded-lg no-underline transition-colors text-sm">
+            <i class="bi bi-bookmark-plus" style="font-size: 15px;"></i>
+            <span>Categorias</span>
+          </a>
+        </li>
+      </ul>
+    </div>
 
-    <ul class="flex flex-col gap-1">
-      <li>
-        <a href="{% url 'entradas:entradas-list' %}"
-           class="flex items-center gap-2 text-white py-2 no-underline hover:text-amber-500 transition-colors">
-          <i class="bi bi-cash-coin text-2xl"></i>
-          <span>Entradas</span>
-        </a>
-      </li>
-      <li>
-        <a href="{% url 'entradas:categorias-entradas-list' %}"
-           class="flex items-center gap-2 text-white py-2 no-underline hover:text-amber-500 transition-colors">
-          <i class="bi bi-bookmark-plus text-2xl"></i>
-          <span>Categorias das Entradas</span>
-        </a>
-      </li>
-    </ul>
+    <!-- Saídas -->
+    <div>
+      <p class="text-zinc-600 text-xs font-semibold uppercase tracking-widest px-3 mb-1">Saídas</p>
+      <ul class="flex flex-col gap-0.5">
+        <li>
+          <a href="{% url 'saidas:saidas-list' %}"
+             class="flex items-center gap-3 text-zinc-400 hover:text-white hover:bg-zinc-800 px-3 py-2.5 rounded-lg no-underline transition-colors text-sm">
+            <i class="bi bi-graph-down-arrow" style="font-size: 15px;"></i>
+            <span>Saídas</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'saidas:categorias-saidas-list' %}"
+             class="flex items-center gap-3 text-zinc-400 hover:text-white hover:bg-zinc-800 px-3 py-2.5 rounded-lg no-underline transition-colors text-sm">
+            <i class="bi bi-bookmark-dash" style="font-size: 15px;"></i>
+            <span>Categorias</span>
+          </a>
+        </li>
+      </ul>
+    </div>
 
-    <hr class="border-zinc-700 my-3 w-full">
-
-    <ul class="flex flex-col gap-1">
-      <li>
-        <a href="{% url 'saidas:saidas-list' %}"
-           class="flex items-center gap-2 text-white py-2 no-underline hover:text-amber-500 transition-colors">
-          <i class="bi bi-graph-down-arrow text-2xl"></i>
-          <span>Saídas</span>
-        </a>
-      </li>
-      <li>
-        <a href="{% url 'saidas:categorias-saidas-list' %}"
-           class="flex items-center gap-2 text-white py-2 no-underline hover:text-amber-500 transition-colors">
-          <i class="bi bi-bookmark-dash text-2xl"></i>
-          <span>Categorias das Saídas</span>
-        </a>
-      </li>
-    </ul>
-
-    <hr class="border-zinc-700 my-3 w-full">
-
-    <ul class="flex flex-col gap-1">
-      <li>
-        <a href="{% url 'bitcoin:bitcoin-upload' %}"
-           class="flex items-center gap-2 text-white py-2 no-underline hover:text-amber-500 transition-colors">
-          <i class="bi bi-currency-bitcoin text-2xl"></i>
-          <span>Upload de Dados</span>
-        </a>
-      </li>
-      <li>
-        <a href="{% url 'bitcoin:bitcoin-list' %}"
-           class="flex items-center gap-2 text-white py-2 no-underline hover:text-amber-500 transition-colors">
-          <i class="bi bi-currency-bitcoin text-2xl"></i>
-          <span>Transações</span>
-        </a>
-      </li>
-    </ul>
-
-    <hr class="border-zinc-700 my-3 w-full">
+    <!-- Bitcoin -->
+    <div>
+      <p class="text-zinc-600 text-xs font-semibold uppercase tracking-widest px-3 mb-1">Bitcoin</p>
+      <ul class="flex flex-col gap-0.5">
+        <li>
+          <a href="{% url 'bitcoin:bitcoin-upload' %}"
+             class="flex items-center gap-3 text-zinc-400 hover:text-white hover:bg-zinc-800 px-3 py-2.5 rounded-lg no-underline transition-colors text-sm">
+            <i class="bi bi-upload" style="font-size: 15px;"></i>
+            <span>Upload</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'bitcoin:bitcoin-list' %}"
+             class="flex items-center gap-3 text-zinc-400 hover:text-white hover:bg-zinc-800 px-3 py-2.5 rounded-lg no-underline transition-colors text-sm">
+            <i class="bi bi-currency-bitcoin" style="font-size: 15px;"></i>
+            <span>Transações</span>
+          </a>
+        </li>
+      </ul>
+    </div>
 
   </div>
 </div>
