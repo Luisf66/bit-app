@@ -2,44 +2,118 @@
 {% block title %}BIT-APP - Upload de Arquivo{% endblock %}
 {% block content %}
 
-<div class="py-4 px-6 max-w-xl mx-auto">
-  <div class="border border-zinc-700 rounded-lg p-6">
+<div class="py-12 px-8 flex justify-center">
+  <div class="w-full max-w-lg">
 
-    <h5 class="font-semibold text-center mb-6">Upload de Arquivo</h5>
+    <!-- Header -->
+    <div class="mb-8">
+      <p class="text-zinc-500 text-xs font-semibold uppercase tracking-widest mb-1">Bitcoin</p>
+      <h4 class="font-semibold text-white text-xl flex items-center gap-2 m-0">
+        <i class="bi bi-upload text-amber-500"></i> Upload de Arquivo
+      </h4>
+    </div>
 
     <form method="POST" enctype="multipart/form-data">
       {% csrf_token %}
-      <div class="mb-4">
-        <label for="arquivo"
-               class="block text-sm font-semibold text-center mb-1">
-          Selecione o arquivo
-        </label>
+
+      <!-- Drop area -->
+      <div id="drop-area"
+           class="border-2 border-dashed border-zinc-700 hover:border-amber-500 rounded-2xl p-12 text-center transition-colors cursor-pointer mb-6"
+           onclick="document.getElementById('arquivo').click()">
+
+        <div class="w-14 h-14 rounded-full bg-zinc-800 flex items-center justify-center mx-auto mb-4">
+          <i class="bi bi-file-earmark-arrow-up text-amber-500 text-2xl"></i>
+        </div>
+
+        <p class="text-white text-sm font-medium mb-1">Clique para selecionar ou arraste o arquivo</p>
+        <p class="text-zinc-500 text-xs">Somente arquivos <span class="text-zinc-300">.csv</span> serão aceitos</p>
+
         <input
           type="file"
           accept=".csv"
           id="arquivo"
           name="arquivo"
           required
-          class="w-full bg-zinc-800 border border-zinc-600 rounded px-3 py-1.5 text-sm text-white file:bg-zinc-700 file:text-white file:border-0 file:rounded file:px-3 file:py-1 file:text-xs file:mr-3 file:cursor-pointer hover:file:bg-zinc-600 transition-colors"
+          class="hidden"
         >
-        <p class="text-xs text-zinc-500 text-center mt-1">
-          Somente arquivos .csv serão aceitos
-        </p>
       </div>
 
-      <div class="flex justify-between items-center mt-6">
+      <!-- Preview do arquivo selecionado -->
+      <div id="file-preview" class="hidden mb-6">
+        <div class="bg-zinc-900 border border-zinc-700 rounded-xl px-4 py-3 flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg bg-amber-900/40 flex items-center justify-center shrink-0">
+            <i class="bi bi-filetype-csv text-amber-400" style="font-size: 13px;"></i>
+          </div>
+          <div class="flex-1 min-w-0">
+            <p id="file-name" class="text-white text-sm font-medium m-0 truncate"></p>
+            <p id="file-size" class="text-zinc-500 text-xs m-0"></p>
+          </div>
+          <button type="button" onclick="clearFile()"
+                  class="w-6 h-6 rounded-lg bg-zinc-800 hover:bg-zinc-700 flex items-center justify-center text-zinc-400 hover:text-white transition-colors">
+            <i class="bi bi-x" style="font-size: 13px;"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Ações -->
+      <div class="flex justify-between items-center">
         <a href="javascript:history.back()"
            class="text-sm text-zinc-400 hover:text-white transition-colors no-underline">
           ← Voltar
         </a>
         <button type="submit"
-                class="text-sm bg-green-600 hover:bg-green-500 text-white px-4 py-1.5 rounded transition-colors flex items-center gap-1">
-          <i class="bi bi-upload"></i> Enviar
+                class="bg-amber-500 hover:bg-amber-400 text-black font-semibold text-sm px-6 py-2.5 rounded-lg transition-colors flex items-center gap-2">
+          <i class="bi bi-upload"></i> Enviar arquivo
         </button>
       </div>
-    </form>
 
+    </form>
   </div>
 </div>
+
+<script>
+  const input = document.getElementById('arquivo');
+  const dropArea = document.getElementById('drop-area');
+  const preview = document.getElementById('file-preview');
+  const fileName = document.getElementById('file-name');
+  const fileSize = document.getElementById('file-size');
+
+  input.addEventListener('change', () => showPreview(input.files[0]));
+
+  dropArea.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropArea.classList.add('border-amber-500');
+  });
+
+  dropArea.addEventListener('dragleave', () => {
+    dropArea.classList.remove('border-amber-500');
+  });
+
+  dropArea.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropArea.classList.remove('border-amber-500');
+    const file = e.dataTransfer.files[0];
+    if (file && file.name.endsWith('.csv')) {
+      const dt = new DataTransfer();
+      dt.items.add(file);
+      input.files = dt.files;
+      showPreview(file);
+    }
+  });
+
+  function showPreview(file) {
+    if (!file) return;
+    fileName.textContent = file.name;
+    fileSize.textContent = (file.size / 1024).toFixed(1) + ' KB';
+    preview.classList.remove('hidden');
+    dropArea.classList.add('hidden');
+  }
+
+  function clearFile() {
+    input.value = '';
+    preview.classList.add('hidden');
+    dropArea.classList.remove('hidden');
+  }
+</script>
 
 {% endblock %}
