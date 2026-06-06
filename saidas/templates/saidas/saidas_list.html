@@ -1,89 +1,84 @@
 {% extends 'base.html' %}
-{% block title %}
-    BIT-APP Saídas
-{% endblock %}
-
+{% block title %}BIT-APP - Saidas{% endblock %}
 {% block content %}
-<div class="container py-4">
 
-    <!-- HEADER -->
-    <div class="d-flex align-items-center gap-3 mb-4">
-        <h4 class="mb-0 fw-semibold text-warning d-flex align-items-center gap-2">
-            <i class="bi bi-graph-down-arrow"></i>
-            Saídas
-        </h4>
+<div class="py-6 px-8">
 
-        <a href="{% url 'saidas:saidas-create' %}" 
-           class="btn btn-warning fw-semibold rounded-pill px-4 py-2">
-            <i class="bi bi-plus-lg"></i> Nova Saída
+  <!-- Header -->
+  <div class="mb-8">
+    <p class="text-zinc-500 text-xs font-semibold uppercase tracking-widest mb-1">Financeiro</p>
+    <div class="flex items-center justify-between">
+      <h4 class="font-semibold text-white text-xl flex items-center gap-2 m-0">
+        <i class="bi bi-cash-coin text-amber-500"></i> Saidas
+      </h4>
+      <a href="{% url 'saidas:saidas-create' %}"
+         class="bg-amber-500 hover:bg-amber-400 text-black font-semibold text-sm px-5 py-2.5 rounded-lg no-underline transition-colors flex items-center gap-2">
+        <i class="bi bi-plus-lg"></i> Nova Saida
+      </a>
+    </div>
+  </div>
+
+  <!-- Lista -->
+  <div class="flex flex-col gap-2">
+    {% for saida in saidas %}
+    <div class="bg-zinc-900 border border-zinc-700 hover:border-zinc-500 rounded-xl px-5 py-4 flex items-center gap-4 transition-colors group">
+
+      <!-- Data -->
+      <div class="w-20 shrink-0 text-center">
+        <p class="text-zinc-500 text-xs mb-0.5">{{ saida.data|date:"d/m" }}</p>
+        <p class="text-zinc-400 text-xs">{{ saida.data|date:"Y" }}</p>
+      </div>
+
+      <div class="w-px h-8 bg-zinc-700 shrink-0"></div>
+
+      <!-- Categoria -->
+      <div class="w-32 shrink-0">
+        <span class="bg-red-900/40 text-red-400 text-xs px-2.5 py-1 rounded-full">
+          {{ saida.categoria }}
+        </span>
+      </div>
+
+      <!-- Descrição -->
+      <p class="flex-1 text-white text-sm m-0 truncate">{{ saida.descricao }}</p>
+
+      <!-- Valor -->
+      <div class="shrink-0 text-right">
+        <p class="text-red-400 font-semibold text-sm m-0">R$ {{ saida.valor }}</p>
+      </div>
+
+      <!-- Ações -->
+      <div class="flex items-center gap-2 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+        <a href="{% url 'saidas:saidas-update' saida.pk %}"
+           class="w-7 h-7 rounded-lg bg-zinc-800 hover:bg-zinc-700 border border-zinc-600 flex items-center justify-center text-zinc-400 hover:text-white transition-colors no-underline">
+          <i class="bi bi-pencil" style="font-size: 11px;"></i>
         </a>
+        <a href="{% url 'saidas:saidas-delete' saida.pk %}"
+           class="w-7 h-7 rounded-lg bg-red-900/20 hover:bg-red-900/40 border border-red-800 flex items-center justify-center text-red-500 hover:text-red-400 transition-colors no-underline">
+          <i class="bi bi-trash" style="font-size: 11px;"></i>
+        </a>
+      </div>
+
     </div>
-
-    <!-- TABELA -->
-    <div class="bg-dark rounded-4 border border-secondary-subtle overflow-hidden">
-        <div class="table-responsive">
-            <table class="table table-dark table-hover align-middle mb-0">
-
-                <thead>
-                    <tr class="text-center small text-secondary">
-                        <th class="py-3">Data</th>
-                        <th>Categoria</th>
-                        <th>Descrição</th>
-                        <th>Valor</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    {% for saida in saidas %}
-                    <tr class="text-center">
-
-                        <td class="text-secondary small">
-                            {{ saida.data|date:"d/m/Y" }}
-                        </td>
-
-                        <td>
-                            <span class="badge bg-danger-subtle text-danger px-2 py-1 rounded-pill">
-                                {{ saida.categoria }}
-                            </span>
-                        </td>
-
-                        <td class="text-white">
-                            {{ saida.descricao }}
-                        </td>
-
-                        <td class="fw-semibold text-danger">
-                            R$ {{ saida.valor }}
-                        </td>
-
-                        <td>
-                            <div class="d-flex justify-content-center gap-2">
-                                <a href="{% url 'saidas:saidas-update' saida.pk %}" 
-                                   class="btn btn-sm btn-outline-light rounded-circle">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
-
-                                <a href="{% url 'saidas:saidas-delete' saida.pk %}" 
-                                   class="btn btn-sm btn-outline-danger rounded-circle">
-                                    <i class="bi bi-trash"></i>
-                                </a>
-                            </div>
-                        </td>
-
-                    </tr>
-
-                    {% empty %}
-                    <tr>
-                        <td colspan="5" class="text-center text-secondary py-4">
-                            Nenhuma saída encontrada.
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-
-            </table>
-        </div>
+    {% empty %}
+    <div class="py-16 flex flex-col items-center justify-center gap-3 text-center">
+      <div class="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center">
+        <i class="bi bi-cash-coin text-zinc-500 text-xl"></i>
+      </div>
+      <p class="text-zinc-500 text-sm">Nenhuma saida encontrada.</p>
+      <a href="{% url 'saidas:saidas-create' %}"
+         class="text-amber-500 hover:text-amber-400 text-sm no-underline transition-colors">
+        Registrar primeira saida →
+      </a>
     </div>
+    {% endfor %}
+  </div>
+
+  {% if saidas %}
+  <p class="text-zinc-600 text-xs mt-4">
+    {{ saidas|length }} saida{{ saidas|length|pluralize }} registrada{{ saidas|length|pluralize }}
+  </p>
+  {% endif %}
 
 </div>
+
 {% endblock %}

@@ -1,79 +1,90 @@
-<div class="row flex-nowrap">
-  <div class="col-auto col-md-0 col-xl-0 px-0 bg- min-vh-100">
-    <div class="d-flex flex-column align-items-center align-items-sm-start px-5 pt-5 text-white">
-      <button class="btn btn-dark d-block d-sm-none mb-3" type="button" data-bs-toggle="collapse"
-        data-bs-target="#menuCollapse" aria-expanded="false" aria-controls="menuCollapse">
-        <i class="bi bi-list fs-4"></i>
-      </button>
+<div class="w-56 shrink-0 min-h-screen flex flex-col border-r border-zinc-800" style="background: #09090b;">
 
-      <div class="collapse d-sm-block" id="menuCollapse">
-        <ul class="nav flex-column align-items-start" id="menu">
-          <li>
-            <a href="{% url 'bitcoin:bitcoin-dashboard' %}" class="nav-link px-0 align-middle text-white">
-              <i class="bi bi-graph-up fs-4"></i>
-              <span class="ms-1">Dashboard</span>
-            </a>
-          </li>
-        </ul>
-      </div>
+  <!-- Toggle mobile -->
+  <button
+    class="block sm:hidden m-4 bg-zinc-800 text-white rounded-lg px-3 py-2 self-start"
+    onclick="document.getElementById('menuCollapse').classList.toggle('hidden')">
+    <i class="bi bi-list text-xl"></i>
+  </button>
 
-      <hr class="w-100">
+  <div id="menuCollapse" class="hidden sm:flex flex-col flex-1 px-3 py-4 gap-6" style="margin-top: 30%; margin-left: 5%;">
 
-      <div class="collapse d-sm-block" id="menuCollapse">
-        <ul class="nav flex-column align-items-start" id="menu">
-          <li>
-            <a href="{% url 'entradas:entradas-list' %}" class="nav-link px-0 align-middle text-white">
-              <i class="bi bi-cash-coin fs-4"></i>
-              <span class="ms-1">Entradas</span>
-            </a>
-          </li>
-          <li>
-            <a href="{% url 'entradas:categorias-entradas-list' %}" class="nav-link px-0 align-middle text-white">
-              <i class="bi bi-bookmark-plus fs-4"></i>
-              <span class="ms-1">Categorias das Entradas</span>
-            </a>
-          </li>
-        </ul>
-      </div>
-
-      <hr class="w-100">
-
-      <div class="collapse d-sm-block" id="menuCollapse">
-        <ul class="nav flex-column align-items-start" id="menu">
-          <li>
-            <a href="{% url 'saidas:saidas-list' %}" class="nav-link px-0 align-middle text-white">
-              <i class="bi bi-graph-down-arrow fs-4"></i>
-              <span class="ms-1">Saídas</span>
-            </a>
-          </li>
-          <li>
-            <a href="{% url 'saidas:categorias-saidas-list' %}" class="nav-link px-0 align-middle text-white">
-              <i class="bi bi-bookmark-dash fs-4"></i>
-              <span class="ms-1">Categorias das Saídas</span>
-            </a>
-          </li>
-        </ul>
-      </div>
-
-      <hr class="w-100">
-
-      <div class="collapse d-sm-block" id="menuCollapse">
-        <ul class="nav flex-column align-items-start" id="menu">
-          <li>
-            <a href="{% url 'bitcoin:bitcoin-upload' %}" class="nav-link px-0 align-middle text-white">
-              <i class="bi bi-currency-bitcoin fs-4"></i>
-              <span class="ms-1">Upload de Dados</span>
-            </a>
-
-            <a href="{% url 'bitcoin:bitcoin-list' %}" class="nav-link px-0 align-middle text-white">
-              <i class="bi bi-currency-bitcoin fs-4"></i>
-              <span class="ms-1">Transações</span>
-            </a>
-          </li>
-        </ul>
-      </div>
-
-      <hr class="w-100">
-    
+    <!-- Dashboard -->
+    <div>
+      <p class="text-zinc-600 text-xs font-semibold uppercase tracking-widest px-3 mb-1">Geral</p>
+      <ul class="flex flex-col gap-0.5">
+        <li>
+          <a href="{% url 'bitcoin:bitcoin-dashboard' %}"
+             class="flex items-center gap-3 text-zinc-400 hover:text-white hover:bg-zinc-800 px-3 py-2.5 rounded-lg no-underline transition-colors text-sm">
+            <i class="bi bi-grid" style="font-size: 15px;"></i>
+            <span>Dashboard</span>
+          </a>
+        </li>
+      </ul>
     </div>
+
+    <!-- Entradas -->
+    <div>
+      <p class="text-zinc-600 text-xs font-semibold uppercase tracking-widest px-3 mb-1">Entradas</p>
+      <ul class="flex flex-col gap-0.5">
+        <li>
+          <a href="{% url 'entradas:entradas-list' %}"
+             class="flex items-center gap-3 text-zinc-400 hover:text-white hover:bg-zinc-800 px-3 py-2.5 rounded-lg no-underline transition-colors text-sm">
+            <i class="bi bi-cash-coin" style="font-size: 15px;"></i>
+            <span>Entradas</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'entradas:categorias-entradas-list' %}"
+             class="flex items-center gap-3 text-zinc-400 hover:text-white hover:bg-zinc-800 px-3 py-2.5 rounded-lg no-underline transition-colors text-sm">
+            <i class="bi bi-bookmark-plus" style="font-size: 15px;"></i>
+            <span>Categorias</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Saídas -->
+    <div>
+      <p class="text-zinc-600 text-xs font-semibold uppercase tracking-widest px-3 mb-1">Saídas</p>
+      <ul class="flex flex-col gap-0.5">
+        <li>
+          <a href="{% url 'saidas:saidas-list' %}"
+             class="flex items-center gap-3 text-zinc-400 hover:text-white hover:bg-zinc-800 px-3 py-2.5 rounded-lg no-underline transition-colors text-sm">
+            <i class="bi bi-graph-down-arrow" style="font-size: 15px;"></i>
+            <span>Saídas</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'saidas:categorias-saidas-list' %}"
+             class="flex items-center gap-3 text-zinc-400 hover:text-white hover:bg-zinc-800 px-3 py-2.5 rounded-lg no-underline transition-colors text-sm">
+            <i class="bi bi-bookmark-dash" style="font-size: 15px;"></i>
+            <span>Categorias</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Bitcoin -->
+    <div>
+      <p class="text-zinc-600 text-xs font-semibold uppercase tracking-widest px-3 mb-1">Bitcoin</p>
+      <ul class="flex flex-col gap-0.5">
+        <li>
+          <a href="{% url 'bitcoin:bitcoin-upload' %}"
+             class="flex items-center gap-3 text-zinc-400 hover:text-white hover:bg-zinc-800 px-3 py-2.5 rounded-lg no-underline transition-colors text-sm">
+            <i class="bi bi-upload" style="font-size: 15px;"></i>
+            <span>Upload</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'bitcoin:bitcoin-list' %}"
+             class="flex items-center gap-3 text-zinc-400 hover:text-white hover:bg-zinc-800 px-3 py-2.5 rounded-lg no-underline transition-colors text-sm">
+            <i class="bi bi-currency-bitcoin" style="font-size: 15px;"></i>
+            <span>Transações</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
   </div>
+</div>

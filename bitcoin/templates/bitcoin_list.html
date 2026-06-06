@@ -1,107 +1,145 @@
 {% extends 'base.html' %}
-{% block title %}
-    BIT-APP Transações BTC
-{% endblock %}
+{% block title %}BIT-APP - Transações BTC{% endblock %}
 {% block content %}
-<div class="container py-4">
 
-<div class="d-flex align-items-center gap-3 mb-4">
-<h4 class="mb-0 fw-semibold text-warning d-flex align-items-center gap-2">
-<i class="bi bi-currency-bitcoin"></i>
-    Transações BTC
-</h4>
+<div class="py-6 px-8">
+
+  <!-- Header -->
+  <div class="mb-8">
+    <p class="text-zinc-500 text-xs font-semibold uppercase tracking-widest mb-1">Bitcoin</p>
+    <h4 class="font-semibold text-white text-xl flex items-center gap-2 m-0">
+      <i class="bi bi-currency-bitcoin text-amber-500"></i> Transações BTC
+    </h4>
+  </div>
+
+  <!-- Lista de transações -->
+  <div class="flex flex-col gap-2">
+    {% for transacao in transacoes %}
+
+    <!-- Card principal -->
+    <div class="bg-zinc-900 border border-zinc-700 hover:border-zinc-500 rounded-xl transition-colors">
+
+      <!-- Linha principal -->
+      <div class="px-5 py-4 flex items-center gap-4">
+
+        <!-- Ícone movimentação -->
+        <div class="shrink-0">
+          {% if transacao.movimentacao == "entrada" %}
+          <div class="w-9 h-9 rounded-lg bg-green-900/40 flex items-center justify-center">
+            <i class="bi bi-arrow-down-left text-green-400"></i>
+          </div>
+          {% else %}
+          <div class="w-9 h-9 rounded-lg bg-red-900/40 flex items-center justify-center">
+            <i class="bi bi-arrow-up-right text-red-400"></i>
+          </div>
+          {% endif %}
+        </div>
+
+        <!-- Data e tipo -->
+        <div class="w-36 shrink-0">
+          <p class="text-white text-sm font-medium m-0 capitalize">{{ transacao.tipo }}</p>
+          <p class="text-zinc-500 text-xs m-0">{{ transacao.data|date:"d/m/Y H:i" }}</p>
+        </div>
+
+        <div class="w-px h-8 bg-zinc-700 shrink-0"></div>
+
+        <!-- Ativo e movimentação -->
+        <div class="flex items-center gap-2 w-40 shrink-0">
+          <span class="bg-amber-900/40 text-amber-400 text-xs px-2.5 py-1 rounded-full">
+            {{ transacao.ativo }}
+          </span>
+          {% if transacao.movimentacao == "entrada" %}
+          <span class="bg-green-900/40 text-green-400 text-xs px-2.5 py-1 rounded-full">
+            {{ transacao.movimentacao }}
+          </span>
+          {% else %}
+          <span class="bg-red-900/40 text-red-400 text-xs px-2.5 py-1 rounded-full">
+            {{ transacao.movimentacao }}
+          </span>
+          {% endif %}
+        </div>
+
+        <div class="w-px h-8 bg-zinc-700 shrink-0"></div>
+
+        <!-- Origem → Destino -->
+        <div class="flex-1 flex items-center gap-2 min-w-0">
+          <p class="text-zinc-400 text-xs m-0 truncate">{{ transacao.origem }}</p>
+          <i class="bi bi-arrow-right text-zinc-600 shrink-0" style="font-size: 11px;"></i>
+          <p class="text-zinc-400 text-xs m-0 truncate">{{ transacao.destino }}</p>
+        </div>
+
+        <div class="w-px h-8 bg-zinc-700 shrink-0"></div>
+
+        <!-- Valores -->
+        <div class="text-right shrink-0">
+          <p class="text-amber-400 font-semibold text-sm m-0">R$ {{ transacao.valor_total|floatformat:2 }}</p>
+          <p class="text-green-400 text-xs m-0">Líq: R$ {{ transacao.valor_liquido|floatformat:2 }}</p>
+        </div>
+
+        <!-- Toggle detalhes -->
+        <button onclick="this.closest('.bg-zinc-900').querySelector('.detalhes').classList.toggle('hidden'); this.querySelector('i').classList.toggle('rotate-180')"
+                class="shrink-0 w-7 h-7 rounded-lg bg-zinc-800 hover:bg-zinc-700 border border-zinc-600 flex items-center justify-center text-zinc-400 hover:text-white transition-all">
+          <i class="bi bi-chevron-down transition-transform" style="font-size: 11px;"></i>
+        </button>
+
+      </div>
+
+      <!-- Detalhes expandíveis -->
+      <div class="detalhes hidden border-t border-zinc-800 px-5 py-4">
+        <div class="grid grid-cols-4 gap-4">
+          <div>
+            <p class="text-zinc-500 text-xs mb-1">Satoshis</p>
+            <p class="text-white text-sm m-0">{{ transacao.satoshis|floatformat:8 }}</p>
+          </div>
+          <div>
+            <p class="text-zinc-500 text-xs mb-1">Cotação do dia</p>
+            <p class="text-white text-sm m-0">R$ {{ transacao.cotacao_do_dia|floatformat:2 }}</p>
+          </div>
+          <div>
+            <p class="text-zinc-500 text-xs mb-1">Taxa ativo</p>
+            <p class="text-white text-sm m-0">{{ transacao.taxa_ativo }}</p>
+          </div>
+          <div>
+            <p class="text-zinc-500 text-xs mb-1">Taxa quantidade</p>
+            <p class="text-white text-sm m-0">
+              {% if transacao.taxa_quantidade == 0 %}0
+              {% else %}{{ transacao.taxa_quantidade|floatformat:5 }}
+              {% endif %}
+            </p>
+          </div>
+          <div>
+            <p class="text-zinc-500 text-xs mb-1">Taxa %</p>
+            <p class="text-white text-sm m-0">
+              {% if transacao.taxa_porcentual == 0 %}0%
+              {% else %}{{ transacao.taxa_porcentual|floatformat:2 }}%
+              {% endif %}
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    {% empty %}
+    <div class="py-16 flex flex-col items-center justify-center gap-3 text-center">
+      <div class="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center">
+        <i class="bi bi-currency-bitcoin text-zinc-500 text-xl"></i>
+      </div>
+      <p class="text-zinc-500 text-sm">Nenhuma transação encontrada.</p>
+      <a href="{% url 'bitcoin:bitcoin-upload' %}"
+         class="text-amber-500 hover:text-amber-400 text-sm no-underline transition-colors">
+        Importar transações →
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% if transacoes %}
+  <p class="text-zinc-600 text-xs mt-4">
+    {{ transacoes|length }} transação transações registrada{{ transacoes|length|pluralize }}
+  </p>
+  {% endif %}
+
 </div>
 
-<div class="bg-dark rounded-4 border border-secondary-subtle overflow-hidden">
-<div class="table-responsive">
-<table class="table table-dark table-hover align-middle mb-0">
-<thead>
-<tr class="text-center small text-secondary">
-<th class="py-3">Data</th>
-<th>Ativo</th>
-<th>Movimentação</th>
-<th>Tipo</th>
-<th>Valor Total</th>
-<th>Valor Líquido</th>
-<th>Satoshis</th>
-<th>Taxa %</th>
-<th>Taxa Ativo</th>
-<th>Taxa Qtde</th>
-<th>Cotação do Dia</th>
-<th>Origem</th>
-<th>Destino</th>
-</tr>
-</thead>
-<tbody>
-{% for transacao in transacoes %}
-<tr class="text-center">
-<td class="text-secondary small">
-    {{ transacao.data|date:"d/m/Y H:i" }}
-</td>
-<td>
-<span class="badge bg-warning-subtle text-warning px-2 py-1 rounded-pill">
-    {{ transacao.ativo }}
-</span>
-</td>
-<td>
-{% if transacao.movimentacao == "entrada" %}
-<span class="badge bg-success-subtle text-success px-2 py-1 rounded-pill">
-    {{ transacao.movimentacao }}
-</span>
-{% else %}
-<span class="badge bg-danger-subtle text-danger px-2 py-1 rounded-pill">
-    {{ transacao.movimentacao }}
-</span>
-{% endif %}
-</td>
-<td class="text-white small">{{ transacao.tipo }}</td>
-<td class="fw-semibold text-warning">
-    {{ transacao.valor_total|floatformat:2 }}
-</td>
-<td class="fw-semibold text-success">
-    {{ transacao.valor_liquido|floatformat:2 }}
-</td>
-<td class="text-secondary small">
-    {{ transacao.satoshis|floatformat:8 }}
-</td>
-{% if transacao.taxa_porcentual == 0 %}
-    <td class="text-secondary small">
-        0%
-    </td>
-{% else %}
-    <td class="text-secondary small">
-        {{ transacao.taxa_porcentual|floatformat:2 }}%        
-    </td>
-{% endif %}
-<td class="text-secondary small">
-    {{ transacao.taxa_ativo }}
-</td>
-{% if transacao.taxa_quantidade == 0 %}
-    <td class="text-secondary small">
-        0
-    </td>
-{% else %}
-    <td class="text-secondary small">
-        {{ transacao.taxa_quantidade|floatformat:5 }}
-    </td>
-{% endif %}
-<td class="text-white small">
-    R$ {{ transacao.cotacao_do_dia|floatformat:2 }}
-</td>
-<td class="text-secondary small">{{ transacao.origem }}</td>
-<td class="text-secondary small">{{ transacao.destino }}</td>
-</tr>
-{% empty %}
-<tr>
-<td colspan="11" class="text-center text-secondary py-4">
-    Nenhuma transação encontrada.
-</td>
-</tr>
-{% endfor %}
-</tbody>
-</table>
-</div>
-</div>
-
-</div>
 {% endblock %}

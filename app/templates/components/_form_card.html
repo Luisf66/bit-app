@@ -1,11 +1,8 @@
-{% extends 'base.html' %}
-{% block title %}BIT-APP - Editar Entrada{% endblock %}
-{% block content %}
-
-<div class="py-4 ml-[15%]" style="max-width: 600px;">
+<!-- components/_form_card.html -->
+<div class="py-4 px-6 max-w-xl mx-auto">
   <div class="border border-zinc-700 rounded-lg p-6">
 
-    <h5 class="font-semibold text-center mb-6">Editar Entrada</h5>
+    <h5 class="font-semibold text-center mb-6">{{ form_titulo }}</h5>
 
     <form method="POST">
       {% csrf_token %}
@@ -23,18 +20,16 @@
       {% endfor %}
 
       <div class="flex justify-between items-center mt-6">
-        <a href="{% url 'entradas:entradas-list' %}"
+        <a href="{{ form_voltar_url }}"
            class="text-sm text-zinc-400 hover:text-white transition-colors no-underline">
           ← Voltar
         </a>
         <button type="submit"
                 class="text-sm bg-green-600 hover:bg-green-500 text-white px-4 py-1.5 rounded transition-colors">
-          Confirmar Alterações
+          {{ form_botao }}
         </button>
       </div>
     </form>
 
   </div>
 </div>
-
-{% endblock %}

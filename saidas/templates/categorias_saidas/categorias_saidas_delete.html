@@ -1,32 +1,41 @@
 {% extends 'base.html' %}
-{% block title %}
-    BIT-APP - Excluir Categoria
-{% endblock %}
+{% block title %}BIT-APP - Excluir Categoria{% endblock %}
 {% block content %}
-<div class="container py-4" style="max-width: 700px; margin-left: 15%;">
 
-    <div class="card border rounded p-4">
-        <h5 class="fw-semibold text-center mb-4">Excluir Categoria</h5>
+<div class="py-4 ml-[15%]" style="max-width: 700px;">
+  <div class="border border-zinc-700 rounded-lg p-6">
 
-        <div class="alert alert-danger small mb-3 text-center">
-            Essa ação não pode ser desfeita
-        </div>
+    <h5 class="font-semibold text-center mb-6">Excluir Categoria</h5>
 
-        <p class="mb-3 small text-muted text-center">Você está prestes a excluir a seguinte categoria:</p>
-
-        <p class="text-center mb-4">
-            <span class="badge text-bg-success fs-6 fw-normal">{{ object.nome }}</span>
-        </p>
-
-        <form method="POST">
-            {% csrf_token %}
-            <div class="d-flex gap-2 justify-content-between mt-3">
-                <a href="{% url 'saidas:categorias-saidas-list' %}" class="btn btn-sm btn-outline-secondary">← Voltar</a>
-                <div class="d-flex gap-2">
-                    <button type="submit" class="btn btn-sm btn-danger">Confirmar exclusão</button>
-                </div>
-            </div>
-        </form>
+    <div class="bg-red-900/30 border border-red-700 rounded text-sm text-center text-red-400 py-2 mb-4">
+      Essa ação não pode ser desfeita.
     </div>
+
+    <p class="text-sm text-zinc-400 text-center mb-4">
+      Você está prestes a excluir a seguinte categoria:
+    </p>
+
+    <p class="text-center mb-6">
+      <span class="bg-green-700 text-white text-base px-3 py-1 rounded font-normal">
+        {{ object.nome }}
+      </span>
+    </p>
+
+    <form method="POST">
+      {% csrf_token %}
+      <div class="flex justify-between items-center mt-4">
+        <a href="{% url 'saidas:categorias-saidas-list' %}"
+           class="text-sm text-zinc-400 hover:text-white transition-colors no-underline">
+          ← Voltar
+        </a>
+        <button type="submit"
+                class="text-sm bg-red-700 hover:bg-red-600 text-white px-4 py-1.5 rounded transition-colors">
+          Confirmar exclusão
+        </button>
+      </div>
+    </form>
+
+  </div>
 </div>
+
 {% endblock %}

@@ -1,35 +1,42 @@
 {% extends 'base.html' %}
-{% block title %}
-    BIT-APP - Nova Categoria de Entrada
-{% endblock %}
+{% block title %}BIT-APP - Nova Categoria de Entrada{% endblock %}
 {% block content %}
-<div class="container py-4" style="max-width: 600px; margin-left: 15%;">
 
-    <div class="card border rounded p-4">
-        <h5 class="fw-semibold text-center mb-4">Nova Categoria de Entrada</h5>
+<div class="py-4 ml-[15%]" style="max-width: 600px;">
+  <div class="border border-zinc-700 rounded-lg p-6">
 
-        <form method="POST">
-            {% csrf_token %}
+    <h5 class="font-semibold text-center mb-6">Nova Categoria de Entrada</h5>
 
-            <div class="mb-3">
-                <label for="nome" class="form-label small fw-semibold w-100 text-center">Nome</label>
-                <input
-                    type="text"
-                    class="form-control form-control-sm"
-                    id="nome"
-                    name="nome"
-                    placeholder="Ex: Alimentação"
-                    required
-                >
-            </div>
+    <form method="POST">
+      {% csrf_token %}
+      <div class="mb-4">
+        <label for="nome"
+               class="block text-sm font-semibold text-center mb-1">
+          Nome
+        </label>
+        <input
+          type="text"
+          id="nome"
+          name="nome"
+          placeholder="Ex: Alimentação"
+          required
+          class="w-full bg-zinc-800 border border-zinc-600 rounded px-3 py-1.5 text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:border-amber-500 transition-colors"
+        >
+      </div>
 
-            <div class="d-flex gap-2 justify-content-between mt-3">
-                <a href="{% url 'entradas:categorias-entradas-list' %}" class="btn btn-sm btn-outline-secondary">← Voltar</a>
-                <div class="d-flex gap-2">
-                    <button type="submit" class="btn btn-sm btn-success">Salvar categoria</button>
-                </div>
-            </div>
-        </form>
-    </div>
+      <div class="flex justify-between items-center mt-6">
+        <a href="{% url 'entradas:categorias-entradas-list' %}"
+           class="text-sm text-zinc-400 hover:text-white transition-colors no-underline">
+          ← Voltar
+        </a>
+        <button type="submit"
+                class="text-sm bg-green-600 hover:bg-green-500 text-white px-4 py-1.5 rounded transition-colors">
+          Salvar categoria
+        </button>
+      </div>
+    </form>
+
+  </div>
 </div>
+
 {% endblock %}
