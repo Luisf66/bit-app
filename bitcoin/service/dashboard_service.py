@@ -74,7 +74,7 @@ class DashboardService:
             'valores_transacoes': dashboard['valores_transacoes'],
             'satoshis_transacoes': dashboard['satoshis_transacoes'],
             'cotacoes_transacoes': dashboard['cotacoes_transacoes'],
-            'movimentacoes_transacoes': dashboard['movimentacoes_transacoes'],
+            'movimentacoes_transacoes': list(dashboard['movimentacoes_transacoes']),
         }
 
     def build_context(self, carteira: str) -> dict:

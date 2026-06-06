@@ -139,8 +139,12 @@ def obter_preco_medio():
         valor_satoshis_total=Avg('satoshis')
     )
 
-    preco_medio_total = preco_medio['valor_liquido_total'] / preco_medio['valor_satoshis_total']
+    if preco_medio['valor_liquido_total'] and preco_medio['valor_satoshis_total']:
 
-    preco_medio_formatado = f'{preco_medio_total:,.2f}'.replace(',', 'X').replace('.', ',').replace('X', '.')
+        preco_medio_total = preco_medio['valor_liquido_total'] / preco_medio['valor_satoshis_total']
 
-    return preco_medio_formatado
+        preco_medio_formatado = f'{preco_medio_total:,.2f}'.replace(',', 'X').replace('.', ',').replace('X', '.')
+
+        return preco_medio_formatado
+
+    return 0
