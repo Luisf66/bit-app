@@ -1,8 +1,10 @@
 from django.db import models
+from django.conf import settings
 # Create your models here.
 
 
 class TransacaoBTC(models.Model):
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     hash = models.CharField(max_length=32, unique=True)
     # Dados da transação
     ativo = models.CharField(max_length=20)

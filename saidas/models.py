@@ -1,8 +1,10 @@
 from django.db import models
+from django.conf import settings
+
 
 # Create your models here.
-
 class Categorias_Saidas(models.Model):
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     nome = models.CharField(max_length=100)
 
     class Meta:
@@ -13,6 +15,7 @@ class Categorias_Saidas(models.Model):
         return self.nome
 
 class Saidas(models.Model):
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     data = models.DateField()
     valor = models.FloatField()
     descricao = models.CharField(max_length=200)
