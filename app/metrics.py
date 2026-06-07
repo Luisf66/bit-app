@@ -8,12 +8,12 @@ from django.db.models.functions import Cast
 from django.utils.formats import number_format
 
 
-def obter_saldo():
-    total_saidas = Saidas.objects.aggregate(
+def obter_saldo(usuario):
+    total_saidas = Saidas.objects.filter(usuario=usuario).aggregate(
         valor_total_saidas=Sum('valor')
     )['valor_total_saidas'] or 0
 
-    total_entradas = Entradas.objects.aggregate(
+    total_entradas = Entradas.objects.filter(usuario=usuario).aggregate(
         valor_total_entradas=Sum('valor')
     )['valor_total_entradas'] or 0
 
@@ -26,9 +26,10 @@ def obter_saldo():
     }
 
 
-def obter_informacoes_financeiras():
+def obter_informacoes_financeiras(usuario):
     entradas = (
         Entradas.objects
+        .filter(usuario=usuario)
         .values('data')
         .annotate(valor=Sum('valor'))
         .order_by('data')
@@ -36,6 +37,7 @@ def obter_informacoes_financeiras():
 
     saidas = (
         Saidas.objects
+        .filter(usuario=usuario)
         .values('data')
         .annotate(valor=Sum('valor'))
         .order_by('data')
@@ -64,9 +66,9 @@ def obter_informacoes_financeiras():
         'valor_saida': valor_saida,
     }
 
-def obter_metricas():
 
-    btc_metrics = TransacaoBTC.objects.aggregate(
+def obter_metricas(usuario):
+    btc_metrics = TransacaoBTC.objects.filter(usuario=usuario).aggregate(
         total_gasto_btc=Sum('valor_total', filter=Q(tipo__in=['compra', 'compra_recorrente'])),
         total_liquido_btc=Sum('valor_liquido', filter=Q(tipo__in=['compra', 'compra_recorrente'])),
         envio_btc_total=Sum('valor_total', filter=Q(tipo='envio_onchain')),
@@ -82,19 +84,19 @@ def obter_metricas():
         'total_gasto_btc': number_format(btc_metrics['total_gasto_btc'] or 0, decimal_pos=2),
         'total_liquido_btc': number_format(btc_metrics['total_liquido_btc'] or 0, decimal_pos=2),
         'taxas_pagas_compra': number_format(taxas_pagas_compra, decimal_pos=2),
-
         'envio_btc_total': number_format(btc_metrics['envio_btc_total'] or 0, decimal_pos=2),
         'envio_btc_liquido': number_format(btc_metrics['envio_btc_liquido'] or 0, decimal_pos=2),
         'taxas_pagas_envio': number_format(taxas_pagas_envio, decimal_pos=2),
-
         'total_satoshis_comprados': number_format(btc_metrics['total_satoshis_comprados'] or 0, decimal_pos=9),
         'total_satoshis_enviados': number_format(btc_metrics['total_satoshis_enviados'] or 0, decimal_pos=9),
     }
 
-def obter_dashboard():
+
+def obter_dashboard(usuario):
     datas, tipos, valores, satoshis, cotacoes = [], [], [], [], []
 
     btc_dashboard = TransacaoBTC.objects.filter(
+        usuario=usuario,
         movimentacao='entrada',
         tipo__in=['compra_recorrente', 'compra']
     ).values_list(
@@ -106,6 +108,7 @@ def obter_dashboard():
     )
 
     movimentacoes = TransacaoBTC.objects.filter(
+        usuario=usuario,
         tipo__in=['compra_recorrente', 'compra', 'envio_onchain']
     ).values_list('movimentacao')
 
@@ -127,11 +130,13 @@ def obter_dashboard():
         'valores_transacoes': valores,
         'satoshis_transacoes': satoshis,
         'cotacoes_transacoes': cotacoes,
-        'movimentacoes_transacoes': movimentacoes
+        'movimentacoes_transacoes': movimentacoes,
     }
 
-def obter_preco_medio():
+
+def obter_preco_medio(usuario):
     preco_medio = TransacaoBTC.objects.filter(
+        usuario=usuario,
         movimentacao='entrada',
         tipo__in=['compra_recorrente', 'compra']
     ).aggregate(
@@ -140,11 +145,8 @@ def obter_preco_medio():
     )
 
     if preco_medio['valor_liquido_total'] and preco_medio['valor_satoshis_total']:
-
         preco_medio_total = preco_medio['valor_liquido_total'] / preco_medio['valor_satoshis_total']
-
         preco_medio_formatado = f'{preco_medio_total:,.2f}'.replace(',', 'X').replace('.', ',').replace('X', '.')
-
         return preco_medio_formatado
 
     return 0

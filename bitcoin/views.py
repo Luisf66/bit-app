@@ -2,34 +2,39 @@ import markdown
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.views.generic import ListView
-
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 from ai.service.prompt_service import PromptService
-
 from bitcoin.models import TransacaoBTC
 from bitcoin.service.dashboard_service import DashboardService
 from bitcoin.service.upload_service import BitcoinUploadService, CSVInvalidoError
 
 
-class TransacaoListView(ListView):
+class TransacaoListView(LoginRequiredMixin, ListView):
     model = TransacaoBTC
     template_name = 'bitcoin_list.html'
     context_object_name = 'transacoes'
 
+    def get_queryset(self):
+        return TransacaoBTC.objects.filter(usuario=self.request.user)
+
+
+@login_required
 def dashboard_view(request):
     carteira = request.GET.get('carteira', '')
-    service = DashboardService()
+    service = DashboardService(request.user)
     context = service.build_context(carteira)
-
-    analise_raw = PromptService().get_or_refresh()
+    analise_raw = PromptService(request.user).get_or_refresh()
     context['analise_ia'] = markdown.markdown(analise_raw)
-
     return render(request, 'bitcoin_dashboard.html', context)
 
+
+@login_required
 def bitcoin_upload_view(request):
     if request.method != 'POST' or not request.FILES.get('arquivo'):
         return render(request, 'bitcoin_upload.html')
 
-    service = BitcoinUploadService(request.FILES['arquivo'])
+    service = BitcoinUploadService(request.FILES['arquivo'], request.user)
 
     try:
         service.validate_csv()
