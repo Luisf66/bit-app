@@ -1,0 +1,35 @@
+<!-- components/_form_card.html -->
+<div class="py-4 px-6 max-w-xl mx-auto">
+  <div class="border border-zinc-700 rounded-lg p-6">
+
+    <h5 class="font-semibold text-center mb-6">{{ form_titulo }}</h5>
+
+    <form method="POST">
+      {% csrf_token %}
+      {% for field in form %}
+      <div class="mb-4">
+        <label for="{{ field.id_for_label }}"
+               class="block text-sm font-semibold text-center mb-1">
+          {{ field.label }}
+        </label>
+        {{ field }}
+        {% if field.errors %}
+        <div class="text-red-500 text-sm mt-1">{{ field.errors }}</div>
+        {% endif %}
+      </div>
+      {% endfor %}
+
+      <div class="flex justify-between items-center mt-6">
+        <a href="{{ form_voltar_url }}"
+           class="text-sm text-zinc-400 hover:text-white transition-colors no-underline">
+          ← Voltar
+        </a>
+        <button type="submit"
+                class="text-sm bg-green-600 hover:bg-green-500 text-white px-4 py-1.5 rounded transition-colors">
+          {{ form_botao }}
+        </button>
+      </div>
+    </form>
+
+  </div>
+</div>

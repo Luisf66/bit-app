@@ -1,8 +1,36 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-black py-4" style="margin-left: 5%; margin-top: 1%;">
-  <div style="display: flex; align-items: center; gap: 10px;">
-    <div style="width: 32px; height: 32px; border-radius: 8px; background: #f59e0b; display: flex; align-items: center; justify-content: center;">
-      <i class="bi bi-currency-bitcoin fs-3"></i>
+<nav class="bg-black py-4 px-8 mt-2 flex items-center justify-between">
+
+  <!-- Logo -->
+  <div class="flex items-center gap-3">
+    <div class="w-8 h-8 rounded-lg bg-amber-500 flex items-center justify-center">
+      <i class="bi bi-currency-bitcoin text-2xl"></i>
     </div>
-    <span style="color: #fff; font-weight: 500; font-size: 25px;">Bit <span style="color: #f59e0b;">App</span></span>
+    <span class="text-white font-medium text-2xl">
+      Bit <span class="text-amber-500">App</span>
+    </span>
   </div>
+
+  <!-- Usuário e logout -->
+  {% if request.user.is_authenticated %}
+  <div class="flex items-center gap-3">
+
+    <div class="flex items-center gap-2 bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-1.5">
+      <div class="w-6 h-6 rounded-full bg-amber-900/40 flex items-center justify-center">
+        <i class="bi bi-person text-amber-500" style="font-size: 12px;"></i>
+      </div>
+      <span class="text-zinc-300 text-sm">{{ request.user.username }}</span>
+    </div>
+
+    <form method="POST" action="{% url 'usuarios:logout' %}">
+      {% csrf_token %}
+      <button type="submit"
+              class="flex items-center gap-2 border border-zinc-700 hover:border-zinc-500 bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white text-xs px-3 py-2 rounded-lg transition-colors">
+        <i class="bi bi-box-arrow-right"></i>
+        <span>Sair</span>
+      </button>
+    </form>
+
+  </div>
+  {% endif %}
+
 </nav>

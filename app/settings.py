@@ -44,9 +44,11 @@ INSTALLED_APPS = [
 
     'django_extensions',
 
+    'ai',
     'bitcoin',
     'entradas',
     'saidas',
+    'usuarios',
 ]
 
 MIDDLEWARE = [
@@ -119,6 +121,12 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+AUTH_USER_MODEL = 'usuarios.Usuario'
+
+LOGIN_URL = 'usuarios:login'
+LOGIN_REDIRECT_URL = 'bitcoin:bitcoin-dashboard'
+LOGOUT_REDIRECT_URL = 'usuarios:login'
 
 
 # Internationalization

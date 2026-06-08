@@ -1,80 +1,66 @@
 {% extends 'base.html' %}
-{% block title %}
-    BIT-APP - Categorias de Entradas
-{% endblock %}
-
+{% block title %}BIT-APP - Categorias de Entradas{% endblock %}
 {% block content %}
-<div class="container py-4">
 
-    <!-- HEADER -->
-    <div class="d-flex align-items-center gap-3 mb-4" style="margin-left: 29%;">
-        <h4 class="mb-0 fw-semibold text-warning d-flex align-items-center gap-2">
-            <i class="bi bi-bookmark-plus"></i>
-            Categorias de Entradas
+<div class="py-6 px-8">
+  <div class="max-w-2xl">
+
+    <!-- Header -->
+    <div class="mb-8">
+      <p class="text-zinc-500 text-xs font-semibold uppercase tracking-widest mb-1">Gestão</p>
+      <div class="flex items-center justify-between">
+        <h4 class="font-semibold text-white text-xl flex items-center gap-2 m-0">
+          <i class="bi bi-bookmark-plus text-amber-500"></i> Categorias de Entradas
         </h4>
-
-        <a href="{% url 'entradas:categorias-entradas-create' %}" 
-           class="btn btn-warning fw-semibold rounded-pill px-4 py-2">
-            <i class="bi bi-plus-lg"></i> Nova Categoria
+        <a href="{% url 'entradas:categorias-entradas-create' %}"
+           class="bg-amber-500 hover:bg-amber-400 text-black font-semibold text-sm px-5 py-2.5 rounded-lg no-underline transition-colors flex items-center gap-2">
+          <i class="bi bi-plus-lg"></i> Nova Categoria
         </a>
+      </div>
     </div>
 
-    <!-- CENTRALIZAÇÃO + LARGURA CONTROLADA -->
-    <div class="row justify-content-center">
-        <div class="col-lg-6 col-md-8">
-
-            <div class="bg-dark rounded-4 border border-secondary-subtle overflow-hidden">
-                <div class="table-responsive">
-                    <table class="table table-dark table-hover align-middle mb-0">
-
-                        <thead>
-                            <tr class="text-center small text-secondary">
-                                <th>Nome</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            {% for cat in categorias_entradas %}
-                            <tr class="text-center">
-                                
-                                <td>
-                                    <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill">
-                                        {{ cat.nome }}
-                                    </span>
-                                </td>
-
-                                <td>
-                                    <div class="d-flex justify-content-center gap-2">
-                                        <a href="{% url 'entradas:categorias-entradas-update' cat.pk %}" 
-                                           class="btn btn-sm btn-outline-light rounded-circle">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
-
-                                        <a href="{% url 'entradas:categorias-entradas-delete' cat.pk %}" 
-                                           class="btn btn-sm btn-outline-danger rounded-circle">
-                                            <i class="bi bi-trash"></i>
-                                        </a>
-                                    </div>
-                                </td>
-
-                            </tr>
-
-                            {% empty %}
-                            <tr>
-                                <td colspan="2" class="text-center text-secondary py-4">
-                                    Nenhuma categoria cadastrada.
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-
-                    </table>
-                </div>
-            </div>
-
+    <!-- Grid de categorias -->
+    <div class="grid grid-cols-2 gap-3">
+      {% for cat in categorias_entradas %}
+      <div class="bg-zinc-900 border border-zinc-700 hover:border-zinc-500 rounded-xl p-4 flex items-center justify-between transition-colors group">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg bg-green-900/40 flex items-center justify-center">
+            <i class="bi bi-tag text-green-400" style="font-size: 13px;"></i>
+          </div>
+          <span class="text-white text-sm font-medium">{{ cat.nome }}</span>
         </div>
+        <div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+          <a href="{% url 'entradas:categorias-entradas-update' cat.pk %}"
+             class="w-7 h-7 rounded-lg bg-zinc-800 hover:bg-zinc-700 border border-zinc-600 flex items-center justify-center text-zinc-400 hover:text-white transition-colors no-underline">
+            <i class="bi bi-pencil" style="font-size: 11px;"></i>
+          </a>
+          <a href="{% url 'entradas:categorias-entradas-delete' cat.pk %}"
+             class="w-7 h-7 rounded-lg bg-red-900/20 hover:bg-red-900/40 border border-red-800 flex items-center justify-center text-red-500 hover:text-red-400 transition-colors no-underline">
+            <i class="bi bi-trash" style="font-size: 11px;"></i>
+          </a>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-span-2 py-16 flex flex-col items-center justify-center gap-3 text-center">
+        <div class="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center">
+          <i class="bi bi-bookmark text-zinc-500 text-xl"></i>
+        </div>
+        <p class="text-zinc-500 text-sm">Nenhuma categoria cadastrada.</p>
+        <a href="{% url 'entradas:categorias-entradas-create' %}"
+           class="text-amber-500 hover:text-amber-400 text-sm no-underline transition-colors">
+          Criar primeira categoria →
+        </a>
+      </div>
+      {% endfor %}
     </div>
 
+    {% if categorias_entradas %}
+    <p class="text-zinc-600 text-xs mt-4">
+      {{ categorias_entradas|length }} categoria{{ categorias_entradas|length|pluralize }} cadastrada{{ categorias_entradas|length|pluralize }}
+    </p>
+    {% endif %}
+
+  </div>
 </div>
+
 {% endblock %}

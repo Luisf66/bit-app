@@ -1,35 +1,40 @@
 {% extends 'base.html' %}
-{% block title %}
-    BIT-APP - Nova Entrada
-{% endblock %}
+{% block title %}BIT-APP - Nova Entrada{% endblock %}
 {% block content %}
-<div class="container py-4" style="max-width: 600px; margin-left: 15%;">
 
-    <div class="card border rounded p-4">
-        <h5 class="fw-semibold text-center mb-4">Nova Entrada</h5>
+<div class="py-4 ml-[15%]" style="max-width: 600px;">
+  <div class="border border-zinc-700 rounded-lg p-6">
 
-        <form method="POST">
-            {% csrf_token %}
+    <h5 class="font-semibold text-center mb-6">Nova Entrada</h5>
 
-            {% for field in form %}
-            <div class="mb-3">
-                <label for="{{ field.id_for_label }}" class="form-label small fw-semibold w-100 text-center">
-                    {{ field.label }}
-                </label>
-                {{ field }}
-                {% if field.errors %}
-                    <div class="text-danger small mt-1">{{ field.errors }}</div>
-                {% endif %}
-            </div>
-            {% endfor %}
+    <form method="POST">
+      {% csrf_token %}
+      {% for field in form %}
+      <div class="mb-4">
+        <label for="{{ field.id_for_label }}"
+               class="block text-sm font-semibold text-center mb-1">
+          {{ field.label }}
+        </label>
+        {{ field }}
+        {% if field.errors %}
+        <div class="text-red-500 text-sm mt-1">{{ field.errors }}</div>
+        {% endif %}
+      </div>
+      {% endfor %}
 
-            <div class="d-flex gap-2 justify-content-between mt-3">
-                <a href="{% url 'entradas:entradas-list' %}" class="btn btn-sm btn-outline-secondary">← Voltar</a>
-                <div class="d-flex gap-2">
-                    <button type="submit" class="btn btn-sm btn-success">Adicionar Entrada</button>
-                </div>
-            </div>
-        </form>
-    </div>
+      <div class="flex justify-between items-center mt-6">
+        <a href="{% url 'entradas:entradas-list' %}"
+           class="text-sm text-zinc-400 hover:text-white transition-colors no-underline">
+          ← Voltar
+        </a>
+        <button type="submit"
+                class="text-sm bg-green-600 hover:bg-green-500 text-white px-4 py-1.5 rounded transition-colors">
+          Adicionar Entrada
+        </button>
+      </div>
+    </form>
+
+  </div>
 </div>
+
 {% endblock %}
