@@ -1,11 +1,8 @@
 import factory
-from django.contrib.auth import get_user_model
 from saidas.models import Saidas, Categorias_Saidas
 from usuarios.test.factory.factory import UsuarioFactory
 import datetime
 
-
-Usuario = get_user_model()
 
 class CategoriaSaidaFactory(factory.django.DjangoModelFactory):
     class Meta:
