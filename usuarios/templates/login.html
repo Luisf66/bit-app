@@ -1,0 +1,70 @@
+{% extends 'base_auth.html' %}
+{% block title %}BIT-APP - Login{% endblock %}
+{% block content %}
+
+<div class="min-h-screen flex items-center justify-center py-12 px-4">
+  <div class="w-full max-w-md">
+
+    <!-- Logo -->
+    <div class="flex items-center justify-center gap-3 mb-8">
+      <div class="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center">
+        <i class="bi bi-currency-bitcoin text-black text-2xl"></i>
+      </div>
+      <span class="text-white font-medium text-2xl">Bit <span class="text-amber-500">App</span></span>
+    </div>
+
+    <!-- Card -->
+    <div class="bg-zinc-900 border border-zinc-700 rounded-2xl p-8">
+
+      <div class="mb-6">
+        <p class="text-zinc-500 text-xs font-semibold uppercase tracking-widest mb-1">Acesso</p>
+        <h4 class="text-white text-xl font-semibold m-0">Entrar na conta</h4>
+      </div>
+
+      <form method="POST">
+        {% csrf_token %}
+
+        {% for field in form %}
+        <div class="mb-4">
+          <label for="{{ field.id_for_label }}"
+                 class="block text-zinc-400 text-xs font-semibold uppercase tracking-wider mb-1.5">
+            {{ field.label }}
+          </label>
+          <input
+            type="{{ field.field.widget.input_type }}"
+            name="{{ field.html_name }}"
+            id="{{ field.id_for_label }}"
+            {% if field.value %}value="{{ field.value }}"{% endif %}
+            class="w-full bg-zinc-800 border border-zinc-600 rounded-lg px-4 py-2.5 text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:border-amber-500 transition-colors"
+          >
+          {% if field.errors %}
+          <p class="text-red-400 text-xs mt-1">{{ field.errors|join:", " }}</p>
+          {% endif %}
+        </div>
+        {% endfor %}
+
+        {% if form.non_field_errors %}
+        <div class="bg-red-900/30 border border-red-700 rounded-lg px-4 py-3 mb-4">
+          <p class="text-red-400 text-sm m-0">{{ form.non_field_errors|join:", " }}</p>
+        </div>
+        {% endif %}
+
+        <button type="submit"
+                class="w-full bg-amber-500 hover:bg-amber-400 text-black font-semibold text-sm py-2.5 rounded-lg transition-colors mt-2">
+          Entrar
+        </button>
+      </form>
+
+      <p class="text-zinc-500 text-sm text-center mt-6 m-0">
+        Não tem uma conta?
+        <a href="{% url 'usuarios:registro' %}"
+           class="text-amber-500 hover:text-amber-400 transition-colors no-underline font-medium">
+          Criar conta
+        </a>
+      </p>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}

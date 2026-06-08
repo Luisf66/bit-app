@@ -14,4 +14,4 @@ RUN pip install -r requirements.txt
 # Expoe a porta 8000 dentro do container
 EXPOSE 8000
 # Executa o sistema na porta 8000 dentro do container
-CMD python manage.py migrate && python manage.py runserver 0.0.0.0:8000
+CMD python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000 --nothreading

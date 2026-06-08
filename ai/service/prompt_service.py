@@ -9,21 +9,18 @@ CACHE_DIAS = 7
 
 class PromptService:
 
+    def __init__(self, usuario):
+        self.usuario = usuario
+
     def get_or_refresh(self) -> str:
-        """
-        Retorna a análise mais recente se tiver menos de 7 dias.
-        Caso contrário, requisita uma nova análise à IA e salva no banco.
-        """
-        ultimo = Prompt.objects.order_by('-created_at').first()
+        ultimo = Prompt.objects.filter(
+            usuario=self.usuario
+        ).order_by('-created_at').first()
 
         if ultimo and self._ainda_valido(ultimo):
             return ultimo.response
 
-        return BitAppAgent().invoke()
-
-    # ------------------------------------------------------------------ #
-    #  Privado                                                             #
-    # ------------------------------------------------------------------ #
+        return BitAppAgent(self.usuario).invoke()
 
     @staticmethod
     def _ainda_valido(prompt: Prompt) -> bool:
