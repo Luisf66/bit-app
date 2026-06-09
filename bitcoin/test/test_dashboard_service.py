@@ -70,10 +70,14 @@ class TestDashboardServiceBTC:
             valor_liquido='980.00',
         )
 
+        print(f'Usuario: {usuario}')
+
         with patch('bitcoin.service.dashboard_service.BlockchainService') as mock_bc:
             mock_bc.return_value.get_btc_price.return_value = '300.000,00'
             service = DashboardService(usuario)
             context = service.get_btc_context()
+            print(f'Service: {service}')
+            print(f'Context: {context}')
 
         assert context['total_gasto_btc'] is not None
         assert context['total_liquido_btc'] is not None

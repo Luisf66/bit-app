@@ -62,31 +62,31 @@ jobs:
       # ---------------------------------------------------------
       # TESTES — descomente quando tiver testes escritos
       # ---------------------------------------------------------
-      # - name: Rodar testes
-      #   env:
-      #     POSTGRES_DB: test_db
-      #     POSTGRES_USER: postgres
-      #     POSTGRES_PASSWORD: postgres
-      #     POSTGRES_HOST: localhost
-      #     POSTGRES_PORT: 5432
-      #     SECRET_KEY: ${{ secrets.SECRET_KEY }}
-      #     DEBUG: "True"
-      #     ALLOWED_HOSTS: "localhost,127.0.0.1"
-      #   run: pytest
+      - name: Rodar testes
+        env:
+          POSTGRES_DB: test_db
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          DEBUG: "True"
+          ALLOWED_HOSTS: "localhost,127.0.0.1"
+        run: pytest
 
       # ---------------------------------------------------------
       # COVERAGE — descomente quando quiser ativar
       # Instale antes: pip install pytest-cov (adicione ao requirements)
       # ---------------------------------------------------------
-      # - name: Cobertura de testes
-      #   env:
-      #     DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
-      #     SECRET_KEY: ${{ secrets.SECRET_KEY }}
-      #     DEBUG: "True"
-      #   run: pytest --cov=. --cov-report=xml --cov-fail-under=80
-      #
-      # - name: Upload do relatório de cobertura
-      #   uses: codecov/codecov-action@v4
-      #   with:
-      #     token: ${{ secrets.CODECOV_TOKEN }}
-      #     files: ./coverage.xml
+      - name: Cobertura de testes
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          DEBUG: "True"
+        run: pytest --cov=. --cov-report=xml --cov-fail-under=80
+      
+      - name: Upload do relatório de cobertura
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.xml
