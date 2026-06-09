@@ -1,5 +1,6 @@
 import factory
-import datetime
+import uuid
+from django.utils import timezone
 from decimal import Decimal
 from bitcoin.models import TransacaoBTC
 from usuarios.test.factory.factory import UsuarioFactory
@@ -10,7 +11,7 @@ class TransacaoBTCFactory(factory.django.DjangoModelFactory):
         model = TransacaoBTC
 
     usuario = factory.SubFactory(UsuarioFactory)
-    hash = factory.Sequence(lambda n: f'hash_{n:032d}')
+    hash = factory.LazyFunction(lambda: uuid.uuid4().hex)  # ← 32 chars exatos
     ativo = 'BTC'
     movimentacao = 'entrada'
     tipo = 'compra'
@@ -23,4 +24,4 @@ class TransacaoBTCFactory(factory.django.DjangoModelFactory):
     cotacao_do_dia = Decimal('500000.00')
     origem = 'pix'
     destino = 'carteira'
-    data = factory.LazyFunction(datetime.datetime.now)
+    data = factory.LazyFunction(timezone.now)  # ← com timezone
