@@ -201,22 +201,61 @@
   <!-- Análise IA -->
   <div class="mb-8">
     <div class="bg-zinc-900 border border-zinc-700 rounded-xl overflow-hidden">
-      <button
-        onclick="const c=document.getElementById('collapseAnalise');c.classList.toggle('hidden');this.querySelector('.chevron').classList.toggle('rotate-180')"
-        class="w-full flex items-center justify-between px-5 py-4 hover:bg-zinc-800 transition-colors">
+
+      <div class="px-5 py-4 flex items-center justify-between">
         <div class="flex items-center gap-3">
           <div class="w-7 h-7 rounded-lg bg-amber-900/40 flex items-center justify-center">
             <i class="bi bi-robot text-amber-500" style="font-size: 13px;"></i>
           </div>
-          <span class="text-white font-semibold text-sm">Análise de Dados — IA</span>
+          <div>
+            <span class="text-white font-semibold text-sm">Análise de Dados — IA</span>
+            {% if analise_data %}
+            <p class="text-zinc-500 text-xs m-0">
+              Gerada em {{ analise_data|date:"d/m/Y H:i" }}
+              {% if not analise_valida %}
+              <span class="text-amber-500">— expirada</span>
+              {% endif %}
+            </p>
+            {% endif %}
+          </div>
         </div>
-        <i class="bi bi-chevron-down chevron text-zinc-400 transition-transform duration-200"></i>
-      </button>
+
+        <div class="flex items-center gap-2">
+          <!-- Botão gerar/atualizar -->
+          <form method="POST" action="{% url 'bitcoin:gerar-analise' %}">
+            {% csrf_token %}
+            {% if not analise_ia %}
+            <button type="submit"
+                    class="flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-black font-semibold text-xs px-3 py-2 rounded-lg transition-colors">
+              <i class="bi bi-stars"></i> Gerar análise
+            </button>
+            {% elif not analise_valida %}
+            <button type="submit"
+                    class="flex items-center gap-2 border border-amber-700 hover:border-amber-500 text-amber-500 hover:text-amber-400 text-xs px-3 py-2 rounded-lg transition-colors">
+              <i class="bi bi-arrow-clockwise"></i> Atualizar análise
+            </button>
+            {% endif %}
+          </form>
+
+          <!-- Toggle conteúdo -->
+          {% if analise_ia %}
+          <button
+            onclick="const c=document.getElementById('collapseAnalise');c.classList.toggle('hidden');this.querySelector('.chevron').classList.toggle('rotate-180')"
+            class="w-7 h-7 rounded-lg bg-zinc-800 hover:bg-zinc-700 border border-zinc-600 flex items-center justify-center text-zinc-400 hover:text-white transition-all">
+            <i class="bi bi-chevron-down chevron text-zinc-400 transition-transform duration-200" style="font-size: 11px;"></i>
+          </button>
+          {% endif %}
+        </div>
+      </div>
+
+      {% if analise_ia %}
       <div id="collapseAnalise" class="hidden px-5 py-5 border-t border-zinc-800">
         <div class="text-zinc-300 text-sm leading-relaxed">
           {{ analise_ia|safe }}
         </div>
       </div>
+      {% endif %}
+
     </div>
   </div>
 
