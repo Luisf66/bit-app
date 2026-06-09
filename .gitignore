@@ -20,3 +20,7 @@ venv/
 #imagens
 *.png
 *.svg
+
+#testes
+.coverage
+coverage.xml
