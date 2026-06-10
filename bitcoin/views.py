@@ -24,9 +24,34 @@ def dashboard_view(request):
     carteira = request.GET.get('carteira', '')
     service = DashboardService(request.user)
     context = service.build_context(carteira)
-    analise_raw = PromptService(request.user).get_or_refresh()
-    context['analise_ia'] = markdown.markdown(analise_raw)
+
+    prompt_service = PromptService(request.user)
+    ultimo = prompt_service.obter_ultimo()
+
+    context['analise_ia'] = markdown.markdown(ultimo.response) if ultimo else None
+    context['analise_valida'] = prompt_service.ainda_valido()
+    context['analise_data'] = ultimo.created_at if ultimo else None
+
     return render(request, 'bitcoin_dashboard.html', context)
+
+@login_required
+def gerar_analise_view(request):
+    if request.method != 'POST':
+        return redirect('bitcoin:bitcoin-dashboard')
+
+    prompt_service = PromptService(request.user)
+
+    if prompt_service.ainda_valido():
+        messages.warning(request, 'A análise ainda está atualizada.')
+        return redirect('bitcoin:bitcoin-dashboard')
+
+    try:
+        prompt_service.gerar()
+        messages.success(request, 'Análise gerada com sucesso.')
+    except Exception as e:
+        messages.error(request, f'Erro ao gerar análise: {e}')
+
+    return redirect('bitcoin:bitcoin-dashboard')
 
 
 @login_required
