@@ -221,13 +221,13 @@ Resposta:
 ## 🗺️ Roadmap
 
 - [x] Planejamento e arquitetura inicial
-- [ ] Módulo de ganhos mensais
-- [ ] Módulo de despesas mensais
-- [ ] Dashboard com Plotly
-- [ ] Módulo de análise Bitcoin (BIPA CSV)
-- [ ] Integração com API de cotação Bitcoin
+- [x] Módulo de ganhos mensais
+- [x] Módulo de despesas mensais
+- [x] Dashboard com Plotly
+- [x] Módulo de análise Bitcoin (BIPA CSV)
+- [x] Integração com API de cotação Bitcoin
 - [ ] Módulo de autenticação (registro, login, JWT)
 - [ ] Documentação da API com Swagger/OpenAPI
-- [ ] Deploy em produção (Railway / Render / VPS)
+- [x] Deploy em produção (Railway / Render / VPS)
 
 ---
