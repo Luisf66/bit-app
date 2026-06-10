@@ -18,6 +18,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.views.generic import RedirectView
 
 
 urlpatterns = [
@@ -27,6 +28,7 @@ urlpatterns = [
     path('saidas/', include('saidas.urls')),
     path('bitcoin/', include('bitcoin.urls')),
     path('usuarios/', include('usuarios.urls')),
+    path('', RedirectView.as_view(url='/usuarios/login/', permanent=False)),
 ]
 
 if settings.DEBUG:
