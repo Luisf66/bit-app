@@ -2,10 +2,12 @@ asgiref==3.11.1
 certifi==2026.2.25
 charset-normalizer==3.4.7
 coverage==7.14.1
+dj-database-url==3.1.2
 Django==6.0.3
 django-extensions==4.1
 factory_boy==3.3.3
 Faker==40.21.0
+gunicorn==26.0.0
 idna==3.11
 iniconfig==2.3.0
 Markdown==3.10.2
@@ -27,3 +29,4 @@ requests==2.33.1
 six==1.17.0
 sqlparse==0.5.5
 urllib3==2.6.3
+whitenoise==6.12.0
