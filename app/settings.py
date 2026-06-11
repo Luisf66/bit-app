@@ -86,7 +86,15 @@ WSGI_APPLICATION = 'app.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-if os.getenv("DATABASE_LOCAL", "False") == "True":
+DATABASE_URL = os.getenv('DATABASE_URL')
+
+if DATABASE_URL:
+    # produção — Render fornece DATABASE_URL
+    DATABASES = {
+        'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600)
+    }
+elif os.getenv('DATABASE_LOCAL') == 'True':
+    # desenvolvimento local — SQLite
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -94,6 +102,7 @@ if os.getenv("DATABASE_LOCAL", "False") == "True":
         }
     }
 else:
+    # desenvolvimento local — PostgreSQL via Docker
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
@@ -103,13 +112,6 @@ else:
             'HOST': os.getenv('POSTGRES_HOST'),
             'PORT': os.getenv('POSTGRES_PORT'),
         }
-    }
-
-# Banco — aceita DATABASE_URL do Render ou variáveis separadas
-DATABASE_URL = os.getenv('DATABASE_URL')
-if DATABASE_URL:
-    DATABASES = {
-        'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600)
     }
 
 
