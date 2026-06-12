@@ -21,6 +21,12 @@
       <span class="text-zinc-300 text-sm">{{ request.user.username }}</span>
     </div>
 
+    <a href="{% url 'usuarios:perfil' %}"
+      class="flex items-center gap-2 border border-zinc-700 hover:border-zinc-500 bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white text-xs px-3 py-2 rounded-lg transition-colors no-underline">
+      <i class="bi bi-person-gear"></i>
+      <span>Perfil</span>
+    </a>
+
     <form method="POST" action="{% url 'usuarios:logout' %}">
       {% csrf_token %}
       <button type="submit"
