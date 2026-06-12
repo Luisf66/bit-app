@@ -46,10 +46,12 @@ def gerar_analise_view(request):
         return redirect('bitcoin:bitcoin-dashboard')
 
     try:
-        prompt_service.gerar()
+        prompt_service.gerar()                                       # ← gera análise
         messages.success(request, 'Análise gerada com sucesso.')
+    except ValueError as e:
+        messages.error(request, str(e))                              # ← exibe msg de chave ausente
     except Exception as e:
-        messages.error(request, f'Erro ao gerar análise: {e}')
+        messages.error(request, f'Erro ao gerar análise: {e}')       # ← exibe msg de erro geral
 
     return redirect('bitcoin:bitcoin-dashboard')
 
