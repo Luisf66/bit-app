@@ -40,6 +40,9 @@ class BitcoinUploadService:
         self.transacoes_ignoradas = 0
 
     def validate_csv(self) -> None:
+        """
+        Valida o arquivo CSV
+        """
         try:
             self.df = pd.read_csv(self.arquivo, sep=',')
         except Exception as e:
@@ -74,6 +77,9 @@ class BitcoinUploadService:
                 )
 
     def process_file(self) -> dict:
+        """
+        Processa o arquivo CSV
+        """
         try:
             with transaction.atomic():
                 for linha in range(len(self.df)):
@@ -88,6 +94,9 @@ class BitcoinUploadService:
         }
 
     def _parse_row(self, linha: int) -> dict:
+        """
+        Forma o dicionário com os dados da transação
+        """
         row = self.df.iloc[linha]
 
         ativo        = str(row.iloc[IDX_ATIVO]).strip().upper()
@@ -123,8 +132,12 @@ class BitcoinUploadService:
                         valor_liquido, satoshis, taxa_porcentual, taxa_ativo,
                         taxa_quantidade, cotacao_do_dia, origem, destino,
                         data) -> str:
+        """
+        Cria HASH das informações da transação evitando duplicação
+        """
         data_str = data.strftime('%d/%m/%Y %H:%M:%S')
         conteudo = (
+            
             f"{ativo}{movimentacao}{tipo}"
             f"{valor_total}{valor_liquido}{satoshis}"
             f"{taxa_porcentual}{taxa_ativo}{taxa_quantidade}"
@@ -133,6 +146,9 @@ class BitcoinUploadService:
         return hashlib.md5(conteudo.encode('utf-8')).hexdigest()
 
     def _save_row(self, dados: dict) -> None:
+        """
+        Salva a transação no banco de dados
+        """
         transacao = TransacaoBTC(**dados)
         try:
             with transaction.atomic():

@@ -10,9 +10,9 @@ class BitAppAgent:
 
     def __init__(self, usuario):
         self.usuario = usuario
-        self.__base_url = config('AI_BASE_URL')
-        self.__model = config('AI_MODEL')
-        self.__api_key = config('AI_API_KEY')
+        self.__base_url = config('AI_BASE_URL')   # ← URL da IA
+        self.__model = config('AI_MODEL')         # ← Modelo da LLM
+        self.__api_key = usuario.api_key_groq     # ← chave do usuário
 
     def __get_data(self):
         """
@@ -35,6 +35,10 @@ class BitAppAgent:
         }, default=str)
 
     def invoke(self) -> str:
+        if not self.usuario.tem_api_key():
+            raise ValueError(
+                'Você precisa cadastrar sua chave API da Groq no perfil para usar a análise de IA.'
+            )
         payload = {
             "model": self.__model,
             "messages": [
