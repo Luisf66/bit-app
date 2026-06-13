@@ -62,6 +62,11 @@ class EntradasCreateView(LoginRequiredMixin, CreateView):
     template_name = 'entradas/entradas_create.html'
     success_url = reverse_lazy('entradas:entradas-list')
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['usuario'] = self.request.user
+        return kwargs
+
     def form_valid(self, form):
         form.instance.usuario = self.request.user
         return super().form_valid(form)
@@ -80,6 +85,11 @@ class EntradasUpdateView(LoginRequiredMixin, UpdateView):
     form_class = EntradasForm
     template_name = 'entradas/entradas_update.html'
     success_url = reverse_lazy('entradas:entradas-list')
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['usuario'] = self.request.user
+        return kwargs
 
     def get_queryset(self):
         return Entradas.objects.filter(usuario=self.request.user)
