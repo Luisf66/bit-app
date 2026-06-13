@@ -51,6 +51,11 @@ class SaidasCreateView(LoginRequiredMixin, CreateView):
     form_class = SaidasForm
     success_url = reverse_lazy('saidas:saidas-list')
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['usuario'] = self.request.user
+        return kwargs
+
     def form_valid(self, form):
         form.instance.usuario = self.request.user
         return super().form_valid(form)
@@ -70,6 +75,11 @@ class SaidasUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'saidas/saidas_update.html'
     form_class = SaidasForm
     success_url = reverse_lazy('saidas:saidas-list')
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['usuario'] = self.request.user
+        return kwargs
 
     def get_queryset(self):
         return Saidas.objects.filter(usuario=self.request.user)
