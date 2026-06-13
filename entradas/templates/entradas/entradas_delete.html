@@ -2,58 +2,55 @@
 {% block title %}BIT-APP - Excluir Entrada{% endblock %}
 {% block content %}
 
-<div class="py-4 ml-[15%]" style="max-width: 700px;">
-  <div class="border border-zinc-700 rounded-lg p-6">
-
-    <h5 class="font-semibold text-center mb-6">Excluir Entrada</h5>
-
-    <div class="bg-red-900/30 border border-red-700 rounded text-sm text-center text-red-400 py-2 mb-4">
-      Essa ação não pode ser desfeita.
+<div class="py-6 px-8">
+  <div class="max-w-lg">
+    <div class="mb-8">
+      <p class="text-zinc-500 text-xs font-semibold uppercase tracking-widest mb-1">Financeiro</p>
+      <h4 class="text-white text-xl font-semibold flex items-center gap-2 m-0">
+        <i class="bi bi-trash text-red-500"></i> Excluir Entrada
+      </h4>
     </div>
+    <div class="bg-zinc-900 border border-zinc-700 rounded-xl p-6">
 
-    <p class="text-sm text-zinc-400 text-center mb-4">
-      Você está prestes a excluir a seguinte entrada:
-    </p>
-
-    <table class="w-full text-sm mb-6 border border-zinc-700 rounded">
-      <tr class="border-b border-zinc-700">
-        <td class="text-zinc-400 font-semibold text-center py-2 px-3 w-[35%]">Data</td>
-        <td class="text-center py-2 px-3">{{ object.data|date:"d/m/Y" }}</td>
-      </tr>
-      <tr class="border-b border-zinc-700">
-        <td class="text-zinc-400 font-semibold text-center py-2 px-3">Categoria</td>
-        <td class="text-center py-2 px-3">
-          <span class="bg-green-700 text-white text-xs px-2 py-0.5 rounded">
-            {{ object.categoria }}
-          </span>
-        </td>
-      </tr>
-      <tr class="border-b border-zinc-700">
-        <td class="text-zinc-400 font-semibold text-center py-2 px-3">Descrição</td>
-        <td class="text-center py-2 px-3">{{ object.descricao }}</td>
-      </tr>
-      <tr>
-        <td class="text-zinc-400 font-semibold text-center py-2 px-3">Valor</td>
-        <td class="text-center py-2 px-3 font-semibold text-green-400">
-          R$ {{ object.valor }}
-        </td>
-      </tr>
-    </table>
-
-    <form method="POST">
-      {% csrf_token %}
-      <div class="flex justify-between items-center mt-4">
-        <a href="{% url 'entradas:entradas-list' %}"
-           class="text-sm text-zinc-400 hover:text-white transition-colors no-underline">
-          ← Voltar
-        </a>
-        <button type="submit"
-                class="text-sm bg-red-700 hover:bg-red-600 text-white px-4 py-1.5 rounded transition-colors">
-          Confirmar exclusão
-        </button>
+      <div class="bg-red-900/30 border border-red-700 rounded-lg px-4 py-3 mb-6">
+        <p class="text-red-400 text-sm m-0">Essa ação não pode ser desfeita.</p>
       </div>
-    </form>
 
+      <p class="text-zinc-400 text-sm mb-4">Você está prestes a excluir a seguinte entrada:</p>
+
+      <div class="flex flex-col gap-2 mb-6">
+        <div class="flex justify-between py-2 border-b border-zinc-800">
+          <span class="text-zinc-500 text-xs font-semibold uppercase">Data</span>
+          <span class="text-white text-sm">{{ object.data|date:"d/m/Y" }}</span>
+        </div>
+        <div class="flex justify-between py-2 border-b border-zinc-800">
+          <span class="text-zinc-500 text-xs font-semibold uppercase">Categoria</span>
+          <span class="bg-green-900/40 text-green-400 text-xs px-2.5 py-1 rounded-full">{{ object.categoria }}</span>
+        </div>
+        <div class="flex justify-between py-2 border-b border-zinc-800">
+          <span class="text-zinc-500 text-xs font-semibold uppercase">Descrição</span>
+          <span class="text-white text-sm">{{ object.descricao }}</span>
+        </div>
+        <div class="flex justify-between py-2">
+          <span class="text-zinc-500 text-xs font-semibold uppercase">Valor</span>
+          <span class="text-green-400 font-semibold text-sm">R$ {{ object.valor }}</span>
+        </div>
+      </div>
+
+      <form method="POST">
+        {% csrf_token %}
+        <div class="flex justify-between items-center pt-4 border-t border-zinc-800">
+          <a href="{% url 'entradas:entradas-list' %}"
+             class="text-sm text-zinc-400 hover:text-white transition-colors no-underline">
+            ← Voltar
+          </a>
+          <button type="submit"
+                  class="bg-red-700 hover:bg-red-600 text-white font-semibold text-sm px-6 py-2.5 rounded-lg transition-colors">
+            Confirmar Exclusão
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
 
