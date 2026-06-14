@@ -4,6 +4,9 @@ from saidas.serializer.saida_serializer import SaidaSerializer, CategoriaSaidaSe
 
 
 class CategoriaSaidaViewSet(viewsets.ModelViewSet):
+    """
+    Possibilita o usuário utilizar categorias de gastos
+    """
     serializer_class = CategoriaSaidaSerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -15,6 +18,9 @@ class CategoriaSaidaViewSet(viewsets.ModelViewSet):
 
 
 class SaidaViewSet(viewsets.ModelViewSet):
+    """
+    Permite o usuário gerenciar seus gastos
+    """
     serializer_class = SaidaSerializer
     permission_classes = [permissions.IsAuthenticated]
 
