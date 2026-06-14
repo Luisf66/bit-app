@@ -19,6 +19,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.views.generic import RedirectView
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 
 urlpatterns = [
@@ -29,6 +30,15 @@ urlpatterns = [
     path('bitcoin/', include('bitcoin.urls')),
     path('usuarios/', include('usuarios.urls')),
     path('', RedirectView.as_view(url='/usuarios/login/', permanent=False)),
+]
+
+urlpatterns += [
+    path('api/v1/', include('entradas.urls.api_url')),
+    path('api/v1/', include('saidas.urls.api_url')),
+    path('api/v1/', include('bitcoin.urls.api_url')),
+    path('api/v1/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/v1/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/v1/token/verify/', TokenRefreshView.as_view(), name='token_verify'),
 ]
 
 if settings.DEBUG:

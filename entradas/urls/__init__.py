@@ -1,0 +1,1 @@
+from entradas.urls.web_url import urlpatterns, app_name
