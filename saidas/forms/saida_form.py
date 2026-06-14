@@ -1,6 +1,6 @@
 from django import forms
 
-from saidas.models import Saidas
+from saidas.models import Saidas, Categorias_Saidas
 
 class SaidasForm(forms.ModelForm):
     class Meta:
@@ -33,3 +33,9 @@ class SaidasForm(forms.ModelForm):
             'descricao': 'Descrição',
             'valor': 'Valor',
         }
+    
+    def __init__(self, *args, **kwargs):
+            usuario = kwargs.pop('usuario', None)
+            super().__init__(*args, **kwargs)
+            if usuario:
+                self.fields['categoria'].queryset = Categorias_Saidas.objects.filter(usuario=usuario)

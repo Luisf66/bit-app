@@ -1,6 +1,6 @@
 from django.urls import path
 
-from . import views
+from saidas.views import views
 
 app_name = 'saidas'
 
