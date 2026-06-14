@@ -4,6 +4,9 @@ from entradas.serializer.entrada_serializer import EntradaSerializer, CategoriaE
 
 
 class CategoriaEntradaViewSet(viewsets.ModelViewSet):
+    """
+    Possibilita o usuário utilizar categorias de entradas
+    """
     serializer_class = CategoriaEntradaSerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -15,6 +18,9 @@ class CategoriaEntradaViewSet(viewsets.ModelViewSet):
 
 
 class EntradaViewSet(viewsets.ModelViewSet):
+    """
+    Gerencia as entradas do usuário autenticado
+    """
     serializer_class = EntradaSerializer
     permission_classes = [permissions.IsAuthenticated]
 
