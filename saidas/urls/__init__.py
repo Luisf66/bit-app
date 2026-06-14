@@ -1,0 +1,1 @@
+from saidas.urls.web_url import urlpatterns, app_name

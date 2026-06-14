@@ -1,0 +1,1 @@
+from bitcoin.urls.web_url import urlpatterns, app_name
