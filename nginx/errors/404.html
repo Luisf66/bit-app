@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Página não encontrada | Bit App</title>
+<style>
+  :root {
+    --bg: #000;
+    --panel: #0c0c0c;
+    --border: #262626;
+    --text: #f2f2f2;
+    --muted: #8c8c8c;
+    --amber: #ffa500;
+    --amber-dim: rgba(255, 165, 0, .12);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Noto Sans", "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+  }
+  header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 28px;
+    border-bottom: 1px solid var(--border);
+  }
+  .logo {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    background: var(--amber);
+    color: #000;
+    display: grid; place-items: center;
+    font-weight: 700; font-size: 18px;
+  }
+  .brand { font-size: 22px; font-weight: 500; }
+  .brand span { color: var(--amber); }
+
+  main {
+    flex: 1;
+    display: grid;
+    place-items: center;
+    padding: 32px 20px;
+  }
+  .card {
+    width: 100%;
+    max-width: 520px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 44px 36px 36px;
+    text-align: center;
+  }
+  .code {
+    font-size: clamp(84px, 22vw, 128px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -.04em;
+    color: var(--amber);
+  }
+  h1 { font-size: 22px; font-weight: 600; margin-top: 18px; }
+  p {
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.6;
+    margin: 10px auto 0;
+    max-width: 38ch;
+  }
+  .actions { margin-top: 30px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    font: inherit; font-size: 14px; font-weight: 600;
+    padding: 11px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    cursor: pointer;
+    border: 1px solid var(--amber);
+  }
+  .btn-primary { background: var(--amber); color: #000; }
+  .btn-ghost { background: transparent; color: var(--amber); }
+  .btn:hover { filter: brightness(1.12); }
+  .btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+</style>
+</head>
+<body>
+  <header>
+    <div class="logo" aria-hidden="true">&#8383;</div>
+    <div class="brand">Bit <span>App</span></div>
+  </header>
+
+  <main>
+    <section class="card">
+      <div class="code">404</div>
+      <h1>Página não encontrada</h1>
+      <p>O endereço que você acessou não existe ou foi movido. Confira o link ou volte para o painel.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="/">Ir para o Dashboard</a>
+        <button class="btn btn-ghost" type="button" onclick="history.back()">Voltar</button>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
